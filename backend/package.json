@@ -1,5 +1,6 @@
 {
   "name": "pole-evolution-backend",
+  "type":"module",
   "version": "1.0.0",
   "description": "Backend MERN Stack - Pole Evolution (Gestion studio pole dance)",
   "main": "server.js",
