@@ -1,0 +1,27 @@
+# Dépendances
+node_modules/
+package-lock.json
+
+# Variables environnement (SENSIBLE - ne JAMAIS commit)
+.env
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads temporaires
+uploads/
+temp/
+
+# Tests
+coverage/
