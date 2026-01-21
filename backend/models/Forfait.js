@@ -80,7 +80,7 @@ const forfaitSchema = new mongoose.Schema(
       type: Number,
       required: false,
       min: [1, "Minimum 1 personne"],
-      max: [15, "Maximum 15 personnes"],
+      max: [12, "Maximum 12 personnes"],
     },
 
     typeEngagement: {
