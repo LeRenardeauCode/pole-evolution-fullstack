@@ -1,7 +1,7 @@
 # CHECKLIST PRÉSENTATION JURY
 
 ✅ Structure MERN Stack documentée
-✅ MongoDB : création CLI (use pole_evolution, db.createCollection)
+✅ MongoDB : création CLI (use poleevolution, db.createCollection)
 ✅ Mongoose : schémas avec validation
 ✅ API REST : CRUD cours + réservations + auth JWT
 ✅ Frontend React MUI : responsive, pages Les Cours/Planning/Tarifs/Show&Animations/A propos/Galerie/Contact
