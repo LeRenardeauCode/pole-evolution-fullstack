@@ -1,0 +1,16 @@
+# POLE EVOLUTION - CONTEXTE COMPLET
+Stack : MERN (MongoDB + Express + React + Node.js)
+Cliente : Coraline DUCATEZ, école pole dance Rumaucourt (Hauts-de-France)
+Public : débutantes/intermédiaires (pas avancé)
+Objectifs : notoriété +50% élèves, planning en ligne administrable par Coraline, réservations, prestations EVJF (buffet sucré ou buffet non sucré), prestations divers : EVG/Animation Pole Dance, départ en retraite, anniversaires, etc.
+
+Fichiers joints :
+- Cahier-des-charges-POLE-EVOLUTION.pdf
+- Cahier-des-Attentes-Projet-Site-Web-Pole-Dance.pdf  
+- Reglement-interieur-1.pdf + 2.pdf
+
+Règles IA :
+- Toujours répondre en FRANÇAIS
+- Responsive mobile-first
+- Sécurité JWT admin obligatoire
+- RGPD conforme (mentions légales, consentement, politique des cookies)
