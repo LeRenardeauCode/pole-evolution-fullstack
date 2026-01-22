@@ -30,8 +30,8 @@ pole-evolution/
 │   │   ├── Avis.js                      
 │   │   ├── MessageContact.js            
 │   │   ├── Notification.js              
-│   │   ├── Parametre.js                 
-│   │   └── index.js                     
+│   │   └── Parametre.js                 
+│   │                     
 │   │
 │   ├── controllers/                     
 │   │   ├── auth.controller.js           
