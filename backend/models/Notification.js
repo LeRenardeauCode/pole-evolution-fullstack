@@ -112,26 +112,23 @@ const notificationSchema = new mongoose.Schema({
   }
 
 }, {
-  timestamps: true, // createdAt, updatedAt
+  timestamps: true,
   collection: 'notifications'
 });
 
 
 notificationSchema.index({ estLue: 1, priorite: -1, dateCreation: -1 });
-
 notificationSchema.index({ type: 1, dateCreation: -1 });
-
 notificationSchema.index({ estArchivee: 1, dateCreation: -1 });
-
 notificationSchema.index({ dateExpiration: 1 }, { 
-  expireAfterSeconds: 0 // MongoDB supprime auto les docs expirés
+  expireAfterSeconds: 0
 });
 
 
 notificationSchema.virtual('tempsEcoule').get(function() {
   const maintenant = new Date();
   const diff = maintenant - this.dateCreation;
-  return Math.floor(diff / (1000 * 60)); // Convertir ms en minutes
+  return Math.floor(diff / (1000 * 60));
 });
 
 notificationSchema.virtual('statut').get(function() {
@@ -140,6 +137,9 @@ notificationSchema.virtual('statut').get(function() {
   return 'Nouvelle';
 });
 
+notificationSchema.set('toJSON', { virtuals: true });
+notificationSchema.set('toObject', { virtuals: true });
+
 
 notificationSchema.pre('save', function(next) {
   if (this.isModified('estLue') && this.estLue && !this.dateLecture) {
@@ -147,6 +147,7 @@ notificationSchema.pre('save', function(next) {
   }
   next();
 });
+
 
 notificationSchema.methods.marquerCommeLue = function() {
   this.estLue = true;
@@ -165,13 +166,12 @@ notificationSchema.statics.getNonLues = function(limite = 20) {
     estLue: false, 
     estArchivee: false 
   })
-  .sort({ priorite: -1, dateCreation: -1 }) // Urgentes en premier
+  .sort({ priorite: -1, dateCreation: -1 })
   .limit(limite)
   .populate('utilisateurId', 'prenom nom email')
   .populate('coursId', 'nom dateDebut')
   .populate('reservationId', 'statut');
 };
-
 
 notificationSchema.statics.compterNonLues = async function() {
   const total = await this.countDocuments({ 
@@ -194,7 +194,6 @@ notificationSchema.statics.compterNonLues = async function() {
   return { total, urgentes, hautes };
 };
 
-
 notificationSchema.statics.creer = async function(data) {
   const notification = new this({
     type: data.type,
@@ -213,7 +212,6 @@ notificationSchema.statics.creer = async function(data) {
   return await notification.save();
 };
 
-
 notificationSchema.statics.marquerToutesCommeLues = function() {
   return this.updateMany(
     { estLue: false, estArchivee: false },
@@ -223,7 +221,6 @@ notificationSchema.statics.marquerToutesCommeLues = function() {
     }
   );
 };
-
 
 notificationSchema.statics.archiverAnciennes = function(joursAvant = 30) {
   const dateLimit = new Date();

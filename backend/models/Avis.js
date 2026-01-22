@@ -5,7 +5,6 @@ const avisSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Utilisateur',
     required: [true, 'L\'utilisateur est obligatoire'],
-    index: true
   },
 
   nomAffiche: {
@@ -145,6 +144,7 @@ const avisSchema = new mongoose.Schema({
     default: 0,
     min: [0, 'Ne peut pas être négatif']
   },
+
   photo: {
     type: String,
     required: false,
@@ -172,11 +172,8 @@ const avisSchema = new mongoose.Schema({
 });
 
 avisSchema.index({ statut: 1, estPublic: 1, datePublication: -1 });
-
 avisSchema.index({ utilisateur: 1, createdAt: -1 });
-
 avisSchema.index({ cours: 1, statut: 1 });
-
 avisSchema.index({ note: -1, statut: 1 });
 
 avisSchema.virtual('noteTexte').get(function() {
@@ -206,7 +203,7 @@ avisSchema.virtual('noteMoyenneDetails').get(function() {
 avisSchema.set('toJSON', { virtuals: true });
 avisSchema.set('toObject', { virtuals: true });
 
-
+// ========== MIDDLEWARE ==========
 avisSchema.pre('save', async function(next) {
   if (this.isNew && !this.estVerifie) {
     const Reservation = mongoose.model('Reservation');
@@ -276,7 +273,7 @@ avisSchema.statics.getAvisPublics = function(limite = 20) {
   })
   .sort({ datePublication: -1 })
   .limit(limite)
-  .populate('utilisateur', 'prenom nom')
+  .populate('utilisateur', 'pseudo')
   .select('-ipAddress');
 };
 

@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 
 const messageContactSchema = new mongoose.Schema({
-
   nom: {
     type: String,
     required: [true, 'Le nom est obligatoire'],
@@ -39,7 +38,6 @@ const messageContactSchema = new mongoose.Schema({
     validate: {
       validator: function(v) {
         if (!v) return true;
-        // Format français : 06 12 34 56 78 ou +33612345678
         return /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(v);
       },
       message: 'Numéro de téléphone invalide (format français attendu)'
@@ -124,18 +122,10 @@ const messageContactSchema = new mongoose.Schema({
   collection: 'messagescontacts'
 });
 
-
 messageContactSchema.index({ estTraitee: 1 });
-
-
 messageContactSchema.index({ dateEnvoi: -1 });
-
-
 messageContactSchema.index({ sujet: 1 });
-
-
 messageContactSchema.index({ ipAddress: 1, dateEnvoi: -1 });
-
 
 messageContactSchema.virtual('nomComplet').get(function() {
   if (this.prenom) {
@@ -144,14 +134,16 @@ messageContactSchema.virtual('nomComplet').get(function() {
   return this.nom;
 });
 
-
 messageContactSchema.virtual('delaiTraitement').get(function() {
   if (!this.estTraitee || !this.dateTraitement) {
     return null;
   }
   const diff = this.dateTraitement - this.dateEnvoi;
-  return Math.round(diff / (1000 * 60 * 60)); // Convertir ms en heures
+  return Math.round(diff / (1000 * 60 * 60));
 });
+
+messageContactSchema.set('toJSON', { virtuals: true });
+messageContactSchema.set('toObject', { virtuals: true });
 
 messageContactSchema.pre('save', function(next) {
   if (this.isModified('estTraitee') && this.estTraitee && !this.dateTraitement) {
@@ -159,7 +151,6 @@ messageContactSchema.pre('save', function(next) {
   }
   next();
 });
-
 
 messageContactSchema.methods.marquerCommeTraite = function(reponse) {
   this.estTraitee = true;
@@ -170,10 +161,9 @@ messageContactSchema.methods.marquerCommeTraite = function(reponse) {
   return this.save();
 };
 
-
 messageContactSchema.methods.marquerCommeSpam = function() {
   this.estSpam = true;
-  this.estTraitee = true; // Considéré comme traité
+  this.estTraitee = true;
   this.dateTraitement = new Date();
   return this.save();
 };
@@ -196,7 +186,7 @@ messageContactSchema.statics.verifierLimiteIP = async function(ipAddress) {
     dateEnvoi: { $gte: debutJour }
   });
 
-  return count < 3; 
+  return count < 3;
 };
 
 messageContactSchema.statics.getStatistiques = async function() {

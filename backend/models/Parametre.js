@@ -28,7 +28,7 @@ const parametreSchema = new mongoose.Schema({
   categorie: {
     type: String,
     enum: {
-      values: ['cours', 'tarifs', 'contact', 'securite', 'reservations', 'interface', 'emails'],
+      values: ['cours', 'tarifs', 'contact', 'reseaux_sociaux', 'securite', 'reservations', 'interface', 'emails'],
       message: 'Catégorie invalide'
     },
     required: [true, 'La catégorie est obligatoire'],
@@ -67,12 +67,13 @@ const parametreSchema = new mongoose.Schema({
   collection: 'parametres' 
 });
 
+
 parametreSchema.index({ cle: 1 }, { unique: true });
-
-
 parametreSchema.index({ categorie: 1 });
 
+
 parametreSchema.methods.validerContraintes = function() {
+
   if (this.type === 'nombre' && typeof this.valeur === 'number') {
     if (this.valeurMin !== undefined && this.valeur < this.valeurMin) {
       throw new Error(`Valeur ${this.valeur} inférieure au minimum ${this.valeurMin}`);
@@ -81,13 +82,22 @@ parametreSchema.methods.validerContraintes = function() {
       throw new Error(`Valeur ${this.valeur} supérieure au maximum ${this.valeurMax}`);
     }
   }
+  
+
+  if (this.type === 'booleen' && typeof this.valeur !== 'boolean') {
+    throw new Error('Valeur doit être true ou false pour type booleen');
+  }
+  
+
+  if (this.type === 'json' && typeof this.valeur !== 'object') {
+    throw new Error('Valeur doit être un objet JSON pour type json');
+  }
+  
   return true;
 };
 
 
 parametreSchema.pre('save', function(next) {
-
-
   try {
     this.validerContraintes();
     next();
@@ -95,5 +105,29 @@ parametreSchema.pre('save', function(next) {
     next(error);
   }
 });
+
+
+parametreSchema.statics.getParCle = function(cle) {
+  return this.findOne({ cle: cle.toLowerCase() });
+};
+
+parametreSchema.statics.getParCategorie = function(categorie) {
+  return this.find({ categorie }).sort({ cle: 1 });
+};
+
+parametreSchema.statics.updateValeur = async function(cle, nouvelleValeur) {
+  const param = await this.findOne({ cle: cle.toLowerCase() });
+  
+  if (!param) {
+    throw new Error(`Paramètre ${cle} introuvable`);
+  }
+  
+  if (!param.estModifiable) {
+    throw new Error(`Le paramètre ${cle} n'est pas modifiable`);
+  }
+  
+  param.valeur = nouvelleValeur;
+  return await param.save();
+};
 
 export default mongoose.model('Parametre', parametreSchema);

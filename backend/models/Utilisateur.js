@@ -20,6 +20,16 @@ const utilisateurSchema = new mongoose.Schema({
     maxlength: [50, 'Le nom ne peut pas dépasser 50 caractères']
   },
 
+  pseudo: {
+    type: String,
+    required: false,
+    unique: true,
+    sparse: true,
+    trim: true,
+    minlength: [3, 'Le pseudo doit contenir au moins 3 caractères'],
+    maxlength: [20, 'Le pseudo ne peut pas dépasser 20 caractères']
+  },
+
   email: {
     type: String,
     required: [true, 'L\'email est obligatoire'],
@@ -31,23 +41,15 @@ const utilisateurSchema = new mongoose.Schema({
         return validator.isEmail(v);
       },
       message: 'Email invalide'
-    }
+    },
+    index: true
   },
 
   motDePasse: {
     type: String,
     required: [true, 'Le mot de passe est obligatoire'],
     minlength: [8, 'Le mot de passe doit contenir au moins 8 caractères'],
-    select: false // Ne jamais renvoyer le mot de passe dans les requêtes par défaut
-  },
-
-  role: {
-    type: String,
-    enum: {
-      values: ['client', 'admin'],
-      message: 'Rôle doit être client ou admin'
-    },
-    default: 'client'
+    select: false
   },
 
   telephone: {
@@ -57,11 +59,94 @@ const utilisateurSchema = new mongoose.Schema({
     validate: {
       validator: function(v) {
         if (!v) return true;
-        // Format français : 06 12 34 56 78 ou +33612345678
         return /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(v);
       },
       message: 'Numéro de téléphone invalide (format français attendu)'
     }
+  },
+
+  dateNaissance: {
+    type: Date,
+    required: false,
+    validate: {
+      validator: function(v) {
+        if (!v) return true;
+        return v < new Date();
+      },
+      message: 'La date de naissance doit être dans le passé'
+    }
+  },
+
+  niveauPole: {
+    type: String,
+    enum: {
+      values: ['debutant', 'intermediaire', 'avance', 'jamais'],
+      message: 'Niveau invalide'
+    },
+    default: 'jamais'
+  },
+
+  accepteContact: {
+    type: Boolean,
+    required: [true, 'Vous devez indiquer votre préférence de contact'],
+    default: false
+  },
+
+  accepteCGU: {
+    type: Boolean,
+    required: [true, 'Vous devez accepter les CGU'],
+    validate: {
+      validator: function(v) {
+        return v === true;
+      },
+      message: 'Vous devez accepter les conditions générales d\'utilisation'
+    }
+  },
+
+  accepteReglement: {
+    type: Boolean,
+    required: [true, 'Vous devez accepter le règlement intérieur'],
+    validate: {
+      validator: function(v) {
+        return v === true;
+      },
+      message: 'Vous devez accepter le règlement intérieur'
+    }
+  },
+
+  statutValidationAdmin: {
+    type: String,
+    enum: {
+      values: ['pending', 'approved', 'rejected'],
+      message: 'Statut invalide'
+    },
+    default: 'pending',
+    index: true
+  },
+
+  raisonsRejet: {
+    type: String,
+    required: false,
+    maxlength: [500, 'La raison ne peut pas dépasser 500 caractères']
+  },
+
+  estVisible: {
+    type: Boolean,
+    default: false
+  },
+
+  datePremiereInscription: {
+    type: Date,
+    required: false
+  },
+
+  role: {
+    type: String,
+    enum: {
+      values: ['client', 'admin'],
+      message: 'Rôle doit être client ou admin'
+    },
+    default: 'client'
   },
 
   adresse: {
@@ -78,7 +163,7 @@ const utilisateurSchema = new mongoose.Schema({
       validate: {
         validator: function(v) {
           if (!v) return true;
-          return /^[0-9]{5}$/.test(v); // Code postal français 5 chiffres
+          return /^[0-9]{5}$/.test(v);
         },
         message: 'Code postal invalide (5 chiffres attendus)'
       }
@@ -95,19 +180,6 @@ const utilisateurSchema = new mongoose.Schema({
       trim: true,
       default: 'France',
       maxlength: [50, 'Le pays ne peut pas dépasser 50 caractères']
-    }
-  },
-
-  dateNaissance: {
-    type: Date,
-    required: false,
-    validate: {
-      validator: function(v) {
-        if (!v) return true;
-        // Date doit être dans le passé
-        return v < new Date();
-      },
-      message: 'La date de naissance doit être dans le passé'
     }
   },
 
@@ -137,14 +209,19 @@ const utilisateurSchema = new mongoose.Schema({
       default: Date.now,
       required: true
     },
-    dateExpiration: {
-      type: Date,
-      required: false
+    seancesAchetees: {
+      type: Number,
+      required: true,
+      min: 0
     },
     seancesRestantes: {
       type: Number,
-      required: false,
-      min: [0, 'Le nombre de séances restantes ne peut pas être négatif']
+      required: true,
+      min: 0
+    },
+    dateExpiration: {
+      type: Date,
+      required: false
     },
     estActif: {
       type: Boolean,
@@ -162,8 +239,22 @@ const utilisateurSchema = new mongoose.Schema({
       type: Date,
       required: false
     },
+    dateFin: {
+      type: Date,
+      required: false
+    },
     dateFinEngagement: {
       type: Date,
+      required: false
+    },
+    montantMensuel: {
+      type: Number,
+      required: false,
+      min: 0
+    },
+    frequenceSeances: {
+      type: Number,
+      enum: [1, 2],
       required: false
     },
     statutPaiement: {
@@ -172,6 +263,10 @@ const utilisateurSchema = new mongoose.Schema({
       default: 'actif'
     },
     dateProchaineEcheance: {
+      type: Date,
+      required: false
+    },
+    dateResiliation: {
       type: Date,
       required: false
     }
@@ -207,7 +302,20 @@ const utilisateurSchema = new mongoose.Schema({
 
   dateInscription: {
     type: Date,
-    default: Date.now
+    default: Date.now,
+    immutable: true
+  },
+
+  inscriptionComplete: {
+    type: Boolean,
+    default: false
+  },
+
+  etapeInscription: {
+    type: Number,
+    default: 1,
+    min: 1,
+    max: 4
   },
 
   derniereConnexion: {
@@ -218,19 +326,19 @@ const utilisateurSchema = new mongoose.Schema({
   nombreCoursReserves: {
     type: Number,
     default: 0,
-    min: [0, 'Ne peut pas être négatif']
+    min: 0
   },
 
   nombreCoursAssistes: {
     type: Number,
     default: 0,
-    min: [0, 'Ne peut pas être négatif']
+    min: 0
   },
 
   nombreAnnulations: {
     type: Number,
     default: 0,
-    min: [0, 'Ne peut pas être négatif']
+    min: 0
   }
 
 }, {
@@ -238,13 +346,12 @@ const utilisateurSchema = new mongoose.Schema({
   collection: 'utilisateurs'
 });
 
-
 utilisateurSchema.index({ email: 1 }, { unique: true });
-
 utilisateurSchema.index({ nom: 1, prenom: 1 });
-
+utilisateurSchema.index({ pseudo: 1 }, { unique: true, sparse: true });
 utilisateurSchema.index({ estActif: 1, role: 1 });
-
+utilisateurSchema.index({ statutValidationAdmin: 1 });
+utilisateurSchema.index({ derniereConnexion: 1, estActif: 1 }, { sparse: true });
 
 utilisateurSchema.virtual('nomComplet').get(function() {
   return `${this.prenom} ${this.nom}`;
@@ -252,13 +359,16 @@ utilisateurSchema.virtual('nomComplet').get(function() {
 
 utilisateurSchema.virtual('age').get(function() {
   if (!this.dateNaissance) return null;
+  
   const today = new Date();
   const birthDate = new Date(this.dateNaissance);
   let age = today.getFullYear() - birthDate.getFullYear();
   const m = today.getMonth() - birthDate.getMonth();
+  
   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
     age--;
   }
+  
   return age;
 });
 
@@ -266,7 +376,6 @@ utilisateurSchema.virtual('estMineur').get(function() {
   if (!this.age) return false;
   return this.age < 18;
 });
-
 
 utilisateurSchema.virtual('adresseComplete').get(function() {
   if (!this.adresse.rue) return null;
@@ -278,10 +387,8 @@ utilisateurSchema.set('toObject', { virtuals: true });
 
 
 utilisateurSchema.pre('save', async function(next) {
-  if (!this.isModified('motDePasse')) {
-    return next();
-  }
-
+  if (!this.isModified('motDePasse')) return next();
+  
   try {
     const salt = await bcrypt.genSalt(10);
     this.motDePasse = await bcrypt.hash(this.motDePasse, salt);
@@ -291,35 +398,33 @@ utilisateurSchema.pre('save', async function(next) {
   }
 });
 
-
 utilisateurSchema.methods.comparerMotDePasse = async function(motDePasseFourni) {
   return await bcrypt.compare(motDePasseFourni, this.motDePasse);
 };
 
-
 utilisateurSchema.methods.genererToken = function() {
   return jwt.sign(
     { 
-      id: this._id,
-      email: this.email,
-      role: this.role
+      id: this._id, 
+      email: this.email, 
+      role: this.role 
     },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRE || '7d' }
   );
 };
 
-
 utilisateurSchema.methods.genererTokenResetPassword = function() {
-  const resetToken = require('crypto').randomBytes(32).toString('hex');
-
-  this.tokenResetPassword = require('crypto')
+  const crypto = require('crypto');
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  
+  this.tokenResetPassword = crypto
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
-
+  
   this.tokenResetPasswordExpire = Date.now() + 10 * 60 * 1000;
-
+  
   return resetToken;
 };
 
@@ -329,74 +434,87 @@ utilisateurSchema.methods.certificatEstValide = function() {
   return this.certificatMedical.dateValidite > new Date();
 };
 
-
 utilisateurSchema.methods.deduireSeance = async function(forfaitId) {
   const forfait = this.forfaitsActifs.find(
     f => f.forfaitId.toString() === forfaitId.toString() && f.estActif
   );
-
+  
   if (!forfait) {
     throw new Error('Forfait non trouvé ou inactif');
   }
-
+  
   if (forfait.seancesRestantes <= 0) {
     throw new Error('Plus de séances disponibles sur ce forfait');
   }
-
+  
   forfait.seancesRestantes -= 1;
-
+  
   if (forfait.seancesRestantes === 0) {
     forfait.estActif = false;
   }
-
+  
   return await this.save();
 };
 
-
 utilisateurSchema.methods.aForfaitActif = function() {
-  const forfaitValide = this.forfaitsActifs.some(f => 
-    f.estActif && 
-    f.seancesRestantes > 0 &&
-    (!f.dateExpiration || f.dateExpiration > new Date())
+  const forfaitValide = this.forfaitsActifs.some(
+    f => f.estActif && 
+         f.seancesRestantes > 0 && 
+         (!f.dateExpiration || f.dateExpiration > new Date())
   );
-
+  
   if (forfaitValide) return true;
-
-  return this.abonnementActif.forfaitId && 
+  
+  return this.abonnementActif?.forfaitId && 
          this.abonnementActif.statutPaiement === 'actif';
 };
 
+utilisateurSchema.statics.getStatistiquesMois = async function(annee, mois) {
+  const debutMois = new Date(annee, mois - 1, 1);
+  const finMois = new Date(annee, mois, 0, 23, 59, 59);
+  
+  const Reservation = mongoose.model('Reservation');
+  
+  const utilisateurs = await this.find({ estActif: true })
+    .select('prenom nom abonnementActif forfaitsActifs');
+  
+  const stats = [];
+  
+  for (const user of utilisateurs) {
+    const reservations = await Reservation.find({
+      utilisateur: user._id,
+      dateReservation: { $gte: debutMois, $lte: finMois }
+    });
+    
+    const aAbonnement = user.abonnementActif?.statutPaiement === 'actif';
+    const montantDu = aAbonnement ? user.abonnementActif.montantMensuel : 0;
+    const montantPaye = reservations
+      .filter(r => r.paiement.estPaye)
+      .reduce((sum, r) => sum + (r.paiement.montant || 0), 0);
+    
+    stats.push({
+      nom: `${user.prenom} ${user.nom}`,
+      dateDebut: aAbonnement ? user.abonnementActif.dateDebut : null,
+      dateFin: aAbonnement ? user.abonnementActif.dateFin : null,
+      statutPaiement: user.abonnementActif?.statutPaiement || 'aucun',
+      montantDu,
+      montantPaye,
+      seances: reservations.length
+    });
+  }
+  
+  return stats;
+};
+
 utilisateurSchema.statics.findByEmail = function(email) {
-  return this.findOne({ email: email.toLowerCase() }).select('+motDePasse');
+  return this.findOne({ email: email.toLowerCase() })
+    .select('+motDePasse');
 };
 
 utilisateurSchema.statics.getClients = function() {
-  return this.find({ 
-    role: 'client', 
-    estActif: true 
-  })
-  .sort({ dateInscription: -1 })
-  .select('-motDePasse -tokenResetPassword');
-};
-
-utilisateurSchema.statics.getStatistiques = async function() {
-  const total = await this.countDocuments({ role: 'client' });
-  const actifs = await this.countDocuments({ role: 'client', estActif: true });
-  const avecAbonnement = await this.countDocuments({ 
-    'abonnementActif.statutPaiement': 'actif' 
-  });
-  const emailsVerifies = await this.countDocuments({ 
-    emailVerifie: true,
-    role: 'client' 
-  });
-
-  return {
-    total,
-    actifs,
-    avecAbonnement,
-    emailsVerifies,
-    tauxVerification: total > 0 ? Math.round((emailsVerifies / total) * 100) : 0
-  };
+  return this.find({ role: 'client', estActif: true })
+    .sort({ dateInscription: -1 })
+    .select('-motDePasse -tokenResetPassword');
 };
 
 export default mongoose.model('Utilisateur', utilisateurSchema);

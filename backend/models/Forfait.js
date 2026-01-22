@@ -43,11 +43,21 @@ const forfaitSchema = new mongoose.Schema(
     categorie: {
       type: String,
       enum: {
-        values: ["collectif", "prive", "abonnement", "evenement", "decouverte"],
-        message:
-          "Catégorie doit être: collectif, prive, abonnement, evenement ou decouverte",
+        values: ["collectif", "prive", "abonnement", "evjf", "prestation", "decouverte"],
+        message: "Catégorie doit être: collectif, prive, abonnement, evjf, prestation ou decouverte",
       },
       required: [true, "La catégorie est obligatoire"],
+    },
+
+    avecEngagement: {
+      type: Boolean,
+      default: false,
+    },
+
+    engagement: {
+      type: String,
+      enum: ["aucun", "12_mois"],
+      default: "aucun",
     },
 
     nombreSeances: {
@@ -157,10 +167,9 @@ const forfaitSchema = new mongoose.Schema(
 );
 
 forfaitSchema.index({ nom: "text" }, { weights: { nom: 10 } });
-
 forfaitSchema.index({ categorie: 1, typeEngagement: 1 });
-
 forfaitSchema.index({ estActif: 1, estVisible: 1 });
+
 
 forfaitSchema.virtual("economie").get(function () {
   if (
@@ -181,18 +190,24 @@ forfaitSchema.virtual("labelAffichage").get(function () {
   return `${this.prix}€`;
 });
 
+forfaitSchema.set("toJSON", { virtuals: true });
+forfaitSchema.set("toObject", { virtuals: true });
+
+
 forfaitSchema.pre("save", function (next) {
+  // Calculer prix unitaire
   if (this.nombreSeances && this.nombreSeances > 0) {
-    this.prixUnitaire =
-      Math.round((this.prix / this.nombreSeances) * 100) / 100;
+    this.prixUnitaire = Math.round((this.prix / this.nombreSeances) * 100) / 100;
   }
 
+  // Validation dates
   if (this.dateDebut && this.dateFin && this.dateFin <= this.dateDebut) {
     return next(
       new Error("La date de fin doit être postérieure à la date de début"),
     );
   }
 
+  // Validation participants
   if (
     this.nombreParticipantsMin &&
     this.nombreParticipantsMax &&

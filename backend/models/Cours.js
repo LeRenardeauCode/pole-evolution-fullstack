@@ -6,7 +6,7 @@ const coursSchema = new mongoose.Schema({
     required: [true, 'Le nom du cours est obligatoire'],
     trim: true,
     minlength: [3, 'Le nom doit contenir au moins 3 caractères'],
-    maxlength: [100, 'Le nom ne peut pas dépasser 100 caractères'],
+    maxlength: [100, 'Le nom ne peut pas dépasser 100 caractères']
   },
 
   description: {
@@ -56,7 +56,7 @@ const coursSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'La durée est obligatoire'],
     min: [30, 'Durée minimum 30 minutes'],
-    max: [180, 'Durée maximum 3 heures'],
+    max: [180, 'Durée maximum 3 heures']
   },
 
   estRecurrent: {
@@ -68,7 +68,7 @@ const coursSchema = new mongoose.Schema({
     type: Number,
     required: false,
     min: [0, 'Jour doit être entre 0 (dimanche) et 6 (samedi)'],
-    max: [6, 'Jour doit être entre 0 (dimanche) et 6 (samedi)'],
+    max: [6, 'Jour doit être entre 0 (dimanche) et 6 (samedi)']
   },
 
   heureDebut: {
@@ -118,7 +118,6 @@ const coursSchema = new mongoose.Schema({
     type: String,
     required: false,
     maxlength: [500, 'La raison ne peut pas dépasser 500 caractères']
-    // Si statut = 'annule', expliquer pourquoi
   },
 
   professeur: {
@@ -131,7 +130,6 @@ const coursSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Forfait',
     default: []
-
   },
 
   estVisible: {
@@ -178,18 +176,9 @@ const coursSchema = new mongoose.Schema({
 });
 
 coursSchema.index({ dateDebut: 1, statut: 1 });
-
-coursSchema.index({ 
-  dateDebut: 1, 
-  statut: 1, 
-  estVisible: 1,
-  reservationOuverte: 1 
-});
-
+coursSchema.index({ dateDebut: 1, statut: 1, estVisible: 1, reservationOuverte: 1 });
 coursSchema.index({ type: 1, niveau: 1 });
-
 coursSchema.index({ estRecurrent: 1, jourSemaine: 1 });
-
 
 coursSchema.virtual('placesDisponibles').get(function() {
   return this.capaciteMax - this.placesReservees;
@@ -200,11 +189,9 @@ coursSchema.virtual('tauxRemplissage').get(function() {
   return Math.round((this.placesReservees / this.capaciteMax) * 100);
 });
 
-
 coursSchema.virtual('estPasse').get(function() {
   return this.dateFin < new Date();
 });
-
 
 coursSchema.virtual('estProchainement').get(function() {
   const maintenant = new Date();
@@ -212,10 +199,9 @@ coursSchema.virtual('estProchainement').get(function() {
   return this.dateDebut > maintenant && this.dateDebut <= dans24h;
 });
 
-
 coursSchema.virtual('peutEtreAnnule').get(function() {
   const maintenant = new Date();
-  const delaiAnnulation = 24; // heures (paramètre à récupérer de la BDD)
+  const delaiAnnulation = 24;
   const dateLimit = new Date(this.dateDebut.getTime() - delaiAnnulation * 60 * 60 * 1000);
   return maintenant < dateLimit && this.statut !== 'annule' && this.statut !== 'termine';
 });
@@ -231,8 +217,18 @@ coursSchema.set('toJSON', { virtuals: true });
 coursSchema.set('toObject', { virtuals: true });
 
 coursSchema.pre('save', function(next) {
+  // Calculer dateFin si manquante
   if (!this.dateFin && this.dateDebut && this.duree) {
     this.dateFin = new Date(this.dateDebut.getTime() + this.duree * 60 * 1000);
+  }
+
+  if (this.type === 'evjf') {
+    if (this.capaciteMax > 12) {
+      return next(new Error('EVJF : capacité maximale 12 personnes'));
+    }
+    if (this.capaciteMin && this.capaciteMin < 6) {
+      return next(new Error('EVJF : capacité minimale 6 personnes'));
+    }
   }
 
   if (this.placesReservees >= this.capaciteMax && this.statut === 'confirme') {
@@ -284,7 +280,6 @@ coursSchema.methods.annuler = async function(raison) {
 };
 
 coursSchema.methods.ajouterListeAttente = async function(utilisateurId) {
-
   const dejaPresent = this.listeAttente.some(
     item => item.utilisateurId.toString() === utilisateurId.toString()
   );
@@ -297,14 +292,12 @@ coursSchema.methods.ajouterListeAttente = async function(utilisateurId) {
   return await this.save();
 };
 
-
 coursSchema.methods.retirerListeAttente = async function(utilisateurId) {
   this.listeAttente = this.listeAttente.filter(
     item => item.utilisateurId.toString() !== utilisateurId.toString()
   );
   return await this.save();
 };
-
 
 coursSchema.statics.getCoursFuturs = function(jourDebut, jourFin) {
   const query = {
@@ -324,16 +317,15 @@ coursSchema.statics.getCoursFuturs = function(jourDebut, jourFin) {
 
 coursSchema.statics.getCoursSemaine = function(dateRef = new Date()) {
   const debutSemaine = new Date(dateRef);
-  debutSemaine.setDate(dateRef.getDate() - dateRef.getDay() + 1); // Lundi
+  debutSemaine.setDate(dateRef.getDate() - dateRef.getDay() + 1);
   debutSemaine.setHours(0, 0, 0, 0);
 
   const finSemaine = new Date(debutSemaine);
-  finSemaine.setDate(debutSemaine.getDate() + 6); // Dimanche
+  finSemaine.setDate(debutSemaine.getDate() + 6);
   finSemaine.setHours(23, 59, 59, 999);
 
   return this.getCoursFuturs(debutSemaine, finSemaine);
 };
-
 
 coursSchema.statics.getCoursJour = function(date) {
   const debutJour = new Date(date);
@@ -351,9 +343,6 @@ coursSchema.statics.getCoursJour = function(date) {
   .populate('professeur', 'prenom nom');
 };
 
-/**
- * Marquer les cours passés comme terminés (CRON job)
- */
 coursSchema.statics.marquerCoursTermines = function() {
   return this.updateMany(
     {
