@@ -1,32 +1,34 @@
-import jwt from 'jsonwebtoken';
-import { Utilisateur } from '../models/index.js';
+import jwt from "jsonwebtoken";
+import { Utilisateur } from "../models/index.js";
 
 export const register = async (req, res) => {
   try {
-    const { 
-      prenom, 
-      nom, 
-      email, 
-      motDePasse, 
-      telephone, 
+    const {
+      prenom,
+      nom,
+      email,
+      motDePasse,
+      telephone,
       dateNaissance,
       niveauPole,
-      accepteContact 
+      accepteContact,
     } = req.body;
-
 
     if (!prenom || !nom || !email || !motDePasse) {
       return res.status(400).json({
         success: false,
-        message: 'Veuillez fournir tous les champs obligatoires (prénom, nom, email, mot de passe).'
+        message:
+          "Veuillez fournir tous les champs obligatoires (prénom, nom, email, mot de passe).",
       });
     }
 
-    const existingUser = await Utilisateur.findOne({ email: email.toLowerCase() });
+    const existingUser = await Utilisateur.findOne({
+      email: email.toLowerCase(),
+    });
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: 'Cet email est déjà utilisé.'
+        message: "Cet email est déjà utilisé.",
       });
     }
 
@@ -37,93 +39,24 @@ export const register = async (req, res) => {
       motDePasse,
       telephone,
       dateNaissance,
-      niveauPole: niveauPole || 'jamais',
+      niveauPole: niveauPole || "jamais",
       accepteContact: accepteContact || false,
       accepteCGU: true,
       accepteReglement: true,
-      statutValidationAdmin: 'pending',
-      role: 'client',
+      statutValidationAdmin: "pending",
+      role: "client",
       estActif: true,
-      emailVerifie: false
+      emailVerifie: false,
     });
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRE || '30d' }
-    );
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE || "30d",
+    });
 
     res.status(201).json({
       success: true,
-      message: 'Inscription réussie. Votre compte est en attente de validation par un administrateur.',
-      token,
-      user: {
-        id: user._id,
-        prenom: user.prenom,
-        nom: user.nom,
-        email: user.email,
-        role: user.role,
-        statutValidationAdmin: user.statutValidationAdmin
-      }
-    });
-
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-};
-
-
-export const login = async (req, res) => {
-  try {
-    const { email, motDePasse } = req.body;
-
-    if (!email || !motDePasse) {
-      return res.status(400).json({
-        success: false,
-        message: 'Veuillez fournir un email et un mot de passe.'
-      });
-    }
-
-    const user = await Utilisateur.findOne({ email: email.toLowerCase() }).select('+motDePasse');
-
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Email ou mot de passe incorrect.'
-      });
-    }
-
-    const isMatch = await user.comparerMotDePasse(motDePasse);
-
-    if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        message: 'Email ou mot de passe incorrect.'
-      });
-    }
-
-    if (!user.estActif) {
-      return res.status(403).json({
-        success: false,
-        message: 'Votre compte a été désactivé. Veuillez contacter un administrateur.'
-      });
-    }
-
-    user.derniereConnexion = new Date();
-    await user.save();
-
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRE || '30d' }
-    );
-
-    res.status(200).json({
-      success: true,
-      message: 'Connexion réussie.',
+      message:
+        "Inscription réussie. Votre compte est en attente de validation par un administrateur.",
       token,
       user: {
         id: user._id,
@@ -132,14 +65,80 @@ export const login = async (req, res) => {
         email: user.email,
         role: user.role,
         statutValidationAdmin: user.statutValidationAdmin,
-        niveauPole: user.niveauPole
-      }
+      },
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
+    });
+  }
+};
+
+export const login = async (req, res) => {
+  try {
+    const { email, motDePasse } = req.body;
+
+    if (!email || !motDePasse) {
+      return res.status(400).json({
+        success: false,
+        message: "Veuillez fournir un email et un mot de passe.",
+      });
+    }
+
+    const user = await Utilisateur.findOne({
+      email: email.toLowerCase(),
+    }).select("+motDePasse");
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Email ou mot de passe incorrect.",
+      });
+    }
+
+    const isMatch = await user.comparerMotDePasse(motDePasse);
+
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Email ou mot de passe incorrect.",
+      });
+    }
+
+    if (!user.estActif) {
+      return res.status(403).json({
+        success: false,
+        message:
+          "Votre compte a été désactivé. Veuillez contacter un administrateur.",
+      });
+    }
+
+    user.derniereConnexion = new Date();
+    await user.save();
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE || "30d",
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Connexion réussie.",
+      token,
+      user: {
+        id: user._id,
+        prenom: user.prenom,
+        nom: user.nom,
+        email: user.email,
+        role: user.role,
+        statutValidationAdmin: user.statutValidationAdmin,
+        niveauPole: user.niveauPole,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 };
@@ -150,13 +149,12 @@ export const getMe = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      user
+      user,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -170,10 +168,10 @@ export const updateProfile = async (req, res) => {
       dateNaissance: req.body.dateNaissance,
       niveauPole: req.body.niveauPole,
       accepteContact: req.body.accepteContact,
-      adresse: req.body.adresse
+      adresse: req.body.adresse,
     };
 
-    Object.keys(fieldsToUpdate).forEach(key => {
+    Object.keys(fieldsToUpdate).forEach((key) => {
       if (fieldsToUpdate[key] === undefined) {
         delete fieldsToUpdate[key];
       }
@@ -184,20 +182,19 @@ export const updateProfile = async (req, res) => {
       fieldsToUpdate,
       {
         new: true,
-        runValidators: true
-      }
+        runValidators: true,
+      },
     );
 
     res.status(200).json({
       success: true,
-      message: 'Profil mis à jour avec succès.',
-      user
+      message: "Profil mis à jour avec succès.",
+      user,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -209,50 +206,44 @@ export const updatePassword = async (req, res) => {
     if (!ancienMotDePasse || !nouveauMotDePasse) {
       return res.status(400).json({
         success: false,
-        message: 'Veuillez fournir l\'ancien et le nouveau mot de passe.'
+        message: "Veuillez fournir l'ancien et le nouveau mot de passe.",
       });
     }
 
-
-    const user = await Utilisateur.findById(req.user._id).select('+motDePasse');
-
+    const user = await Utilisateur.findById(req.user._id).select("+motDePasse");
 
     const isMatch = await user.comparerMotDePasse(ancienMotDePasse);
 
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        message: 'Ancien mot de passe incorrect.'
+        message: "Ancien mot de passe incorrect.",
       });
     }
 
     user.motDePasse = nouveauMotDePasse;
     await user.save();
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRE || '30d' }
-    );
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE || "30d",
+    });
 
     res.status(200).json({
       success: true,
-      message: 'Mot de passe modifié avec succès.',
-      token
+      message: "Mot de passe modifié avec succès.",
+      token,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
 
-
 export const logout = async (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'Déconnexion réussie. Veuillez supprimer le token côté client.'
+    message: "Déconnexion réussie. Veuillez supprimer le token côté client.",
   });
 };

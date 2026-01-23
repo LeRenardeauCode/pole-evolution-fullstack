@@ -7,6 +7,7 @@ import { errorHandler } from './middleware/errorHandler.middleware.js';
 
 
 import authRoutes from './routes/auth.routes.js';
+import utilisateurRoutes from './routes/utilisateur.routes.js';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/utilisateurs', utilisateurRoutes);
 
 app.use(errorHandler);
 
