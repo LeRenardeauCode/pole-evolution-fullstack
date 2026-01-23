@@ -1,4 +1,3 @@
-// Backend/controllers/auth.controller.js
 import jwt from 'jsonwebtoken';
 import { Utilisateur } from '../models/index.js';
 
