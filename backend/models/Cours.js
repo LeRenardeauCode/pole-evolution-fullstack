@@ -190,16 +190,19 @@ coursSchema.virtual('tauxRemplissage').get(function() {
 });
 
 coursSchema.virtual('estPasse').get(function() {
+  if (!this.dateFin) return null;
   return this.dateFin < new Date();
 });
 
 coursSchema.virtual('estProchainement').get(function() {
+  if (!this.dateDebut) return null;
   const maintenant = new Date();
   const dans24h = new Date(maintenant.getTime() + 24 * 60 * 60 * 1000);
   return this.dateDebut > maintenant && this.dateDebut <= dans24h;
 });
 
 coursSchema.virtual('peutEtreAnnule').get(function() {
+  if (!this.dateDebut) return null;
   const maintenant = new Date();
   const delaiAnnulation = 24;
   const dateLimit = new Date(this.dateDebut.getTime() - delaiAnnulation * 60 * 60 * 1000);
