@@ -9,6 +9,7 @@ import { errorHandler } from './middleware/errorHandler.middleware.js';
 import authRoutes from './routes/auth.routes.js';
 import utilisateurRoutes from './routes/utilisateur.routes.js';
 import coursRoutes from './routes/cours.routes.js';
+import reservationRoutes from './routes/reservations.routes.js';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/utilisateurs', utilisateurRoutes);
 app.use('/api/cours', coursRoutes);
+app.use('/api/reservations', reservationRoutes);
 
 app.use(errorHandler);
 
