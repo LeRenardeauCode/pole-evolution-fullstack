@@ -9,6 +9,7 @@ import authRoutes from './routes/auth.routes.js';
 import utilisateurRoutes from './routes/utilisateur.routes.js';
 import coursRoutes from './routes/cours.routes.js';
 import reservationRoutes from './routes/reservations.routes.js';
+import forfaitRoutes from './routes/forfait.routes.js';
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/utilisateurs', utilisateurRoutes);
 app.use('/api/cours', coursRoutes);
 app.use('/api/reservations', reservationRoutes);
+app.use('/api/forfaits', forfaitRoutes);
 
 app.use(errorHandler);
 
