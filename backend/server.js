@@ -10,6 +10,7 @@ import utilisateurRoutes from './routes/utilisateur.routes.js';
 import coursRoutes from './routes/cours.routes.js';
 import reservationRoutes from './routes/reservations.routes.js';
 import forfaitRoutes from './routes/forfait.routes.js';
+import avisRoutes from './routes/avis.routes.js';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use('/api/utilisateurs', utilisateurRoutes);
 app.use('/api/cours', coursRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/forfaits', forfaitRoutes);
+app.use('/api/avis', avisRoutes);
 
 app.use(errorHandler);
 
