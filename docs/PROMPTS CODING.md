@@ -2,7 +2,7 @@
 Rôle : ANALYSE, DEBUG, REFACTOR, TESTS, OPTIMISATION.
 Respecte dictionnaire données + cahier des charges.
 
-## 🐛 DEBUGGING (copie-colle)
+## 🐛 DEBUGGING
 
 Debug [CODE SELECTIONNÉ]. Erreur : [MESSAGE ERREUR].
 Contexte : [FICHIER/LIGNE]. Vérifie :
