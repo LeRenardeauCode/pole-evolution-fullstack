@@ -1,0 +1,2866 @@
+{
+  "info": {
+    "_postman_id": "fe1eadf6-b2bc-4486-bd14-923e3bb89869",
+    "name": "Pole-Evolution",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49266486",
+    "_collection_link": "https://go.postman.co/collection/49266486-fe1eadf6-b2bc-4486-bd14-923e3bb89869?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "GET",
+      "item": [
+        {
+          "name": "auth/me",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE2OTc0MCwiZXhwIjoxNzY5MjU2MTQwfQ.3jO_LvEp0WhMvtrIhZaqla7-IfVvyuAPb1a-E7kad1Q",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"marie.dupont@test.com\",\r\n  \"motDePasse\": \"Test123!\"\r\n}\r\n"
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/auth/me",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "utilisateurs",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE2OTc0MCwiZXhwIjoxNzY5MjU2MTQwfQ.3jO_LvEp0WhMvtrIhZaqla7-IfVvyuAPb1a-E7kad1Q",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/utilisateurs??role%3Dclient=&?statutValidationAdmin%3Dpending=&?estActif%3Dtrue=&?search%3Dmarie=&?page%3D1%26limit%3D10=",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "utilisateurs"
+              ],
+              "query": [
+                {
+                  "key": "?role%3Dclient",
+                  "value": ""
+                },
+                {
+                  "key": "?statutValidationAdmin%3Dpending",
+                  "value": ""
+                },
+                {
+                  "key": "?estActif%3Dtrue",
+                  "value": ""
+                },
+                {
+                  "key": "?search%3Dmarie",
+                  "value": ""
+                },
+                {
+                  "key": "?page%3D1%26limit%3D10",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "utilisateurs/:id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE2OTc0MCwiZXhwIjoxNzY5MjU2MTQwfQ.3jO_LvEp0WhMvtrIhZaqla7-IfVvyuAPb1a-E7kad1Q",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/utilisateurs/697361c8e932fb549d0303ab",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "utilisateurs",
+                "697361c8e932fb549d0303ab"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "utilisateurs/stats",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE3MDMwNSwiZXhwIjoxNzY5MjU2NzA1fQ.08-ncAiuF44ItJ2DjzZC_YFLHiK_hnJz0rJGd63e7_M",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/utilisateurs/stats",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "utilisateurs",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "utilisateurs/stats/[stats_date]",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE3MDMwNSwiZXhwIjoxNzY5MjU2NzA1fQ.08-ncAiuF44ItJ2DjzZC_YFLHiK_hnJz0rJGd63e7_M",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/utilisateurs/stats/monthly?annee=2026&mois=1",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "utilisateurs",
+                "stats",
+                "monthly"
+              ],
+              "query": [
+                {
+                  "key": "annee",
+                  "value": "2026"
+                },
+                {
+                  "key": "mois",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cours",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/cours??type%3Dcollectif=&?niveau%3Ddebutant=&?statut%3Dplanifie=",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cours"
+              ],
+              "query": [
+                {
+                  "key": "?type=collectif",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "?niveau=debutant",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "?statut=planifie",
+                  "value": "",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cours/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/cours/697374d9682cc99a5f1e2621",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cours",
+                "697374d9682cc99a5f1e2621"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cours/semaine/date",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/cours/semaine/2026-01-27",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cours",
+                "semaine",
+                "2026-01-27"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cours/jour/date",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/cours/jour/2026-01-27",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cours",
+                "jour",
+                "2026-01-27"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cours/admin/all",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE3MTI1NSwiZXhwIjoxNzY5MjU3NjU1fQ.bKfZnST2_SvI4zgF62V4ZIHzXWWtHdk5rNguB_f3kxY",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/cours/admin/all??page%3D1%26limit%3D50=&?type%3Dcollectif=&?statut%3Dplanifie=",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cours",
+                "admin",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "?page=1&limit=50",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "?type=collectif",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "?statut=planifie",
+                  "value": "",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cours/admin/stats",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE3MTI1NSwiZXhwIjoxNzY5MjU3NjU1fQ.bKfZnST2_SvI4zgF62V4ZIHzXWWtHdk5rNguB_f3kxY",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/cours/admin/stats",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cours",
+                "admin",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reservations",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3NzAzNiwiZXhwIjoxNzY5NzYzNDM2fQ.p0Ei6hkzsnoFiGgQ1P3e-EEq6bJ5w5ghEtNSBDbQzow",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/reservations??statut%3Dconfirmee=&?limit%3D20=",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "reservations"
+              ],
+              "query": [
+                {
+                  "key": "?statut%3Dconfirmee",
+                  "value": ""
+                },
+                {
+                  "key": "?limit%3D20",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reservations/:id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/reservations/697b238c52bded8678e433cf",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "reservations",
+                "697b238c52bded8678e433cf"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reservations/cours/:id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/reservations/cours/697b237e52bded8678e433c2",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "reservations",
+                "cours",
+                "697b237e52bded8678e433c2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reservations/admin/all",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/reservations/admin/all??statut%3Dconfirmee=&?typeReservation%3Dmembre=&?page%3D1%26limit%3D50=",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "reservations",
+                "admin",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "?statut=confirmee",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "?typeReservation=membre",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "?page=1&limit=50",
+                  "value": "",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reservations/admin/stats",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/reservations/admin/stats",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "reservations",
+                "admin",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forfaits",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/forfaits??categorie%3Dcollectif=&?estActif%3Dtrue=",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "forfaits"
+              ],
+              "query": [
+                {
+                  "key": "?categorie%3Dcollectif",
+                  "value": ""
+                },
+                {
+                  "key": "?estActif%3Dtrue",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forfaits/:id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/forfaits/6973643292303a3cf11e2624",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "forfaits",
+                "6973643292303a3cf11e2624"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forfaits/categorie/collectif",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/forfaits/categorie/collectif",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "forfaits",
+                "categorie",
+                "collectif"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forfaits/admin/stats",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/forfaits/admin/stats",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "forfaits",
+                "admin",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "avis",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/avis??page%3D1%26limit%3D20=",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "avis"
+              ],
+              "query": [
+                {
+                  "key": "?page=1&limit=20",
+                  "value": "",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "avis/mes-avis",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/avis/mes-avis",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "avis",
+                "mes-avis"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "avis/admin/all",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/avis/admin/all",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "avis",
+                "admin",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "avis/cours/:id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/avis/cours/697b445c5e00e95b6962880a",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "avis",
+                "cours",
+                "697b445c5e00e95b6962880a"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "avis/admin/stats",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/avis/admin/stats",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "avis",
+                "admin",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "media",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"marie.dupont@test.com\",\r\n  \"motDePasse\": \"NouveauTest456!\"\r\n}\r\n\r\n"
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/media/galerie",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "media",
+                "galerie"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "media/une",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/media/une?limit=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "media",
+                "une"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "media/cours/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/media/cours/697f8175414d92eb9a59b243",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "media",
+                "cours",
+                "697f8175414d92eb9a59b243"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "media (token)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/media",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "media"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "media/admin/stats",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/media/admin/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "media",
+                "admin",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "contact",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/contact",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contact"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "notifications",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/notifications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "notifications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "notifications/count",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/count",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "notifications",
+                "count"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "parametres",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/parametres",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parametres"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "parametres/categorie/cours",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/parametres/categorie/cours",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parametres",
+                "categorie",
+                "cours"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "parametres/:id parametres",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/parametres/{{testParamCle}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parametres",
+                "{{testParamCle}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "POST",
+      "item": [
+        {
+          "name": "auth/register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"prenom\": \"Marie\",\r\n  \"nom\": \"Dupont\",\r\n  \"email\": \"marie.dupont@test.com\",\r\n  \"motDePasse\": \"Test123!\",\r\n  \"telephone\": \"0612345678\",\r\n  \"niveauPole\": \"debutant\",\r\n  \"accepteContact\": true\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/auth/register",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "auth/login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"marie.dupont@test.com\",\r\n  \"motDePasse\": \"NouveauTest456!\"\r\n}\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/auth/login",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "auth/logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE2OTc0MCwiZXhwIjoxNzY5MjU2MTQwfQ.3jO_LvEp0WhMvtrIhZaqla7-IfVvyuAPb1a-E7kad1Q",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"marie.dupont@test.com\",\r\n  \"motDePasse\": \"Test123!\"\r\n}\r\n"
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/auth/logout",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "utilisateurs/id_marie/forfaits",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3NzAzNiwiZXhwIjoxNzY5NzYzNDM2fQ.p0Ei6hkzsnoFiGgQ1P3e-EEq6bJ5w5ghEtNSBDbQzow",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"forfaitId\": \"6973643292303a3cf11e2623\",\r\n  \"seancesAchetees\": 10,\r\n  \"dateExpiration\": \"2026-05-29T00:00:00.000Z\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/utilisateurs/697361c8e932fb549d0303ab/forfaits",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "utilisateurs",
+                "697361c8e932fb549d0303ab",
+                "forfaits"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cours",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nom\": \"Pole Intermédiaire - Vendredi 19h\",\r\n  \"description\": \"Cours pour niveau intermédiaire\",\r\n  \"type\": \"collectif\",\r\n  \"niveau\": \"intermediaire\",\r\n  \"dateDebut\": \"2026-01-31T19:00:00.000Z\",\r\n  \"dateFin\": \"2026-01-31T20:30:00.000Z\",\r\n  \"duree\": 90,\r\n  \"estRecurrent\": true,\r\n  \"jourSemaine\": 5,\r\n  \"heureDebut\": \"19:00\",\r\n  \"capaciteMax\": 8,\r\n  \"capaciteMin\": 3,\r\n  \"estVisible\": true,\r\n  \"reservationOuverte\": true\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/cours",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cours"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cours/generer-recurrents",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE3MTI1NSwiZXhwIjoxNzY5MjU3NjU1fQ.bKfZnST2_SvI4zgF62V4ZIHzXWWtHdk5rNguB_f3kxY",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"coursModeleId\": \"697374d9682cc99a5f1e2621\",\r\n  \"dateDebut\": \"2026-02-03\",\r\n  \"dateFin\": \"2026-02-28\",\r\n  \"exclureDates\": []\r\n}\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/cours/generer-recurrents",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cours",
+                "generer-recurrents"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reservations",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"coursId\": \"697b237e52bded8678e433c2\" ,\r\n  \"forfaitId\": \"6973643292303a3cf11e2623\",\r\n  \"typePaiement\": \"forfait\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/reservations",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "reservations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reservation (paiement sur place)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"coursId\": \"697b445c5e00e95b6962880a\" ,\r\n  \"typePaiement\": \"sur_place\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/reservations",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "reservations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cours (EVJF)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nom\": \"EVJF Julie - Samedi 14h\",\r\n  \"description\": \"Enterrement de vie de jeune fille\",\r\n  \"type\": \"evjf\",\r\n  \"niveau\": \"initiation\",\r\n  \"dateDebut\": \"2026-02-08T14:00:00.000Z\",\r\n  \"dateFin\": \"2026-02-08T15:30:00.000Z\",\r\n  \"duree\": 90,\r\n  \"estRecurrent\": false,\r\n  \"capaciteMax\": 10,\r\n  \"capaciteMin\": 6,\r\n  \"estVisible\": true,\r\n  \"reservationOuverte\": true\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/cours",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cours"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reservations/invite (route publique)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"coursId\": \"697b26e352bded8678e43411\",\r\n  \"nomEleve\": \"Caroline Invitée\",\r\n  \"emailInvite\": \"caroline.invite@evjf.com\",\r\n  \"telephoneInvite\": \"0698765439\",\r\n  \"niveauPoleInvite\": \"jamais\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/reservations/invite",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "reservations",
+                "invite"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forfaits",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nom\": \"Forfait TEST à supprimer\",\r\n  \"prix\": 50,\r\n  \"categorie\": \"collectif\",\r\n  \"nombreSeances\": 2,\r\n  \"dureeValidite\": 30,\r\n  \"estActif\": true,\r\n  \"estVisible\": false\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/forfaits",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "forfaits"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forfaits (abonnement)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nom\": \"Abonnement 2x/semaine\",\r\n  \"description\": \"2 cours par semaine avec engagement 12 mois\",\r\n  \"prix\": 120,\r\n  \"prixUnitaire\": 15,\r\n  \"reductionPourcentage\": 0,\r\n  \"categorie\": \"abonnement\",\r\n  \"avecEngagement\": true,\r\n  \"engagement\": \"12_mois\",\r\n  \"typeEngagement\": \"engagement_12_mois\",\r\n  \"frequenceSeances\": \"hebdomadaire\",\r\n  \"dureeCours\": 90,\r\n  \"inclusions\": [\"8 cours/mois\", \"Accès prioritaire aux réservations\"],\r\n  \"exclusions\": [\"Cours privés\", \"EVJF\"],\r\n  \"estActif\": true,\r\n  \"estVisible\": true\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/forfaits",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "forfaits"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forfaits (EVJF)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nom\": \"EVJF Formule Premium avec buffet\",\r\n  \"description\": \"Séance EVJF 1h30 + buffet sucré + décorations\",\r\n  \"prix\": 300,\r\n  \"prixUnitaire\": 30,\r\n  \"reductionPourcentage\": 0,\r\n  \"categorie\": \"evjf\",\r\n  \"avecEngagement\": false,\r\n  \"engagement\": \"aucun\",\r\n  \"nombreParticipantsMin\": 6,\r\n  \"nombreParticipantsMax\": 12,\r\n  \"dureeCours\": 90,\r\n  \"typeEngagement\": \"sans_engagement\",\r\n  \"frequenceSeances\": \"ponctuel\",\r\n  \"inclusions\": [\"Cours privé 1h30\", \"Buffet sucré\", \"Décorations\", \"Photos souvenir\"],\r\n  \"exclusions\": [],\r\n  \"estActif\": true,\r\n  \"estVisible\": true,\r\n  \"notes\": \"Réservation minimum 10 jours avant\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/forfaits",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "forfaits"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "avis",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"coursId\": \"697b445c5e00e95b6962880a\",\r\n  \"note\": 5,\r\n  \"commentaire\": \"Cours excellent ! Coraline est une super prof, ambiance conviviale et exercices progressifs. Je recommande vivement ! 🔥\"\r\n}\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/avis",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "avis"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "media",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.environment.set(\"testMediaId\", pm.response.json().data._id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "fichier",
+                  "type": "file",
+                  "uuid": "23026de9-6a40-49e5-8a66-1d25433096c9",
+                  "src": "/C:/Users/pewan/Desktop/Programmation/DWWM2025/Projet Fil-Rouge/Maquette graphique/Illustrations/img_hero.jpg"
+                },
+                {
+                  "key": "titre",
+                  "value": "Test Image Pole Dance",
+                  "type": "text",
+                  "uuid": "bf977f89-994b-4232-ac70-6e748b9befeb"
+                },
+                {
+                  "key": "description",
+                  "value": "Image de test uploadée via Postman",
+                  "type": "text",
+                  "uuid": "ed791647-fd8c-493c-90f1-3c6ce22b7c37"
+                },
+                {
+                  "key": "type",
+                  "value": "image",
+                  "type": "text",
+                  "uuid": "7be76f2c-8a26-4b00-afd2-76dc62accf1e"
+                },
+                {
+                  "key": "categorie",
+                  "value": "galerie",
+                  "type": "text",
+                  "uuid": "e5ecf3ac-7819-4840-93d6-3b995288988d"
+                },
+                {
+                  "key": "tags",
+                  "value": "pole,test,demo",
+                  "type": "text",
+                  "uuid": "2132168f-e80d-4837-b402-334c2fc9b9dd"
+                },
+                {
+                  "key": "estPublic",
+                  "value": "true",
+                  "type": "text",
+                  "uuid": "0c64bb09-269e-40ed-92cf-8b6a37c94ef4"
+                },
+                {
+                  "key": "estALaUne",
+                  "value": "false",
+                  "type": "text",
+                  "uuid": "4f2b0d50-37e8-40ed-8c8b-6c4d26d22a24"
+                },
+                {
+                  "key": "altText",
+                  "value": "Photo pole dance test",
+                  "type": "text",
+                  "uuid": "923fdca1-f9fa-4f3e-8016-53af6c3f95a5"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/media",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "media"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "contact",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.environment.set(\"testContactId\", pm.response.json().data.id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nom\": \"Dupont\",\r\n  \"prenom\": \"Marie\",\r\n  \"email\": \"marie.dupont@test.com\",\r\n  \"telephone\": \"06 12 34 56 78\",\r\n  \"sujet\": \"Informations cours\",\r\n  \"message\": \"Bonjour, je souhaiterais avoir plus d'informations sur les cours collectifs pour débutants. Merci !\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/contact",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contact"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "parametres",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.environment.set(\"testParamCle\", pm.response.json().data.cle);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"cle\": \"delai_annulation_cours\",\r\n  \"valeur\": 24,\r\n  \"type\": \"nombre\",\r\n  \"categorie\": \"cours\",\r\n  \"description\": \"Délai minimum en heures pour annuler un cours\",\r\n  \"estModifiable\": true,\r\n  \"unite\": \"heures\",\r\n  \"valeurMin\": 1,\r\n  \"valeurMax\": 72\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/parametres",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parametres"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "PUT",
+      "item": [
+        {
+          "name": "auth/updateprofile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE2OTc0MCwiZXhwIjoxNzY5MjU2MTQwfQ.3jO_LvEp0WhMvtrIhZaqla7-IfVvyuAPb1a-E7kad1Q",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"prenom\": \"Marie\",\r\n  \"nom\": \"Dupont-Martin\",\r\n  \"telephone\": \"0698765432\",\r\n  \"niveauPole\": \"intermediaire\",\r\n  \"accepteContact\": true,\r\n  \"adresse\": {\r\n    \"rue\": \"10 rue des Lilas\",\r\n    \"codePostal\": \"59000\",\r\n    \"ville\": \"Lille\",\r\n    \"pays\": \"France\"\r\n  }\r\n}\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/auth/updateprofile",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "updateprofile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "auth/updatepassword",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE2OTM2OCwiZXhwIjoxNzY5MjU1NzY4fQ.BXb5-L62coK_Vfzn0xNO-UwNeWxFrgL03gKRDbeSKXo",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"ancienMotDePasse\": \"Test123!\",\r\n  \"nouveauMotDePasse\": \"NouveauTest456!\"\r\n}\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/auth/updatepassword",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "updatepassword"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "utilisateurs/:id/approve",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE2OTc0MCwiZXhwIjoxNzY5MjU2MTQwfQ.3jO_LvEp0WhMvtrIhZaqla7-IfVvyuAPb1a-E7kad1Q",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/utilisateurs/697361c8e932fb549d0303ab/approve",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "utilisateurs",
+                "697361c8e932fb549d0303ab",
+                "approve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "utilisateurs/:id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE2OTc0MCwiZXhwIjoxNzY5MjU2MTQwfQ.3jO_LvEp0WhMvtrIhZaqla7-IfVvyuAPb1a-E7kad1Q",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"prenom\": \"Marie\",\r\n  \"nom\": \"Dupont-Modifié\",\r\n  \"niveauPole\": \"avance\",\r\n  \"estActif\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/utilisateurs/697361c8e932fb549d0303ab/",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "utilisateurs",
+                "697361c8e932fb549d0303ab",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "utilisateurs/reject",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE2OTc0MCwiZXhwIjoxNzY5MjU2MTQwfQ.3jO_LvEp0WhMvtrIhZaqla7-IfVvyuAPb1a-E7kad1Q",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"raison\": \"Informations incomplètes\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/utilisateurs/697361c8e932fb549d0303ab/reject",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "utilisateurs",
+                "697361c8e932fb549d0303ab",
+                "reject"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "utilisateurs/id_marie/abonnement",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE3MDMwNSwiZXhwIjoxNzY5MjU2NzA1fQ.08-ncAiuF44ItJ2DjzZC_YFLHiK_hnJz0rJGd63e7_M",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"forfaitId\": \"6973643292303a3cf11e2623\",\r\n  \"dateDebut\": \"2026-01-01\",\r\n  \"montantMensuel\": 80,\r\n  \"frequenceSeances\": 1,\r\n  \"statutPaiement\": \"actif\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/utilisateurs/697361c8e932fb549d0303ab/abonnement",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "utilisateurs",
+                "697361c8e932fb549d0303ab",
+                "abonnement"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cours/cours_id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE3MTI1NSwiZXhwIjoxNzY5MjU3NjU1fQ.bKfZnST2_SvI4zgF62V4ZIHzXWWtHdk5rNguB_f3kxY",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"capaciteMax\": 12,\r\n  \"description\": \"Cours pour débutants - MODIFIÉ\",\r\n  \"reservationOuverte\": true\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/cours/{{cours_id}}",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cours",
+                "{{cours_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cours/cours_id/annuler",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE3MTI1NSwiZXhwIjoxNzY5MjU3NjU1fQ.bKfZnST2_SvI4zgF62V4ZIHzXWWtHdk5rNguB_f3kxY",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"raison\": \"Professeur malade\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/cours/{{cours_id}}/annuler",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cours",
+                "{{cours_id}}",
+                "annuler"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reservation/:id/annuler",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"raison\": \"Empêchement personnel\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/reservations/697b238c52bded8678e433cf/annuler",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "reservations",
+                "697b238c52bded8678e433cf",
+                "annuler"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reservations/:id/presence",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"present\": true\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/reservations/697b44725e00e95b69628817/presence",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "reservations",
+                "697b44725e00e95b69628817",
+                "presence"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reservations/:id/paiement",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"moyenPaiement\": \"cb\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/reservations/697b295138e4b33d864ab7f7/paiement",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "reservations",
+                "697b295138e4b33d864ab7f7",
+                "paiement"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forfaits/:id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"prix\": 195,\r\n  \"description\": \"10 séances valables 4 mois - PROMO\",\r\n  \"estVisible\": true\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/forfaits/697b36a0803aeb7150a478c8",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "forfaits",
+                "697b36a0803aeb7150a478c8"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forfaits/:id/desactiver",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/forfaits/697b36a0803aeb7150a478c8/desactiver",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "forfaits",
+                "697b36a0803aeb7150a478c8",
+                "desactiver"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "avis/:id/valider",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/avis/697b44d05e00e95b6962882e/valider",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "avis",
+                "697b44d05e00e95b6962882e",
+                "valider"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "avis/:id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"note\": 5,\r\n  \"commentaire\": \"EXCELLENT cours ! Je recommande à 100% (modifié)\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/avis/697b44d05e00e95b6962882e",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "avis",
+                "697b44d05e00e95b6962882e"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "avis/:id/rejeter",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"raison\": \"Contenu inapproprié et non conforme à la charte\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/avis/697b519a36e0d9acd21e2621/rejeter",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "avis",
+                "697b519a36e0d9acd21e2621",
+                "rejeter"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "media/:id media/une/ajouter",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/media/{{testMediaId}}/une/ajouter",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "media",
+                "{{testMediaId}}",
+                "une",
+                "ajouter"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "contact/:id contact/traiter",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"reponse\": \"Merci pour votre message. Nous vous répondrons par email dans les 48h.\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/contact/{{testContactId}}/traiter",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contact",
+                "{{testContactId}}",
+                "traiter"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "contact/:id contact/spam",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/contact/{{testContactId}}/spam",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "contact",
+                "{{testContactId}}",
+                "spam"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "notifications/:id notification/lire",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/{{testNotificationId}}/lire",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "notifications",
+                "{{testNotificationId}}",
+                "lire"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "notifications/:id notification/archiver",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/{{testNotificationId}}/archiver",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "notifications",
+                "{{testNotificationId}}",
+                "archiver"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "parametres/:id parametres",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"valeur\": 48\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/parametres/{{testParamCle}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "parametres",
+                "{{testParamCle}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "DELETE",
+      "item": [
+        {
+          "name": "utilisateurs/id_suppression",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE3MTI1NSwiZXhwIjoxNzY5MjU3NjU1fQ.bKfZnST2_SvI4zgF62V4ZIHzXWWtHdk5rNguB_f3kxY",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/utilisateurs/6973674d3ff51ce7ad1e2621",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "utilisateurs",
+                "6973674d3ff51ce7ad1e2621"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "cours/cours_id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTE3MTI1NSwiZXhwIjoxNzY5MjU3NjU1fQ.bKfZnST2_SvI4zgF62V4ZIHzXWWtHdk5rNguB_f3kxY",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "\r\n"
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/cours/697377fcac977c5bf24739aa",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "cours",
+                "697377fcac977c5bf24739aa"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forfaits",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/forfaits/697b375d803aeb7150a478e3",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "forfaits",
+                "697b375d803aeb7150a478e3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forfaits/:id (erreur obligatoire)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/forfaits/6973643292303a3cf11e2623",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "forfaits",
+                "6973643292303a3cf11e2623"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "avis/:id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTY3ODQwNiwiZXhwIjoxNzY5NzY0ODA2fQ.ZcG1qZPsBAPGKVMLnYJEKUhsHBlAR1y0HbHLhZpUYnA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/avis/697b519a36e0d9acd21e2621",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "avis",
+                "697b519a36e0d9acd21e2621"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "media/:id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzM2MWM4ZTkzMmZiNTQ5ZDAzMDNhYiIsImlhdCI6MTc2OTk2Mzc2NSwiZXhwIjoxNzcwMDUwMTY1fQ.wD0JFkkVEH2w4QO1WDOevkDBBf78ioTLBPs85DLZyAk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/media/{{testMediaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "media",
+                "{{testMediaId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseURL",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
