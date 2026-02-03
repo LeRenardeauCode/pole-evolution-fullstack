@@ -656,6 +656,19 @@ export const validerReservation = async (req, res) => {
       });
     }
 
+    if (reservation.typeReservation === "invite" && reservation.emailInvite) {
+      // TODO: Envoyer email avec Nodemailer
+      // En attendant Nodemailer, créer notification admin
+      await Notification.creer({
+        type: "systeme",
+        titre: `✉️ Email envoyé - ${reservation.nomEleve}`,
+        message: `Confirmation envoyée pour ${cours.nom} le ${cours.dateDebut.toLocaleDateString()} à ${reservation.emailInvite}`,
+        priorite: "normale",
+        reservationId: reservation._id,
+        coursId: cours._id,
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: "Réservation validée avec succès",
@@ -728,5 +741,44 @@ export const refuserReservation = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+export const validerEmailInvite = async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    const reservation = await Reservation.findOne({
+      tokenValidation: token,
+      estValideEmail: false,
+    }).populate("cours");
+
+    if (!reservation) {
+      return res.status(404).json({
+        success: false,
+        message: "Token invalide ou déjà utilisé",
+      });
+    }
+
+    reservation.estValideEmail = true;
+    reservation.dateValidationEmail = new Date();
+    await reservation.save();
+
+    await Notification.creer({
+      type: "nouvelle_reservation",
+      titre: "Réservation invité validée",
+      message: `${reservation.nomEleve} a validé son email pour ${reservation.cours.nom} le ${reservation.cours.dateDebut.toLocaleDateString()}`,
+      priorite: "haute",
+      reservationId: reservation._id,
+      coursId: reservation.cours._id,
+    });
+
+    res.status(200).json({
+      success: true,
+      message:
+        "Email validé avec succès. Votre réservation est en attente de validation par l'administrateur.",
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };

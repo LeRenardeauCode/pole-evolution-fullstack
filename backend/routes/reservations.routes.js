@@ -12,6 +12,7 @@ import {
   getStatsReservations,
   validerReservation,
   refuserReservation,
+  validerEmailInvite
 } from '../controllers/reservation.controller.js';
 import { protect, admin } from '../middleware/auth.middleware.js';
 
@@ -33,5 +34,6 @@ router.put('/:id/presence', admin, validerPresence);
 router.put('/:id/paiement', admin, marquerPaye);
 router.patch('/:id/valider', admin, validerReservation);
 router.patch('/:id/refuser', admin, refuserReservation);
+router.patch('/validate-email/:token', validerEmailInvite);
 
 export default router;
