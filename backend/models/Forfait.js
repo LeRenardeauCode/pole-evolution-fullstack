@@ -43,23 +43,25 @@ const forfaitSchema = new mongoose.Schema(
     categorie: {
       type: String,
       enum: {
-        values: ["collectif", "prive", "abonnement", "evjf", "prestation", "decouverte"],
-        message: "Catégorie doit être: collectif, prive, abonnement, evjf, prestation ou decouverte",
+        values: [
+          "collectif",
+          "prive",
+          "abonnement",
+          "evjf",
+          "prestation",
+          "decouverte",
+        ],
+        message:
+          "Catégorie doit être: collectif, prive, abonnement, evjf, prestation ou decouverte",
       },
       required: [true, "La catégorie est obligatoire"],
     },
 
-    avecEngagement: {
-      type: Boolean,
-      default: false,
-    },
-
-    engagement: {
+    typeEngagement: {
       type: String,
-      enum: ["aucun", "12_mois"],
-      default: "aucun",
+      enum: ["sans_engagement", "engagement_12_mois"],
+      default: "sans_engagement",
     },
-
     nombreSeances: {
       type: Number,
       required: false,
@@ -80,19 +82,6 @@ const forfaitSchema = new mongoose.Schema(
       max: [180, "Durée maximum 3 heures"],
     },
 
-    capaciteMin: {
-      type: Number,
-      required: false,
-      min: [1, "Minimum 1 personne"],
-    },
-
-    capaciteMax: {
-      type: Number,
-      required: false,
-      min: [1, "Minimum 1 personne"],
-      max: [12, "Maximum 12 personnes"],
-    },
-
     typeEngagement: {
       type: String,
       enum: {
@@ -100,6 +89,26 @@ const forfaitSchema = new mongoose.Schema(
         message: "Type d'engagement invalide",
       },
       default: "sans_engagement",
+    },
+
+    nombreSeancesParSemaine: {
+      type: Number,
+      required: false,
+      min: [1, "Minimum 1 séance par semaine"],
+      max: [7, "Maximum 7 séances par semaine"],
+    },
+
+    dureeEngagementMois: {
+      type: Number,
+      required: false,
+      default: 12,
+    },
+
+    validiteMois: {
+      type: Number,
+      required: false,
+      min: [1, "Minimum 1 mois"],
+      max: [12, "Maximum 12 mois"],
     },
 
     frequenceSeances: {
@@ -170,7 +179,6 @@ forfaitSchema.index({ nom: "text" }, { weights: { nom: 10 } });
 forfaitSchema.index({ categorie: 1, typeEngagement: 1 });
 forfaitSchema.index({ estActif: 1, estVisible: 1 });
 
-
 forfaitSchema.virtual("economie").get(function () {
   if (
     this.reductionPourcentage > 0 &&
@@ -193,21 +201,18 @@ forfaitSchema.virtual("labelAffichage").get(function () {
 forfaitSchema.set("toJSON", { virtuals: true });
 forfaitSchema.set("toObject", { virtuals: true });
 
-
 forfaitSchema.pre("save", function (next) {
-  // Calculer prix unitaire
   if (this.nombreSeances && this.nombreSeances > 0) {
-    this.prixUnitaire = Math.round((this.prix / this.nombreSeances) * 100) / 100;
+    this.prixUnitaire =
+      Math.round((this.prix / this.nombreSeances) * 100) / 100;
   }
 
-  // Validation dates
   if (this.dateDebut && this.dateFin && this.dateFin <= this.dateDebut) {
     return next(
       new Error("La date de fin doit être postérieure à la date de début"),
     );
   }
 
-  // Validation participants
   if (
     this.nombreParticipantsMin &&
     this.nombreParticipantsMax &&
@@ -216,6 +221,28 @@ forfaitSchema.pre("save", function (next) {
     return next(
       new Error("Le nombre max de participants doit être >= au minimum"),
     );
+  }
+
+  if (this.categorie === "abonnement") {
+    if (!this.nombreSeancesParSemaine) {
+      return next(
+        new Error("nombreSeancesParSemaine requis pour les abonnements"),
+      );
+    }
+    if (this.typeEngagement !== "engagement_12_mois") {
+      return next(
+        new Error("Les abonnements nécessitent un engagement 12 mois"),
+      );
+    }
+    if (!this.dureeEngagementMois) {
+      this.dureeEngagementMois = 12;
+    }
+  }
+
+  if (this.categorie === "collectif" && this.nombreSeances > 1) {
+    if (!this.validiteMois) {
+      return next(new Error("validiteMois requis pour les carnets de cours"));
+    }
   }
 
   next();

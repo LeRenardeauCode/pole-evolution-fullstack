@@ -19,7 +19,7 @@ const coursSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: {
-      values: ['collectif', 'prive', 'evjf', 'prestation'],
+      values: ['collectif', 'prive', 'evjf', 'prestation', "decouverte"],
       message: 'Type doit être: collectif, prive, evjf ou prestation'
     },
     required: [true, 'Le type de cours est obligatoire'],

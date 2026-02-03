@@ -61,10 +61,10 @@ const importData = async () => {
     const createdForfaits = await Forfait.insertMany(forfaits);
     console.log(`   ✅ ${createdForfaits.length} forfaits créés`.green);
 
-    // 3. Cours (avec instructeur = admin)
+    // 3. Cours (avec professeur = admin)
     const coursWithInstructor = cours.map(c => ({
       ...c,
-      instructeur: createdUsers[0]._id
+      professeur: createdUsers[0]._id
     }));
     const createdCours = await Cours.insertMany(coursWithInstructor);
     console.log(`   ✅ ${createdCours.length} cours créés`.green);
@@ -104,8 +104,10 @@ const importData = async () => {
         note: 5,
         titre: 'Cours exceptionnel !',
         commentaire: 'Instructrice très pédagogue, ambiance au top ! Je recommande à 100%.',
-        estModere: true,
-        estApprouve: true
+        statut: 'approuve',
+        estVerifie: true,
+        estPublic: true,
+        datePublication: new Date()
       },
       {
         utilisateur: createdUsers[2]._id,
@@ -113,8 +115,10 @@ const importData = async () => {
         note: 4,
         titre: 'Très bon cours',
         commentaire: 'Parfait pour les débutants, j\'ai adoré découvrir cette discipline.',
-        estModere: true,
-        estApprouve: true
+        statut: 'approuve',
+        estVerifie: true,
+        estPublic: true,
+        datePublication: new Date()
       },
       {
         utilisateur: createdUsers[3]._id,
@@ -122,8 +126,10 @@ const importData = async () => {
         note: 5,
         titre: 'Super progression',
         commentaire: 'Le niveau intermédiaire permet vraiment de progresser rapidement.',
-        estModere: true,
-        estApprouve: true
+        statut: 'approuve',
+        estVerifie: true,
+        estPublic: true,
+        datePublication: new Date()
       }
     ];
     const createdAvis = await Avis.insertMany(avis);

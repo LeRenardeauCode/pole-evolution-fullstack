@@ -184,6 +184,17 @@ const mediaSchema = new mongoose.Schema(
       type: Date,
       required: false,
     },
+
+    cloudinaryId: {
+      type: String,
+      required: false,
+      select: false,
+    },
+
+    cloudinaryPublicId: {
+      type: String,
+      required: false,
+    },
   },
   {
     timestamps: true,
@@ -222,11 +233,13 @@ mediaSchema.virtual("dimensionsFormatees").get(function () {
 mediaSchema.set("toJSON", { virtuals: true });
 mediaSchema.set("toObject", { virtuals: true });
 
-mediaSchema.pre('save', async function(next) {
+mediaSchema.pre("save", async function (next) {
   if (this.isNew) {
-    const utilisateur = await mongoose.model('Utilisateur').findById(this.uploadePar);
-    if (!utilisateur || utilisateur.role !== 'admin') {
-      throw new Error('Seuls les administrateurs peuvent ajouter des médias');
+    const utilisateur = await mongoose
+      .model("Utilisateur")
+      .findById(this.uploadePar);
+    if (!utilisateur || utilisateur.role !== "admin") {
+      throw new Error("Seuls les administrateurs peuvent ajouter des médias");
     }
   }
   next();

@@ -34,9 +34,11 @@ export const errorHandler = (err, req, res, next) => {
     };
   }
 
+  const debugInfo = process.env.NODE_ENV === "development" ? { stack: err.stack } : {};
+
   res.status(error.statusCode || 500).json({
     success: false,
     message: error.message || "Erreur serveur interne",
-    ...err(process.env.NODE_ENV === "development" && { stack: err.stack }),
+    ...debugInfo,
   });
 };

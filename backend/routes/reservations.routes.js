@@ -9,7 +9,9 @@ import {
   marquerPaye,
   getReservationsCours,
   getAllReservations,
-  getStatsReservations
+  getStatsReservations,
+  validerReservation,
+  refuserReservation,
 } from '../controllers/reservation.controller.js';
 import { protect, admin } from '../middleware/auth.middleware.js';
 
@@ -29,5 +31,7 @@ router.get('/admin/stats', admin, getStatsReservations);
 router.get('/cours/:coursId', admin, getReservationsCours);
 router.put('/:id/presence', admin, validerPresence);
 router.put('/:id/paiement', admin, marquerPaye);
+router.patch('/:id/valider', admin, validerReservation);
+router.patch('/:id/refuser', admin, refuserReservation);
 
 export default router;

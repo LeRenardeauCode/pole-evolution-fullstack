@@ -146,11 +146,11 @@ export const createAvis = async (req, res) => {
     });
 
     await Notification.creer({
-      type: "nouvel_avis",
+      type: "nouvel_avis_admin",
       titre: "Nouvel avis à valider",
       message: `${req.user.prenom} ${req.user.nom} a laissé un avis (${note}/5) pour "${cours.nom}"`,
       priorite: "basse",
-      estGlobal: true,
+      utilisateurId: null,
     });
 
     const avisComplet = await Avis.findById(avis._id)

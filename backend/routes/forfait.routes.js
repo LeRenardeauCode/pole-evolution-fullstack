@@ -7,7 +7,8 @@ import {
   updateForfait,
   deleteForfait,
   desactiverForfait,
-  getStatsForfaits
+  getStatsForfaits,
+  getAbonnements
 } from '../controllers/forfait.controller.js';
 import { protect, admin } from '../middleware/auth.middleware.js';
 
@@ -16,6 +17,7 @@ const router = express.Router();
 router.get('/', getForfaits);
 router.get('/categorie/:categorie', getForfaitsByCategorie);
 router.get('/:id', getForfait);
+router.get('/forfaits/abonnements', getAbonnements);
 
 router.get('/admin/stats', protect, admin, getStatsForfaits);
 router.post('/', protect, admin, createForfait);

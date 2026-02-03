@@ -32,6 +32,19 @@ export const getForfaits = async (req, res) => {
   }
 };
 
+export const getAbonnements = async (req, res) => {
+  try {
+    const abonnements = await Forfait.find({ 
+      categorie: 'abonnement',
+      estActif: true, 
+      estVisible: true 
+    });
+    res.json(abonnements);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const getForfait = async (req, res) => {
   try {
     const forfait = await Forfait.findById(req.params.id);
