@@ -1,0 +1,109 @@
+const cours = [
+  {
+    nom: 'Pole Dance Débutant - Lundi 18h',
+    description: 'Cours d\'initiation au pole dance pour découvrir les bases en toute sécurité. Apprentissage des spins, grips et premières figures au sol.',
+    type: 'collectif',           // ← AJOUTÉ (obligatoire)
+    niveau: 'debutant',
+    dateDebut: new Date('2026-02-10T18:00:00'),
+    dateFin: new Date('2026-02-10T19:30:00'),
+    duree: 90,
+    capaciteMax: 12,             // ← CHANGÉ de placesTotales
+    placesReservees: 0,          // ← CHANGÉ de placesDisponibles
+    statut: 'planifie',
+    estVisible: true,            // ← CHANGÉ de estPublic
+    reservationOuverte: true,
+    notes: 'Aucun prérequis. Matériel fourni : Tapis, Serviettes, Magnésie'
+  },
+  {
+    nom: 'Pole Dance Débutant - Mercredi 19h',
+    description: 'Cours d\'initiation au pole dance pour découvrir les bases en toute sécurité. Session du mercredi soir.',
+    type: 'collectif',
+    niveau: 'debutant',
+    dateDebut: new Date('2026-02-12T19:00:00'),
+    dateFin: new Date('2026-02-12T20:30:00'),
+    duree: 90,
+    capaciteMax: 12,
+    placesReservees: 0,
+    statut: 'planifie',
+    estVisible: true,
+    reservationOuverte: true,
+    notes: 'Aucun prérequis. Matériel fourni : Tapis, Serviettes, Magnésie'
+  },
+  {
+    nom: 'Pole Dance Intermédiaire - Mardi 19h',
+    description: 'Perfectionnez vos figures et gagnez en fluidité. Travail des inversions, combos et chorégraphies.',
+    type: 'collectif',
+    niveau: 'intermediaire',
+    dateDebut: new Date('2026-02-11T19:00:00'),
+    dateFin: new Date('2026-02-11T20:30:00'),
+    duree: 90,
+    capaciteMax: 10,
+    placesReservees: 0,
+    statut: 'planifie',
+    estVisible: true,
+    reservationOuverte: true,
+    notes: 'Prérequis : 6 mois de pratique minimum. Matériel fourni : Tapis, Serviettes, Magnésie'
+  },
+  {
+    nom: 'Pole Dance Intermédiaire - Jeudi 20h',
+    description: 'Niveau intermédiaire avec focus sur les transitions et le flow.',
+    type: 'collectif',
+    niveau: 'intermediaire',
+    dateDebut: new Date('2026-02-13T20:00:00'),
+    dateFin: new Date('2026-02-13T21:30:00'),
+    duree: 90,
+    capaciteMax: 10,
+    placesReservees: 0,
+    statut: 'planifie',
+    estVisible: true,
+    reservationOuverte: true,
+    notes: 'Prérequis : 6 mois de pratique minimum. Matériel fourni : Tapis, Serviettes, Magnésie'
+  },
+  {
+    nom: 'Exotic Pole Dance - Vendredi 19h',
+    description: 'Travail de la sensualité et de la féminité avec talons. Chorégraphies sexy et fluides.',
+    type: 'collectif',
+    niveau: 'intermediaire',
+    dateDebut: new Date('2026-02-14T19:00:00'),
+    dateFin: new Date('2026-02-14T20:30:00'),
+    duree: 90,
+    capaciteMax: 10,
+    placesReservees: 0,
+    statut: 'planifie',
+    estVisible: true,
+    reservationOuverte: true,
+    notes: 'Prérequis : Bases pole dance. Apporter ses talons. Matériel fourni : Tapis, Serviettes'
+  },
+  {
+    nom: 'Exotic Pole Dance - Samedi 16h',
+    description: 'Session exotic du samedi après-midi. Ambiance chill et sensuelle.',
+    type: 'collectif',
+    niveau: 'intermediaire',
+    dateDebut: new Date('2026-02-15T16:00:00'),
+    dateFin: new Date('2026-02-15T17:30:00'),
+    duree: 90,
+    capaciteMax: 10,
+    placesReservees: 0,
+    statut: 'planifie',
+    estVisible: true,
+    reservationOuverte: true,
+    notes: 'Prérequis : Bases pole dance. Apporter ses talons. Matériel fourni : Tapis, Serviettes'
+  },
+  {
+    nom: 'Pole Dance Initiation - Cours Découverte',
+    description: 'Cours découverte d\'1h30 pour essayer le pole dance sans engagement.',
+    type: 'collectif',
+    niveau: 'initiation',
+    dateDebut: new Date('2026-02-08T14:00:00'),
+    dateFin: new Date('2026-02-08T15:30:00'),
+    duree: 90,
+    capaciteMax: 8,
+    placesReservees: 0,
+    statut: 'planifie',
+    estVisible: true,
+    reservationOuverte: true,
+    notes: 'Parfait pour découvrir ! Aucun prérequis. Tout le matériel fourni.'
+  }
+];
+
+export default cours;
