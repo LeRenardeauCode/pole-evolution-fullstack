@@ -2,6 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import connectDB from './config/database.js';
 import { errorHandler } from './middleware/errorHandler.middleware.js';
 
@@ -16,6 +18,9 @@ import mediaRoutes from './routes/media.routes.js';
 import contactRoutes from './routes/contact.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
 import parametreRoutes from './routes/parametre.routes.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -34,7 +39,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-app.use('/uploads', express.static('uploads'));
+app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/', (req, res) => {
   res.json({ 

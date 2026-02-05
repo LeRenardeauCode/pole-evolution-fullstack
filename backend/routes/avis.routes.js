@@ -1,4 +1,3 @@
-// Backend/routes/avis.routes.js
 import express from 'express';
 import {
   getAvisPublics,
@@ -16,7 +15,7 @@ import { protect, admin } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
-router.get('/', getAvisPublics);
+router.get('/publics', getAvisPublics);
 router.get('/cours/:coursId', getAvisCours);
 
 router.get('/mes-avis', protect, getMesAvis);

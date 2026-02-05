@@ -114,6 +114,87 @@ const parametres = [
     categorie: 'tarifs',
     description: 'Prix d\'un cours à l\'unité en euros',
     estModifiable: true
+  },
+
+  {
+    cle: 'footer_adresse_ligne1',
+    valeur: '1412 Rue Joffre',
+    type: 'texte',
+    categorie: 'footer',
+    description: 'Adresse ligne 1',
+    estModifiable: true
+  },
+  {
+    cle: 'footer_adresse_ligne2',
+    valeur: '62680 RUMAUCOURT',
+    type: 'texte',
+    categorie: 'footer',
+    description: 'Code postal et ville',
+    estModifiable: true
+  },
+  {
+    cle: 'footer_description',
+    valeur: 'Rumaucourt est un petit village à 3 minutes de Baralle/Marquion.',
+    type: 'texte',
+    categorie: 'footer',
+    description: 'Description de l\'emplacement',
+    estModifiable: true
+  },
+  {
+    cle: 'footer_distance_cambrai',
+    valeur: '25 minutes de Cambrai',
+    type: 'texte',
+    categorie: 'footer',
+    description: 'Distance depuis Cambrai',
+    estModifiable: true
+  },
+  {
+    cle: 'footer_distance_douai',
+    valeur: '25 minutes de Douai',
+    type: 'texte',
+    categorie: 'footer',
+    description: 'Distance depuis Douai',
+    estModifiable: true
+  },
+  {
+    cle: 'footer_distance_arras',
+    valeur: 'Environ 30 minutes d\'Arras',
+    type: 'texte',
+    categorie: 'footer',
+    description: 'Distance depuis Arras',
+    estModifiable: true
+  },
+  {
+    cle: 'footer_facebook_url',
+    valeur: 'https://facebook.com/poleevolution',
+    type: 'texte',
+    categorie: 'footer',
+    description: 'Lien Facebook',
+    estModifiable: true
+  },
+  {
+    cle: 'footer_instagram_url',
+    valeur: 'https://instagram.com/poleevolution',
+    type: 'texte',
+    categorie: 'footer',
+    description: 'Lien Instagram',
+    estModifiable: true
+  },
+  {
+    cle: 'footer_tiktok_url',
+    valeur: 'https://tiktok.com/@poleevolution',
+    type: 'texte',
+    categorie: 'footer',
+    description: 'Lien TikTok',
+    estModifiable: true
+  },
+  {
+    cle: 'footer_map_image',
+    valeur: '/uploads/google_map.png',
+    type: 'texte',
+    categorie: 'footer',
+    description: 'Image de la carte Google Maps',
+    estModifiable: true
   }
 ];
 
