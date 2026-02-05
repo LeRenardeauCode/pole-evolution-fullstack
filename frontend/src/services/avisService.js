@@ -1,30 +1,55 @@
-import api from './api';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const avisService = {
-  getPublics: async (limit = 20) => {
-    const response = await api.get(`/avis/publics?limit=${limit}`);
+  getAvisVisibles: async (limit = 3) => {
+    const response = await axios.get(`${API_URL}/avis/publics`, {
+      params: { limit }
+    });
+    return response.data.data;
+  },
+
+  getAvisCours: async (coursId) => {
+    const response = await axios.get(`${API_URL}/avis/cours/${coursId}`);
     return response.data;
   },
 
-  create: async (avisData) => {
-    const response = await api.post('/avis', avisData);
+  createAvis: async (avisData, token) => {
+    const response = await axios.post(
+      `${API_URL}/avis`,
+      avisData,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response.data;
   },
 
-  approve: async (id) => {
-    const response = await api.patch(`/avis/${id}/approuver`);
+  getMesAvis: async (token) => {
+    const response = await axios.get(`${API_URL}/avis/mes-avis`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return response.data;
   },
 
-  reject: async (id, raison) => {
-    const response = await api.patch(`/avis/${id}/rejeter`, { raison });
+  updateAvis: async (avisId, avisData, token) => {
+    const response = await axios.put(
+      `${API_URL}/avis/${avisId}`,
+      avisData,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response.data;
   },
 
-  getEnAttente: async () => {
-    const response = await api.get('/avis/en-attente');
+  deleteAvis: async (avisId, token) => {
+    const response = await axios.delete(`${API_URL}/avis/${avisId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return response.data;
-  }
+  },
 };
 
 export default avisService;
