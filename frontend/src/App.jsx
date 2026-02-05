@@ -11,6 +11,7 @@ import ProtectedRoute from "@components/common/ProtectedRoute";
 
 import Accueil from "@pages/Accueil/Accueil";
 import Cours from "@pages/Cours";
+import Planning from "@pages/Planning"
 
 
 import theme from '@utils/theme';
@@ -30,7 +31,7 @@ function App() {
                 {/* Routes publiques */}
                 <Route path="/" element={<Accueil />} />
                 <Route path="/cours" element={<Cours />} />
-                <Route path="/planning" element={<div>Page Planning</div>} />
+                <Route path="/planning" element={<Planning/>} />
                 <Route path="/tarifs" element={<div>Page Tarifs</div>} />
                 <Route path="/galerie" element={<div>Page Galerie</div>} />
                 <Route path="/contact" element={<div>Page Contact</div>} />

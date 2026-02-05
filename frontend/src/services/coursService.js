@@ -1,35 +1,42 @@
 import api from './api';
 
-const coursService = {
-  getAll: async () => {
-    const response = await api.get('/cours');
-    return response.data;
-  },
+export const getCoursPlanningSemaine = async (date, filters = {}) => {
+  try {
+    const params = new URLSearchParams();
+    
+    params.append('date', date.toISOString());
+    
+    if (filters.type && filters.type !== 'tous') {
+      params.append('type', filters.type);
+    }
+    if (filters.niveau && filters.niveau !== 'tous') {
+      params.append('niveau', filters.niveau);
+    }
+    if (filters.placesDisponibles) {
+      params.append('placesDisponibles', 'true');
+    }
 
-  getCoursFuturs: async () => {
-    const response = await api.get('/cours/futurs');
-    return response.data;
-  },
-
-  getById: async (id) => {
-    const response = await api.get(`/cours/${id}`);
-    return response.data;
-  },
-
-  create: async (coursData) => {
-    const response = await api.post('/cours', coursData);
-    return response.data;
-  },
-
-  update: async (id, coursData) => {
-    const response = await api.put(`/cours/${id}`, coursData);
-    return response.data;
-  },
-
-  delete: async (id) => {
-    const response = await api.delete(`/cours/${id}`);
-    return response.data;
+    const response = await api.get(`/cours/semaine?${params.toString()}`);
+    return response.data.data;
+  } catch (error) {
+    throw error.response?.data || error;
   }
 };
 
-export default coursService;
+export const getCoursByDate = async (date) => {
+  try {
+    const response = await api.get(`/cours/jour/${date.toISOString().split('T')[0]}`);
+    return response.data.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+export const getCoursDetails = async (coursId) => {
+  try {
+    const response = await api.get(`/cours/${coursId}`);
+    return response.data.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};

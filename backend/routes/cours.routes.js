@@ -10,7 +10,7 @@ import {
   deleteCours,
   annulerCours,
   genererCoursRecurrents,
-  getStatsCours
+  getStatsCours,
 } from '../controllers/cours.controller.js';
 import { protect, admin } from '../middleware/auth.middleware.js';
 

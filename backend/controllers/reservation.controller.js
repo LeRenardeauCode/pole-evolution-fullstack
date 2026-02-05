@@ -266,11 +266,11 @@ export const createReservationInvite = async (req, res) => {
       });
     }
 
-    if (!["evjf", "prestation"].includes(cours.type)) {
+    if (!["collectif", "decouverte"].includes(cours.type)) {
       return res.status(400).json({
         success: false,
         message:
-          "Les réservations invités sont uniquement autorisées pour les EVJF et prestations",
+          "Les réservations invités sont uniquement autorisées pour les cours collectifs et découverte",
       });
     }
 

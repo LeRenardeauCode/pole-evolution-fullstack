@@ -1,7 +1,6 @@
-// Imports des illustrations
-import poleSportIllustration from '../../assets/images/img_cours.jpg';
-import poleChoreographieeIllustration from '../../assets/images/img_collectif.jpg';
-import poleExotiqueIllustration from '../../assets/images/img_exotic.jpg';
+import poleSportIllustration from '../assets/images/img_cours.jpg';
+import poleChoreographieeIllustration from '../assets/images/img_collectif.jpg';
+import poleExotiqueIllustration from '../assets/images/img_exotic.jpg';
 
 // Ajouter les vraies photos Pole Dance
 
