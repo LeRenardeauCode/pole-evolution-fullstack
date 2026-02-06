@@ -26,7 +26,7 @@ const HeroSection = () => {
           left: 0,
           width: { xs: '100%', md: '50%' }, 
           height: '100%',
-          backgroundImage: 'url(/assets/images/hero-overlay-image.jpg)', // VOTRE IMAGE QUI COUPE
+          backgroundImage: 'url(/assets/images/hero-overlay-image.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'right center',
           zIndex: 1,
@@ -58,6 +58,7 @@ const HeroSection = () => {
             sx={{
               mb: 2,
               opacity: 0.9,
+              color: (theme) => theme.palette.navy.main,
             }}
           >
             "Laisse tes rêves prendre de la hauteur"

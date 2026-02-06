@@ -109,15 +109,15 @@ const Footer = () => {
                 boxShadow: 4,
               }}
             >
-              <Box
-                component="img"
-                src={footerData.mapImage}
-                alt="Carte Rumaucourt"
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2551.990939667303!2d3.058239577007313!3d50.23607417155207!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c2b76852303691%3A0xd36cbdcffbec3944!2sp%C3%B4le%20evolution!5e0!3m2!1sfr!2sfr!4v1770367224217!5m2!1sfr!2sfr"
+                width="700px"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Localisation Pole Evolution"
               />
             </Box>
           </Grid>

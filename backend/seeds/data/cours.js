@@ -2,15 +2,15 @@ const cours = [
   {
     nom: 'Pole Dance Débutant - Lundi 18h',
     description: 'Cours d\'initiation au pole dance pour découvrir les bases en toute sécurité. Apprentissage des spins, grips et premières figures au sol.',
-    type: 'collectif',           // ← AJOUTÉ (obligatoire)
+    type: 'collectif',          
     niveau: 'debutant',
     dateDebut: new Date('2026-02-10T18:00:00'),
     dateFin: new Date('2026-02-10T19:30:00'),
     duree: 90,
-    capaciteMax: 12,             // ← CHANGÉ de placesTotales
-    placesReservees: 0,          // ← CHANGÉ de placesDisponibles
+    capaciteMax: 12,            
+    placesReservees: 0,          
     statut: 'planifie',
-    estVisible: true,            // ← CHANGÉ de estPublic
+    estVisible: true,            
     reservationOuverte: true,
     notes: 'Aucun prérequis. Matériel fourni : Tapis, Serviettes, Magnésie'
   },
