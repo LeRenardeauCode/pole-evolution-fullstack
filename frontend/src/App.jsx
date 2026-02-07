@@ -13,6 +13,7 @@ import Accueil from "@pages/Accueil/Accueil";
 import Cours from "@pages/Cours";
 import Planning from "@pages/Planning"
 import Tarifs from "@pages/Tarifs"
+import ShowAnimations from "@/pages/ShowAnimations";
 
 
 import theme from '@utils/theme';
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/cours" element={<Cours />} />
                 <Route path="/planning" element={<Planning/>} />
                 <Route path="/tarifs" element={<Tarifs/>} />
+                <Route path="/show-animations" element={<ShowAnimations/>} />
                 <Route path="/galerie" element={<div>Page Galerie</div>} />
                 <Route path="/contact" element={<div>Page Contact</div>} />
                 <Route path="/login" element={<div>Page Login</div>} />
