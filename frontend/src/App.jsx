@@ -14,6 +14,8 @@ import Cours from "@pages/Cours";
 import Planning from "@pages/Planning"
 import Tarifs from "@pages/Tarifs"
 import ShowAnimations from "@/pages/ShowAnimations";
+import Galerie from '@pages/Galerie';
+
 
 
 import theme from '@utils/theme';
@@ -36,7 +38,7 @@ function App() {
                 <Route path="/planning" element={<Planning/>} />
                 <Route path="/tarifs" element={<Tarifs/>} />
                 <Route path="/show-animations" element={<ShowAnimations/>} />
-                <Route path="/galerie" element={<div>Page Galerie</div>} />
+                <Route path="/galerie" element={<Galerie />} />
                 <Route path="/contact" element={<div>Page Contact</div>} />
                 <Route path="/login" element={<div>Page Login</div>} />
                 <Route path="/register" element={<div>Page Register</div>} />

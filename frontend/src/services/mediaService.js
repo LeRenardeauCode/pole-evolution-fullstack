@@ -7,6 +7,11 @@ const mediaService = {
     return response.data;
   },
 
+  getMediasALaUne: async (limit = 4) => {
+    const response = await api.get(`/media/une?limit=${limit}`);
+    return response.data;
+  },
+
   upload: async (formData) => {
     const response = await api.post('/media', formData, {
       headers: {
@@ -22,7 +27,7 @@ const mediaService = {
   },
 
   mettreALaUne: async (id) => {
-    const response = await api.patch(`/media/${id}/mettre-a-la-une`);
+    const response = await api.patch(`/media/${id}/une/ajouter`);
     return response.data;
   }
 };
