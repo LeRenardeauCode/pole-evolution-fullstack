@@ -57,11 +57,6 @@ const forfaitSchema = new mongoose.Schema(
       required: [true, "La catégorie est obligatoire"],
     },
 
-    typeEngagement: {
-      type: String,
-      enum: ["sans_engagement", "engagement_12_mois"],
-      default: "sans_engagement",
-    },
     nombreSeances: {
       type: Number,
       required: false,
@@ -85,10 +80,10 @@ const forfaitSchema = new mongoose.Schema(
     typeEngagement: {
       type: String,
       enum: {
-        values: ["sans_engagement", "engagement_12_mois"],
+        values: ["sansengagement", "engagement12mois"],
         message: "Type d'engagement invalide",
       },
-      default: "sans_engagement",
+      default: "sansengagement",
     },
 
     nombreSeancesParSemaine: {
@@ -140,13 +135,13 @@ const forfaitSchema = new mongoose.Schema(
     },
 
     inclusions: {
-      type: [String],
-      default: [],
+      type: String,
+      default: "",
     },
 
     exclusions: {
-      type: [String],
-      default: [],
+      type: String,
+      default: "",
     },
 
     estActif: {
@@ -229,7 +224,7 @@ forfaitSchema.pre("save", function (next) {
         new Error("nombreSeancesParSemaine requis pour les abonnements"),
       );
     }
-    if (this.typeEngagement !== "engagement_12_mois") {
+    if (this.typeEngagement !== "engagement12mois") {
       return next(
         new Error("Les abonnements nécessitent un engagement 12 mois"),
       );

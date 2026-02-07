@@ -14,15 +14,17 @@ import { protect, admin } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
-router.get('/', getForfaits);
+
+router.get('/abonnements', getAbonnements);
 router.get('/categorie/:categorie', getForfaitsByCategorie);
-router.get('/:id', getForfait);
-router.get('/forfaits/abonnements', getAbonnements);
 
 router.get('/admin/stats', protect, admin, getStatsForfaits);
 router.post('/', protect, admin, createForfait);
-router.put('/:id', protect, admin, updateForfait);
 router.put('/:id/desactiver', protect, admin, desactiverForfait);
+router.put('/:id', protect, admin, updateForfait);
 router.delete('/:id', protect, admin, deleteForfait);
+
+router.get('/', getForfaits);
+router.get('/:id', getForfait);
 
 export default router;

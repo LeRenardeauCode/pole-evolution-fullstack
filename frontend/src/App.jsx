@@ -12,6 +12,7 @@ import ProtectedRoute from "@components/common/ProtectedRoute";
 import Accueil from "@pages/Accueil/Accueil";
 import Cours from "@pages/Cours";
 import Planning from "@pages/Planning"
+import Tarifs from "@pages/Tarifs"
 
 
 import theme from '@utils/theme';
@@ -32,7 +33,7 @@ function App() {
                 <Route path="/" element={<Accueil />} />
                 <Route path="/cours" element={<Cours />} />
                 <Route path="/planning" element={<Planning/>} />
-                <Route path="/tarifs" element={<div>Page Tarifs</div>} />
+                <Route path="/tarifs" element={<Tarifs/>} />
                 <Route path="/galerie" element={<div>Page Galerie</div>} />
                 <Route path="/contact" element={<div>Page Contact</div>} />
                 <Route path="/login" element={<div>Page Login</div>} />

@@ -1,129 +1,130 @@
 const forfaits = [
+  // ==================== SANS ENGAGEMENT ====================
+  
+  // Cours découverte
   {
-    nom: 'Carte 10 Cours',
-    description: 'Forfait de 10 cours valable 3 mois. Idéal pour pratiquer régulièrement à votre rythme.',
-    type: 'carte',
-    categorie: 'collectif',
-    nombreSeances: 10,
-    prix: 220,
-    dureeValiditeMois: 3,
-    avantages: [
-      'Valable sur tous les cours collectifs',
-      'Transférable à un proche',
-      '3 mois de validité',
-      'Possibilité de reporter un cours (48h avant)'
-    ],
+    nom: 'Cours Découverte',
+    description: 'Cours découverte pour essayer la pole dance. Idéal pour débuter !',
+    categorie: 'decouverte',
+    typeEngagement: 'sansengagement',
+    nombreSeances: 1,
+    prix: 15,
+    validiteMois: 1,
     estActif: true,
-    estPopulaire: true,
-    categoriesIncluses: ['pole_dance', 'stretching', 'fitness', 'exotic']
+    estVisible: true
   },
-  {
-    nom: 'Abonnement Mensuel Illimité',
-    description: 'Accès illimité à tous les cours pendant 1 mois. Le meilleur rapport qualité-prix pour progresser rapidement !',
-    type: 'abonnement',
-    categorie: 'abonnement',
-    nombreSeances: 200,
-    prix: 150,
-    dureeValiditeMois: 1,
-    avantages: [
-      'Cours illimités tous niveaux',
-      'Priorité sur les réservations',
-      'Accès events privés et soirées pole',
-      '1 cours particulier offert',
-      'Remise 10% sur le merchandising'
-    ],
-    estActif: true,
-    estPopulaire: true,
-    categoriesIncluses: ['pole_dance', 'stretching', 'fitness', 'exotic']
-  },
+  
+  // Cours collectifs sans engagement
   {
     nom: 'Cours à l\'Unité',
     description: 'Payez uniquement le cours que vous prenez. Sans engagement.',
-    type: 'unitaire',
     categorie: 'collectif',
+    typeEngagement: 'sansengagement',
     nombreSeances: 1,
     prix: 25,
-    dureeValiditeMois: null,
-    avantages: [
-      'Aucun engagement',
-      'Idéal pour découvrir',
-      'Valable 1 mois après achat'
-    ],
     estActif: true,
-    estPopulaire: false,
-    categoriesIncluses: ['pole_dance', 'stretching', 'fitness', 'exotic']
+    estVisible: true
   },
   {
-    nom: 'Forfait Découverte',
-    description: 'Forfait découverte de 3 cours valable 1 mois. Parfait pour essayer !',
-    type: 'carte',
-    categorie: 'decouverte',
-    nombreSeances: 3,
-    prix: 65,
-    dureeValiditeMois: 1,
-    avantages: [
-      'Idéal pour débuter',
-      '1 mois de validité',
-      'Cours d\'essai offert'
-    ],
+    nom: 'Carte 5 Cours',
+    description: 'Forfait de 5 cours valable 2 mois. Soit 23€ par cours.',
+    categorie: 'collectif',
+    typeEngagement: 'sansengagement',
+    nombreSeances: 5,
+    prix: 115,
+    validiteMois: 2,
     estActif: true,
-    estPopulaire: true,
-    categoriesIncluses: ['pole_dance', 'stretching', 'fitness']
+    estVisible: true
   },
+  {
+    nom: 'Carte 10 Cours',
+    description: 'Forfait de 10 cours valable 4 mois. Soit 22€ par cours.',
+    categorie: 'collectif',
+    typeEngagement: 'sansengagement',
+    nombreSeances: 10,
+    prix: 220,
+    validiteMois: 4,
+    estActif: true,
+    estVisible: true,
+    estPopulaire: true
+  },
+  {
+    nom: 'Carte 20 Cours',
+    description: 'Forfait de 20 cours valable 6 mois. Soit 20,50€ par cours.',
+    categorie: 'collectif',
+    typeEngagement: 'sansengagement',
+    nombreSeances: 20,
+    prix: 410,
+    validiteMois: 6,
+    estActif: true,
+    estVisible: true
+  },
+  
+  // Cours privé
   {
     nom: 'Cours Privé - 1h',
     description: 'Cours particulier personnalisé d\'une heure avec instructeur dédié.',
-    type: 'unitaire',
     categorie: 'prive',
+    typeEngagement: 'sansengagement',
     nombreSeances: 1,
     prix: 80,
-    dureeValiditeMois: 2,
-    avantages: [
-      'Cours 100% personnalisé',
-      'Instructeur dédié',
-      'Horaires flexibles',
-      'Progression rapide'
-    ],
     estActif: true,
-    estPopulaire: false,
-    categoriesIncluses: ['pole_dance', 'stretching', 'exotic']
+    estVisible: true
   },
+  
+  // EVJF
   {
     nom: 'EVJF - Enterrement de Vie de Jeune Fille',
-    description: 'Séance pole dance spéciale EVJF pour un moment inoubliable entre amies !',
-    type: 'prestation',
+    description: 'Séance pole dance spéciale EVJF pour un moment inoubliable entre amies ! (6 à 12 personnes)',
     categorie: 'evjf',
+    typeEngagement: 'sansengagement',
     nombreSeances: 1,
     prix: 350,
-    dureeValiditeMois: null,
-    avantages: [
-      'Séance privée groupe (max 12 personnes)',
-      'Ambiance festive garantie',
-      'Champagne offert',
-      'Photos souvenirs',
-      'Playlist personnalisée'
-    ],
+    nombreParticipantsMin: 6,
+    nombreParticipantsMax: 12,
+    inclusions: 'Séance privée groupe, Champagne offert, Photos souvenirs, Playlist personnalisée',
     estActif: true,
-    estPopulaire: true,
-    categoriesIncluses: ['exotic', 'pole_dance']
+    estVisible: true,
+    estPopulaire: true
   },
+  
+  // Prestation
   {
     nom: 'Prestation Événementielle',
     description: 'Animation pole dance pour vos événements privés ou professionnels.',
-    type: 'prestation',
     categorie: 'prestation',
+    typeEngagement: 'sansengagement',
     nombreSeances: 1,
     prix: 500,
-    dureeValiditeMois: null,
-    avantages: [
-      'Animation professionnelle',
-      'Démonstration spectaculaire',
-      'Initiation possible',
-      'Déplacement inclus (50km)'
-    ],
+    inclusions: 'Animation professionnelle, Démonstration spectaculaire, Initiation possible, Déplacement inclus (50km)',
     estActif: true,
-    estPopulaire: false,
-    categoriesIncluses: ['pole_dance', 'exotic']
+    estVisible: true
+  },
+  
+  // ==================== AVEC ENGAGEMENT 12 MOIS ====================
+  
+  {
+    nom: 'Abonnement 1 Cours/Semaine',
+    description: 'Abonnement 1 cours par semaine avec engagement 12 mois.',
+    categorie: 'abonnement',
+    typeEngagement: 'engagement12mois',
+    nombreSeancesParSemaine: 1,
+    prix: 80,
+    dureeEngagementMois: 12,
+    estActif: true,
+    estVisible: true
+  },
+  {
+    nom: 'Abonnement 2 Cours/Semaine',
+    description: 'Abonnement 2 cours par semaine avec engagement 12 mois. Le meilleur rapport qualité-prix !',
+    categorie: 'abonnement',
+    typeEngagement: 'engagement12mois',
+    nombreSeancesParSemaine: 2,
+    prix: 120,
+    dureeEngagementMois: 12,
+    estActif: true,
+    estVisible: true,
+    estPopulaire: true
   }
 ];
 
