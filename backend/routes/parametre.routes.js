@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get('/', getParametres);
 router.get('/categorie/:categorie', getParametresByCategorie);
-router.get('/cle/:cle', protect, admin, getParametre);
+router.get('/:cle', getParametre);
 
 router.post('/', protect, admin, createParametre);
 router.put('/:cle', protect, admin, updateParametre);

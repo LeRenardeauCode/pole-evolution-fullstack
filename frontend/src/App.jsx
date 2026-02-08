@@ -15,6 +15,8 @@ import Planning from "@pages/Planning"
 import Tarifs from "@pages/Tarifs"
 import ShowAnimations from "@/pages/ShowAnimations";
 import Galerie from '@pages/Galerie';
+import APropos from '@pages/APropos';
+import Contact from '@pages/Contact';
 
 
 
@@ -39,7 +41,8 @@ function App() {
                 <Route path="/tarifs" element={<Tarifs/>} />
                 <Route path="/show-animations" element={<ShowAnimations/>} />
                 <Route path="/galerie" element={<Galerie />} />
-                <Route path="/contact" element={<div>Page Contact</div>} />
+                <Route path="/a-propos" element={<APropos />} />
+                <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<div>Page Login</div>} />
                 <Route path="/register" element={<div>Page Register</div>} />
                 

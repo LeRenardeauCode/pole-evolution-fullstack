@@ -1,18 +1,30 @@
-import api from './api';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const contactService = {
   sendMessage: async (messageData) => {
-    const response = await api.post('/contact', messageData);
+    const response = await axios.post(`${API_URL}/contact`, messageData);
     return response.data;
   },
 
-  getMessagesNonTraites: async () => {
-    const response = await api.get('/contact/non-traites');
+  getMessages: async (filters = {}) => {
+    const response = await axios.get(`${API_URL}/contact`, { params: filters });
     return response.data;
   },
 
-  marquerTraite: async (id, reponse) => {
-    const response = await api.patch(`/contact/${id}/traiter`, { reponse });
+  markAsProcessed: async (id, reponse = '') => {
+    const response = await axios.patch(`${API_URL}/contact/${id}/traite`, { reponse });
+    return response.data;
+  },
+
+  markAsSpam: async (id) => {
+    const response = await axios.patch(`${API_URL}/contact/${id}/spam`);
+    return response.data;
+  },
+
+  getStats: async () => {
+    const response = await axios.get(`${API_URL}/contact/stats`);
     return response.data;
   }
 };

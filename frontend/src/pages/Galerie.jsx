@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Container, Typography, IconButton, Grid, CircularProgress, Alert } from '@mui/material';
+import { Box, Container, Typography, IconButton, CircularProgress, Alert } from '@mui/material';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useGallery } from '@hooks/useGallery';
 
@@ -51,24 +51,124 @@ const Galerie = () => {
   }
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        background: 'linear-gradient(180deg, #100249 0%, #5E1A5C 100%)',
-        pt: { xs: 10, md: 12 },
-        pb: 8,
-      }}
-    >
-      <Container maxWidth="xl">
-        <Box sx={{ mb: 10 }}>
+    <Box>
+      <Box
+        sx={{
+          position: 'relative',
+          minHeight: '100vh',
+          background: 'linear-gradient(180deg, #574A78 0%, #AB326F 36%, #574A78 63%, #5E1A5C 100%)',
+          pt: { xs: 12, md: 14 },
+          pb: { xs: 8, md: 12 },
+          overflow: 'hidden',
+        }}
+      >
+        <Container maxWidth="xl">
+          {featuredMedias.length > 0 && (
+            <Box
+              sx={{
+                position: 'relative',
+                width: '100%',
+                maxWidth: 1200,
+                mx: 'auto',
+                height: { xs: 500, md: 700 },
+              }}
+            >
+              {featuredMedias[0] && (
+                <Box
+                  component="img"
+                  src={featuredMedias[0].url}
+                  alt={featuredMedias[0].titre || 'Photo 1'}
+                  sx={{
+                    position: 'absolute',
+                    top: { xs: 0, md: 20 },
+                    left: { xs: 0, md: '5%' },
+                    width: { xs: '45%', md: '35%' },
+                    height: { xs: 180, md: 280 },
+                    objectFit: 'cover',
+                    borderRadius: 2,
+                    border: '3px solid rgba(255, 255, 255, 0.15)',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+                    zIndex: 1,
+                  }}
+                />
+              )}
+
+              {featuredMedias[1] && (
+                <Box
+                  component="img"
+                  src={featuredMedias[1].url}
+                  alt={featuredMedias[1].titre || 'Photo 2'}
+                  sx={{
+                    position: 'absolute',
+                    top: { xs: 20, md: 60 },
+                    right: { xs: 0, md: '8%' },
+                    width: { xs: '50%', md: '40%' },
+                    height: { xs: 200, md: 320 },
+                    objectFit: 'cover',
+                    borderRadius: 2,
+                    border: '3px solid rgba(255, 255, 255, 0.15)',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+                    zIndex: 2,
+                  }}
+                />
+              )}
+
+              {featuredMedias[2] && (
+                <Box
+                  component="img"
+                  src={featuredMedias[2].url}
+                  alt={featuredMedias[2].titre || 'Photo 3'}
+                  sx={{
+                    position: 'absolute',
+                    bottom: { xs: 120, md: 150 },
+                    left: { xs: '15%', md: '20%' },
+                    width: { xs: '40%', md: '32%' },
+                    height: { xs: 180, md: 260 },
+                    objectFit: 'cover',
+                    borderRadius: 2,
+                    border: '3px solid rgba(255, 255, 255, 0.15)',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+                    zIndex: 1,
+                  }}
+                />
+              )}
+
+              {featuredMedias[3] && (
+                <Box
+                  component="img"
+                  src={featuredMedias[3].url}
+                  alt={featuredMedias[3].titre || 'Photo 4'}
+                  sx={{
+                    position: 'absolute',
+                    bottom: { xs: 100, md: 120 },
+                    right: { xs: '5%', md: '12%' },
+                    width: { xs: '45%', md: '38%' },
+                    height: { xs: 200, md: 300 },
+                    objectFit: 'cover',
+                    borderRadius: 2,
+                    border: '3px solid rgba(255, 255, 255, 0.15)',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+                    zIndex: 2,
+                  }}
+                />
+              )}
+            </Box>
+          )}
+
           <Typography
-            variant="h2"
+            variant="h1"
             sx={{
-              fontSize: { xs: '2.5rem', md: '3.5rem' },
-              fontWeight: 700,
+              position: 'absolute',
+              bottom: { xs: 40, md: 80 },
+              left: '50%',
+              transform: 'translateX(-50%)',
+              fontSize: { xs: '2.5rem', md: '4rem', lg: '5rem' },
+              fontWeight: 800,
               color: 'white',
               textAlign: 'center',
-              mb: 6,
+              textShadow: '0 4px 20px rgba(0, 0, 0, 0.7)',
+              zIndex: 10,
+              whiteSpace: 'nowrap',
             }}
           >
             GALERIE{' '}
@@ -76,46 +176,18 @@ const Galerie = () => {
               PHOTO
             </Box>
           </Typography>
+        </Container>
+      </Box>
 
-          <Grid container spacing={3}>
-            {featuredMedias.slice(0, 4).map((media, index) => (
-              <Grid item xs={12} sm={6} md={3} key={media._id || index}>
-                <Box
-                  sx={{
-                    position: 'relative',
-                    paddingTop: '100%',
-                    overflow: 'hidden',
-                    borderRadius: 2,
-                    border: '2px solid rgba(255, 255, 255, 0.1)',
-                    transition: 'all 0.4s ease',
-                    '&:hover': {
-                      transform: 'scale(1.05)',
-                      border: '2px solid',
-                      borderColor: 'primary.main',
-                      boxShadow: '0 8px 24px rgba(255, 25, 102, 0.4)',
-                    },
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={media.url}
-                    alt={media.titre || `Photo ${index + 1}`}
-                    sx={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                    }}
-                  />
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-
-        <Box>
+      <Box
+        sx={{
+          minHeight: '100vh',
+          background: 'linear-gradient(180deg, #141414 0%, #100249 100%)',
+          pt: { xs: 8, md: 12 },
+          pb: { xs: 8, md: 12 },
+        }}
+      >
+        <Container maxWidth="xl">
           <Typography
             variant="h3"
             sx={{
@@ -123,7 +195,7 @@ const Galerie = () => {
               fontWeight: 700,
               color: 'white',
               textAlign: 'center',
-              mb: 4,
+              mb: 6,
             }}
           >
             DÉFILEZ les{' '}
@@ -133,12 +205,12 @@ const Galerie = () => {
           </Typography>
 
           {medias.length > 0 ? (
-            <Box sx={{ position: 'relative', maxWidth: 900, mx: 'auto' }}>
+            <Box sx={{ position: 'relative', maxWidth: 1000, mx: 'auto', px: { xs: 8, md: 12 } }}>
               <IconButton
                 onClick={handlePrevSlide}
                 sx={{
                   position: 'absolute',
-                  left: { xs: -20, md: -60 },
+                  left: { xs: -10, md: 0 },
                   top: '50%',
                   transform: 'translateY(-50%)',
                   zIndex: 10,
@@ -209,7 +281,7 @@ const Galerie = () => {
                 onClick={handleNextSlide}
                 sx={{
                   position: 'absolute',
-                  right: { xs: -20, md: -60 },
+                  right: { xs: -10, md: 0 },
                   top: '50%',
                   transform: 'translateY(-50%)',
                   zIndex: 10,
@@ -266,8 +338,8 @@ const Galerie = () => {
               Aucune photo disponible pour le moment.
             </Typography>
           )}
-        </Box>
-      </Container>
+        </Container>
+      </Box>
     </Box>
   );
 };
