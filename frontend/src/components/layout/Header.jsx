@@ -164,14 +164,11 @@ const Header = () => {
                     <MenuItem disabled sx={{ fontWeight: 600 }}>
                       {user?.prenom} {user?.nom}
                     </MenuItem>
-                    <MenuItem onClick={() => { handleMenuClose(); navigate('/dashboard'); }}>
-                      Mon tableau de bord
+                    <MenuItem onClick={() => { handleMenuClose(); navigate('/mon-compte'); }}>
+                      Mon compte
                     </MenuItem>
                     <MenuItem onClick={() => { handleMenuClose(); navigate('/mes-reservations'); }}>
                       Mes réservations
-                    </MenuItem>
-                    <MenuItem onClick={() => { handleMenuClose(); navigate('/mon-profil'); }}>
-                      Mon profil
                     </MenuItem>
                     {isAdmin && (
                       <MenuItem onClick={() => { handleMenuClose(); navigate('/admin'); }}>
@@ -187,7 +184,7 @@ const Header = () => {
                 <Button
                   variant="contained"
                   component={Link}
-                  to="/login"
+                  to="/connexion"
                   startIcon={<FaUser />}
                   sx={{
                     ml: 2,
@@ -254,8 +251,8 @@ const Header = () => {
           {isAuthenticated ? (
             <>
               <ListItem disablePadding>
-                <ListItemButton component={Link} to="/dashboard" onClick={handleDrawerToggle} sx={{ color: 'white' }}>
-                  <ListItemText primary="Mon tableau de bord" />
+                <ListItemButton component={Link} to="/mon-compte" onClick={handleDrawerToggle} sx={{ color: 'white' }}>
+                  <ListItemText primary="Mon compte" />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
@@ -266,7 +263,7 @@ const Header = () => {
             </>
           ) : (
             <ListItem disablePadding>
-              <ListItemButton component={Link} to="/login" onClick={handleDrawerToggle} sx={{ color: 'white' }}>
+              <ListItemButton component={Link} to="/connexion" onClick={handleDrawerToggle} sx={{ color: 'white' }}>
                 <ListItemText primary="Connexion" />
               </ListItemButton>
             </ListItem>

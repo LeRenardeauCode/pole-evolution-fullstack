@@ -5,7 +5,7 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   const { user, isAdmin } = useAuth();
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/connexion" replace />;
   }
 
   if (adminOnly && !isAdmin) {

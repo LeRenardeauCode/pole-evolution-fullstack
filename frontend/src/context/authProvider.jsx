@@ -1,15 +1,19 @@
-import { useState } from 'react';
-import AuthContext from './authContext';
+// src/context/AuthProvider.jsx
+import { useState, useEffect } from 'react';
+import AuthContext from './AuthContext';
 import authService from '@services/authService';
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
     const currentUser = authService.getCurrentUser();
     if (currentUser && authService.isTokenValid()) {
-      return currentUser;
+      setUser(currentUser);
     }
-    return null;
-  });
+    setLoading(false);
+  }, []);
 
   const login = async (email, password) => {
     const data = await authService.login(email, password);
@@ -28,11 +32,18 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+  };
+
   const value = {
     user,
+    loading,
     login,
     register,
     logout,
+    updateUser,
     isAuthenticated: !!user,
     isAdmin: user?.role === 'admin'
   };

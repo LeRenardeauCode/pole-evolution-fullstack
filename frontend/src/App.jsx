@@ -17,6 +17,9 @@ import ShowAnimations from "@/pages/ShowAnimations";
 import Galerie from '@pages/Galerie';
 import APropos from '@pages/APropos';
 import Contact from '@pages/Contact';
+import Login from '@pages/Login';
+import Register from '@pages/Register';
+import MonCompte from '@pages/MonCompte';
 
 
 
@@ -43,15 +46,15 @@ function App() {
                 <Route path="/galerie" element={<Galerie />} />
                 <Route path="/a-propos" element={<APropos />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/login" element={<div>Page Login</div>} />
-                <Route path="/register" element={<div>Page Register</div>} />
+                <Route path="/connexion" element={<Login />} />
+                <Route path="/register" element={<Register />} />
                 
                 {/* Routes protégées */}
                 <Route 
-                  path="/profile" 
+                  path="/mon-compte" 
                   element={
                     <ProtectedRoute>
-                      <div>Page Profile (protégée)</div>
+                      <MonCompte />
                     </ProtectedRoute>
                   } 
                 />

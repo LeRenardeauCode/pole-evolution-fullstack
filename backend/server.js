@@ -6,6 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './config/database.js';
 import { errorHandler } from './middleware/errorHandler.middleware.js';
+import fs from 'fs';
 
 
 import authRoutes from './routes/auth.routes.js';
@@ -39,12 +40,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/', (req, res) => {
   res.json({ 
     message: 'API Pole Evolution - Serveur actif',
-    version: '1.0.0'
+    version: '1.0.0',
+    uploadsPath: path.join(__dirname, 'uploads')
   });
 });
 
@@ -63,5 +65,5 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Serveur démarré sur le port ${PORT}`);
+  console.log(`✅ Serveur démarré sur le port ${PORT}`);
 });

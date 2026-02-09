@@ -15,7 +15,7 @@ import {
   reordonnerMedias
 } from '../controllers/media.controller.js';
 import { protect, admin } from '../middleware/auth.middleware.js';
-import { upload } from '../middleware/upload.middleware.js';
+import { uploadMedia } from '../middleware/upload.middleware.js';
 
 const router = express.Router();
 
@@ -27,8 +27,8 @@ router.get('/', protect, admin, getMedias);
 router.get('/admin/stats', protect, admin, getStatsMedias);
 router.get('/:id', protect, admin, getMedia);
 
-router.post('/', protect, admin, upload.single('fichier'), createMedia);
-router.put('/:id', protect, admin, upload.single('fichier'), updateMedia);
+router.post('/', uploadMedia.single('fichier'), createMedia);
+router.put('/:id', uploadMedia.single('fichier'), updateMedia);
 router.delete('/:id', protect, admin, deleteMedia);
 
 router.put('/:id/une/ajouter', protect, admin, mettreALaUne);

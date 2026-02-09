@@ -1,9 +1,13 @@
 import multer from 'multer';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const storage = multer.memoryStorage();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const fileFilter = (req, file, cb) => {
+const storageMemory = multer.memoryStorage();
+
+const fileFilterMedia = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|webp|mp4|mov|avi|mkv/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = allowedTypes.test(file.mimetype);
@@ -15,10 +19,45 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-export const upload = multer({
-  storage,
-  fileFilter,
+export const uploadMedia = multer({
+  storage: storageMemory,
+  fileFilter: fileFilterMedia,
   limits: {
-    fileSize: 50 * 1024 * 1024
+    fileSize: 50 * 1024 * 1024,
   }
 });
+
+const storageDisk = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/profiles/');
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = `${req.user.id}-${Date.now()}${path.extname(file.originalname)}`;
+
+    console.log('📁 Nom fichier généré:', uniqueName);
+    
+    cb(null, uniqueName);
+  },
+});
+
+const fileFilterProfile = (req, file, cb) => {
+  const allowedTypes = /jpeg|jpg|png|gif|webp/;
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = allowedTypes.test(file.mimetype);
+
+  if (extname && mimetype) {
+    cb(null, true);
+  } else {
+    cb(new Error('Seules les images sont autorisées pour la photo de profil (JPG, PNG, GIF, WEBP)'));
+  }
+};
+
+export const uploadProfile = multer({
+  storage: storageDisk,
+  fileFilter: fileFilterProfile,
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  }
+});
+
+export default uploadMedia;

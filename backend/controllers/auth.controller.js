@@ -1,5 +1,11 @@
 import jwt from "jsonwebtoken";
 import { Utilisateur } from "../models/index.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const register = async (req, res) => {
   try {
@@ -145,11 +151,32 @@ export const login = async (req, res) => {
 
 export const getMe = async (req, res) => {
   try {
-    const user = await Utilisateur.findById(req.user._id);
+    const user = await Utilisateur.findById(req.user.id).select("-motDePasse");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Utilisateur non trouvé",
+      });
+    }
 
     res.status(200).json({
       success: true,
-      user,
+      user: {
+        id: user._id,
+        prenom: user.prenom,
+        nom: user.nom,
+        email: user.email,
+        telephone: user.telephone,
+        dateNaissance: user.dateNaissance,
+        niveauPole: user.niveauPole,
+        accepteContact: user.accepteContact,
+        role: user.role,
+        statutValidationAdmin: user.statutValidationAdmin,
+        photoUrl: user.photoUrl,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
     });
   } catch (error) {
     res.status(500).json({
@@ -190,6 +217,64 @@ export const updateProfile = async (req, res) => {
       success: true,
       message: "Profil mis à jour avec succès.",
       user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const uploadPhoto = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Aucun fichier fourni",
+      });
+    }
+
+    const user = await Utilisateur.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Utilisateur non trouvé",
+      });
+    }
+
+    const photoUrl = `${req.protocol}://${req.get('host')}/uploads/profiles/${req.file.filename}`;
+
+    if (user.photoUrl) {
+      const oldPhotoPath = path.join(
+        __dirname,
+        "..",
+        "uploads",
+        "profiles",
+        path.basename(user.photoUrl),
+      );
+
+      if (fs.existsSync(oldPhotoPath)) {
+        fs.unlinkSync(oldPhotoPath);
+      }
+    }
+
+    user.photoUrl = photoUrl;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Photo de profil mise à jour avec succès",
+      user: {
+        id: user._id,
+        prenom: user.prenom,
+        nom: user.nom,
+        email: user.email,
+        role: user.role,
+        photoUrl: user.photoUrl,
+        niveauPole: user.niveauPole,
+      },
     });
   } catch (error) {
     res.status(500).json({

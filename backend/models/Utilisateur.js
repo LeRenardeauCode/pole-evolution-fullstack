@@ -87,6 +87,11 @@ const utilisateurSchema = new mongoose.Schema(
       default: "jamais",
     },
 
+    photoUrl: {
+      type: String,
+      default: null,
+    },
+
     accepteContact: {
       type: Boolean,
       required: [true, "Vous devez indiquer votre préférence de contact"],
