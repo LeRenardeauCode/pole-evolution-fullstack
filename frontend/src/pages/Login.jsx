@@ -92,7 +92,7 @@ const Login = () => {
               width: '100%',
               backgroundColor: 'navy.main',
               borderRadius: 0,
-              p: { xs: 4, md: 6 },
+              p: { xs: 4, md: 2 },
               border: 1,
               borderColor: 'white',
             }}

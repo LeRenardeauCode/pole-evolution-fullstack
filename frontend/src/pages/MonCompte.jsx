@@ -27,6 +27,7 @@ const MonCompte = () => {
 
   const [nextReservation, setNextReservation] = useState(null);
   const [profilePhoto, setProfilePhoto] = useState(null);
+  const [photoKey, setPhotoKey] = useState(0);
 
   const [formData, setFormData] = useState({
     prenom: "",
@@ -42,11 +43,15 @@ const MonCompte = () => {
   });
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchData = async () => {
       try {
         setLoading(true);
 
         const profileResponse = await authService.getProfile();
+
+        if (!isMounted) return;
 
         setFormData({
           prenom: profileResponse.user.prenom || "",
@@ -60,8 +65,12 @@ const MonCompte = () => {
           setProfilePhoto(profileResponse.user.photoUrl);
         }
 
-        const reservationsResponse =
-          await reservationService.getMesReservations({ statut: "confirmee" });
+        const reservationsResponse = await reservationService.getMesReservations({ 
+          statut: "confirmee" 
+        });
+
+        if (!isMounted) return;
+
         const reservations = reservationsResponse.data || [];
 
         const futureReservations = reservations
@@ -76,14 +85,22 @@ const MonCompte = () => {
 
         setError(null);
       } catch (err) {
-        console.error("Erreur chargement données:", err);
-        setError("Erreur lors du chargement des données");
+        if (isMounted) {
+          console.error("Erreur chargement données:", err);
+          setError("Erreur lors du chargement des données");
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchData();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleChange = (e) => {
@@ -119,14 +136,13 @@ const MonCompte = () => {
     }
 
     try {
-      setLoading(true);
-
       const formDataPhoto = new FormData();
       formDataPhoto.append("photo", file);
 
       const response = await authService.uploadPhoto(formDataPhoto);
 
       setProfilePhoto(response.user.photoUrl);
+      setPhotoKey(prev => prev + 1);
 
       const currentUser = JSON.parse(localStorage.getItem("user"));
       currentUser.photoUrl = response.user.photoUrl;
@@ -140,8 +156,6 @@ const MonCompte = () => {
         err.response?.data?.message || "Erreur lors de l'upload de la photo",
       );
       setSuccess(null);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -238,6 +252,7 @@ const MonCompte = () => {
           display: { xs: "none", md: "block" },
         }}
       />
+
 
       <Box
         sx={{
@@ -339,7 +354,7 @@ const MonCompte = () => {
                       cursor: "pointer",
                       textDecoration: "underline",
                       "&:hover": {
-                        color: "navy.main",
+                        color: "white",
                       },
                     }}
                   >
@@ -356,7 +371,8 @@ const MonCompte = () => {
                 </Box>
 
                 <Avatar
-                  src={profilePhoto}
+                  src={profilePhoto || undefined}
+                  key={photoKey}
                   sx={{
                     width: 80,
                     height: 80,
@@ -377,7 +393,7 @@ const MonCompte = () => {
                 value={formData.prenom}
                 onChange={handleChange}
                 variant="filled"
-                sx={{ mb: 3, bgcolor: "white"}}
+                sx={{ mb: 3, bgcolor: "white" }}
               />
 
               <TextField
@@ -387,7 +403,7 @@ const MonCompte = () => {
                 value={formData.nom}
                 onChange={handleChange}
                 variant="filled"
-                sx={{ mb: 3, bgcolor: "white"}}
+                sx={{ mb: 3, bgcolor: "white" }}
               />
 
               <TextField
@@ -397,7 +413,7 @@ const MonCompte = () => {
                 value={formData.email}
                 disabled
                 variant="outlined"
-                helperText="[Mail apparent en lecture seule]"
+                helperText="Mail en lecture seule"
                 sx={{ mb: 3 }}
               />
 
@@ -433,6 +449,7 @@ const MonCompte = () => {
                 sx={{
                   backgroundColor: "navy.main",
                   border: 1,
+                  borderColor: "primary.main",
                   color: "white",
                   py: 1.5,
                   fontSize: "1rem",
@@ -489,6 +506,7 @@ const MonCompte = () => {
                     backgroundColor: "navy.main",
                     color: "white",
                     border: 1,
+                    borderColor: "primary.main",
                     py: 1.5,
                     fontSize: "1rem",
                     fontWeight: 600,
@@ -555,132 +573,168 @@ const MonCompte = () => {
                 </Typography>
               </Box>
 
-              {nextReservation ? (
-                <>
-                  <TextField
-                    fullWidth
-                    label="Prochain cours à venir"
-                    value={
-                      nextReservation.cours.nom ||
-                      "[Ici, la prochaine réservation faite]"
-                    }
-                    disabled
-                    variant="outlined"
-                    sx={{ mb: 3 }}
-                  />
+              <TextField
+                fullWidth
+                label="Prochain cours à venir"
+                value={nextReservation?.cours?.nom || "Aucune réservation à venir"}
+                InputProps={{ readOnly: true }}
+                variant="outlined"
+                sx={{ 
+                  mb: 3,
+                  '& .MuiOutlinedInput-root': {
+                    color: 'white',
+                    '& fieldset': {
+                      borderColor: 'rgba(255, 255, 255, 0.3)',
+                    },
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'rgba(255, 255, 255, 0.7)',
+                  },
+                }}
+              />
 
-                  <TextField
-                    fullWidth
-                    label="Date / Heure"
-                    value={
-                      nextReservation.cours.dateDebut
-                        ? `${new Date(nextReservation.cours.dateDebut).toLocaleDateString("fr-FR")} - ${new Date(
-                            nextReservation.cours.dateDebut,
-                          ).toLocaleTimeString("fr-FR", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}`
-                        : "[La date et l'heure de la prochaine réservation]"
-                    }
-                    disabled
-                    variant="outlined"
-                    sx={{ mb: 3 }}
-                  />
+              <TextField
+                fullWidth
+                label="Date / Heure"
+                value={
+                  nextReservation?.cours?.dateDebut
+                    ? new Date(nextReservation.cours.dateDebut).toLocaleString('fr-FR', {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })
+                    : "Aucune réservation à venir"
+                }
+                InputProps={{ readOnly: true }}
+                variant="outlined"
+                sx={{ 
+                  mb: 3,
+                  '& .MuiOutlinedInput-root': {
+                    color: 'white',
+                    '& fieldset': {
+                      borderColor: 'rgba(255, 255, 255, 0.3)',
+                    },
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'rgba(255, 255, 255, 0.7)',
+                  },
+                }}
+              />
 
-                  <TextField
-                    fullWidth
-                    label="Type de cours"
-                    value={
-                      nextReservation.cours.type ||
-                      "[Chorée / Cours / Pole exotique]"
-                    }
-                    disabled
-                    variant="outlined"
-                    sx={{ mb: 3 }}
-                  />
+              <TextField
+                fullWidth
+                label="Type de cours"
+                value={
+                  nextReservation?.cours?.type
+                    ? `${nextReservation.cours.type} - Niveau ${nextReservation.cours.niveau || ''}`
+                    : "Aucune réservation à venir"
+                }
+                InputProps={{ readOnly: true }}
+                variant="outlined"
+                sx={{ 
+                  mb: 3,
+                  '& .MuiOutlinedInput-root': {
+                    color: 'white',
+                    '& fieldset': {
+                      borderColor: 'rgba(255, 255, 255, 0.3)',
+                    },
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'rgba(255, 255, 255, 0.7)',
+                  },
+                }}
+              />
 
-                  <TextField
-                    fullWidth
-                    label="Statut de réservation"
-                    value={
-                      nextReservation.statut === "confirmee"
-                        ? "Confirmée"
-                        : nextReservation.statut === "enattente"
-                          ? "En attente"
-                          : "Autre"
-                    }
-                    disabled
-                    variant="outlined"
-                    sx={{ mb: 4 }}
-                  />
+              <TextField
+                fullWidth
+                label="Statut de réservation"
+                value={
+                  nextReservation?.statut === "confirmee"
+                    ? "Confirmée"
+                    : nextReservation?.statut === "enattente"
+                    ? "En attente"
+                    : "Aucune réservation à venir"
+                }
+                InputProps={{ readOnly: true }}
+                variant="outlined"
+                sx={{ 
+                  mb: 4,
+                  '& .MuiOutlinedInput-root': {
+                    color: 'white',
+                    '& fieldset': {
+                      borderColor: 'rgba(255, 255, 255, 0.3)',
+                    },
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'rgba(255, 255, 255, 0.7)',
+                  },
+                }}
+              />
 
-                  <Button
-                    onClick={() => navigate("/planning")}
-                    fullWidth
-                    sx={{
-                      backgroundColor: "navy.main",
-                      color: "white",
-                      py: 1.5,
-                      fontSize: "1rem",
-                      fontWeight: 600,
-                      textTransform: "uppercase",
-                      mb: 2,
-                      "&:hover": {
-                        background:
-                          "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                      },
-                    }}
-                  >
-                    Voir planning
-                  </Button>
+              <Button
+                onClick={() => navigate("/planning")}
+                fullWidth
+                sx={{
+                  backgroundColor: "navy.main",
+                  color: "white",
+                  border: 1,
+                  borderColor: "primary.main",
+                  py: 1.5,
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                  textTransform: "uppercase",
+                  mb: 2,
+                  "&:hover": {
+                    background: "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
+                  },
+                }}
+              >
+                Voir planning
+              </Button>
 
-                  <Button
-                    onClick={handleCancelReservation}
-                    fullWidth
-                    sx={{
-                      backgroundColor: "transparent",
-                      border: "2px solid",
-                      borderColor: "primary.main",
-                      color: "primary.main",
-                      py: 1.5,
-                      fontSize: "1rem",
-                      fontWeight: 600,
-                      textTransform: "uppercase",
-                      mb: 2,
-                      "&:hover": {
-                        background:
-                          "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                        color: "white",
-                        borderColor: "transparent",
-                      },
-                    }}
-                  >
-                    Annuler une réservation*
-                  </Button>
+              <Button
+                onClick={handleCancelReservation}
+                disabled={!nextReservation}
+                fullWidth
+                sx={{
+                  backgroundColor: "transparent",
+                  border: "2px solid",
+                  borderColor: nextReservation ? "primary.main" : "rgba(255, 255, 255, 0.3)",
+                  color: nextReservation ? "primary.main" : "rgba(255, 255, 255, 0.5)",
+                  py: 1.5,
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                  textTransform: "uppercase",
+                  mb: 2,
+                  "&:hover": nextReservation ? {
+                    background: "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
+                    color: "white",
+                    borderColor: "transparent",
+                  } : {},
+                }}
+              >
+                Annuler une réservation*
+              </Button>
 
-                  <Typography
-                    component="a"
-                    href="/conditions-annulation"
-                    sx={{
-                      fontSize: "0.9rem",
-                      color: "primary.main",
-                      textDecoration: "underline",
-                      display: "block",
-                      textAlign: "center",
-                      cursor: "pointer",
-                      "&:hover": {
-                        color: "navy.main",
-                      },
-                    }}
-                  >
-                    Voir conditions d'annulations
-                  </Typography>
-                </>
-              ) : (
-                <Typography sx={{ color: "#666", textAlign: "center", py: 4 }}>
-                  Aucune réservation à venir
-                </Typography>
-              )}
+              <Typography
+                sx={{
+                  fontSize: "0.85rem",
+                  color: "primary.main",
+                  textAlign: "center",
+                  fontStyle: "italic",
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                  "&:hover": {
+                    color: "white",
+                  },
+                }}
+                onClick={() => window.open('/reglement-interieur', '_blank')}
+              >
+                *Voir conditions d'annulations
+              </Typography>
             </Box>
           </Box>
         </Container>

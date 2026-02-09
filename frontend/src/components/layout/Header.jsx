@@ -25,9 +25,37 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [scrolled, setScrolled] = useState(false);
+  const [profilePhoto, setProfilePhoto] = useState(null);
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    if (user?.photoUrl) {
+      setProfilePhoto(user.photoUrl);
+    }
+
+    const handleStorageChange = () => {
+      const updatedUser = JSON.parse(localStorage.getItem('user'));
+      if (updatedUser?.photoUrl) {
+        setProfilePhoto(updatedUser?.photoUrl);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    const interval = setInterval(() => {
+      const currentUser = JSON.parse(localStorage.getItem('user'));
+      if (currentUser?.photoUrl && currentUser.photoUrl !== profilePhoto) {
+        setProfilePhoto(currentUser.photoUrl);
+      }
+    }, 1000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [user]); // ✅ Seulement 'user' dans les dépendances
 
   useEffect(() => {
     const handleScroll = () => {
@@ -149,14 +177,16 @@ const Header = () => {
                 <>
                   <IconButton onClick={handleMenuOpen} sx={{ ml: 2 }}>
                     <Avatar
+                      src={profilePhoto || undefined}
+                      key={profilePhoto} // ✅ Force refresh quand photoUrl change
                       sx={{
-                        background: 'linear-gradient(180deg, #100249 0%, #FF1966 100%)',
+                        background: profilePhoto ? 'transparent' : 'linear-gradient(180deg, #100249 0%, #FF1966 100%)',
                         width: 40,
                         height: 40,
                         boxShadow: scrolled ? 'none' : '0px 2px 8px rgba(0, 0, 0, 0.5)',
                       }}
                     >
-                      {user?.prenom?.charAt(0).toUpperCase()}
+                      {!profilePhoto && user?.prenom?.charAt(0).toUpperCase()}
                     </Avatar>
                   </IconButton>
 
@@ -166,9 +196,6 @@ const Header = () => {
                     </MenuItem>
                     <MenuItem onClick={() => { handleMenuClose(); navigate('/mon-compte'); }}>
                       Mon compte
-                    </MenuItem>
-                    <MenuItem onClick={() => { handleMenuClose(); navigate('/mes-reservations'); }}>
-                      Mes réservations
                     </MenuItem>
                     {isAdmin && (
                       <MenuItem onClick={() => { handleMenuClose(); navigate('/admin'); }}>
