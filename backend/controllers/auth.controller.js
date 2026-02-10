@@ -151,19 +151,22 @@ export const login = async (req, res) => {
 
 export const getMe = async (req, res) => {
   try {
-    const user = await Utilisateur.findById(req.user.id).select("-motDePasse");
+    const user = await Utilisateur.findById(req.user.id)
+      .select('-motDePasse')
+      .populate('forfaitsActifs.forfaitId', 'nom prix categorie')
+      .populate('abonnementActif.forfaitId', 'nom prix categorie'); 
 
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "Utilisateur non trouvé",
+        message: 'Utilisateur non trouvé',
       });
     }
 
     res.status(200).json({
       success: true,
       user: {
-        id: user._id,
+        id: user.id,
         prenom: user.prenom,
         nom: user.nom,
         email: user.email,
@@ -176,6 +179,11 @@ export const getMe = async (req, res) => {
         photoUrl: user.photoUrl,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
+        
+        forfaitsActifs: user.forfaitsActifs || [],
+        abonnementActif: user.abonnementActif || null,
+        nombreCoursReserves: user.nombreCoursReserves || 0,
+        nombreCoursAssistes: user.nombreCoursAssistes || 0,
       },
     });
   } catch (error) {

@@ -351,7 +351,6 @@ export const createReservationInvite = async (req, res) => {
 export const annulerReservation = async (req, res) => {
   try {
     const { raison } = req.body;
-
     const reservation = await Reservation.findById(req.params.id).populate(
       "cours",
     );
@@ -365,7 +364,7 @@ export const annulerReservation = async (req, res) => {
 
     if (
       req.user.role !== "admin" &&
-      reservation.utilisateur.toString() !== req.user._id.toString()
+      reservation.utilisateur.toString() !== req.user.id.toString()
     ) {
       return res.status(403).json({
         success: false,
@@ -387,15 +386,39 @@ export const annulerReservation = async (req, res) => {
       });
     }
 
-    const delaiAnnulation = 24; // heures (à récupérer depuis Parametre)
+    const delaiAnnulation = 24;
     const heuresRestantes =
       (reservation.cours.dateDebut - new Date()) / (1000 * 60 * 60);
 
-    if (heuresRestantes < delaiAnnulation && req.user.role !== "admin") {
-      return res.status(400).json({
-        success: false,
-        message: `Annulation impossible : il faut annuler au moins ${delaiAnnulation}h avant le cours`,
-      });
+    if (heuresRestantes >= delaiAnnulation || req.user.role === "admin") {
+      if (
+        reservation.statut === "confirmee" &&
+        reservation.typeReservation === "membre" &&
+        reservation.forfait
+      ) {
+        const utilisateur = await Utilisateur.findById(reservation.utilisateur);
+
+        if (reservation.paiement.type === "forfait") {
+          const forfaitIndex = utilisateur.forfaitsActifs.findIndex(
+            (f) => f.forfaitId.toString() === reservation.forfait.toString(),
+          );
+
+          if (forfaitIndex !== -1) {
+            utilisateur.forfaitsActifs[forfaitIndex].seancesRestantes += 1;
+
+            if (utilisateur.forfaitsActifs[forfaitIndex].seancesRestantes > 0) {
+              utilisateur.forfaitsActifs[forfaitIndex].estActif = true;
+            }
+
+            await utilisateur.save();
+          }
+        }
+
+        if (reservation.paiement.type === "abonnement") {
+          utilisateur.abonnementActif.seancesRestantesMois += 1;
+          await utilisateur.save();
+        }
+      }
     }
 
     reservation.statut = "annulee";
@@ -407,17 +430,17 @@ export const annulerReservation = async (req, res) => {
     const cours = await Cours.findById(reservation.cours._id);
     if (cours.placesReservees > 0) {
       cours.placesReservees -= 1;
-      if (cours.statut === "complet") {
-        cours.statut = "confirme";
-      }
-      await cours.save();
     }
+    if (cours.statut === "complet") {
+      cours.statut = "confirme";
+    }
+    await cours.save();
 
     if (reservation.utilisateur) {
       await Notification.creer({
         type: "annulation",
         titre: "Réservation annulée",
-        message: `Votre réservation pour "${cours.nom}" a été annulée.`,
+        message: `Votre réservation pour ${cours.nom} a été annulée. ${heuresRestantes >= delaiAnnulation ? "Séance recréditée ✅" : "Séance non recréditée (annulation < 24h) ❌"}`,
         priorite: "normale",
         utilisateurId: reservation.utilisateur,
         coursId: cours._id,
@@ -428,6 +451,7 @@ export const annulerReservation = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Réservation annulée avec succès",
+      seanceRecreditee: heuresRestantes >= delaiAnnulation,
       data: reservation,
     });
   } catch (error) {
@@ -441,21 +465,36 @@ export const annulerReservation = async (req, res) => {
 export const validerPresence = async (req, res) => {
   try {
     const { present } = req.body;
-
-    const reservation = await Reservation.findById(req.params.id);
+    const reservation = await Reservation.findById(req.params.id).populate(
+      "utilisateur",
+    );
 
     if (!reservation) {
-      return res.status(404).json({
-        success: false,
-        message: "Réservation non trouvée",
-      });
+      return res
+        .status(404)
+        .json({ success: false, message: "Réservation non trouvée" });
     }
 
-    if (reservation.statut !== "confirmee") {
-      return res.status(400).json({
-        success: false,
-        message: "Seules les réservations confirmées peuvent être validées",
-      });
+    if (present && reservation.typeReservation === "membre") {
+      const utilisateur = await Utilisateur.findById(reservation.utilisateur);
+
+      if (!reservation.forfait && utilisateur.aForfaitActif()) {
+        const forfaitActif = utilisateur.forfaitsActifs.find(
+          (f) => f.estActif && f.seancesRestantes > 0,
+        );
+
+        return res.status(400).json({
+          success: false,
+          warning: true,
+          message: `Attention ! ${utilisateur.nomComplet} a un forfait actif (${forfaitActif.seancesRestantes} séances) mais aucune séance n'a été décomptée !`,
+          data: {
+            utilisateurId: utilisateur._id,
+            forfaitId: forfaitActif.forfaitId,
+            seancesRestantes: forfaitActif.seancesRestantes,
+          },
+          action: "DEMANDER_CONFIRMATION_DECOMPTE",
+        });
+      }
     }
 
     reservation.statut = present ? "present" : "absent";
@@ -473,14 +512,11 @@ export const validerPresence = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: `Présence ${present ? "validée" : "marquée comme absente"}`,
+      message: present ? "Présence validée" : "Marqué comme absent",
       data: reservation,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -630,7 +666,7 @@ export const validerReservation = async (req, res) => {
       });
     }
 
-    if (reservation.statut !== "en_attente") {
+    if (reservation.statut !== "enattente") {
       return res.status(400).json({
         success: false,
         message: "Seules les réservations en attente peuvent être validées",
@@ -638,11 +674,44 @@ export const validerReservation = async (req, res) => {
     }
 
     const cours = await Cours.findById(reservation.cours._id);
+
     if (cours.placesReservees >= cours.capaciteMax) {
       return res.status(400).json({
         success: false,
         message: "Ce cours est maintenant complet, impossible de valider",
       });
+    }
+
+    if (reservation.typeReservation === "membre" && reservation.forfait) {
+      const utilisateur = await Utilisateur.findById(
+        reservation.utilisateur._id,
+      );
+
+      if (reservation.paiement.type === "forfait") {
+        try {
+          await utilisateur.deduireSeance(reservation.forfait);
+          console.log(`✅ Forfait décompté : ${utilisateur.nomComplet}`);
+        } catch (error) {
+          console.error("❌ Erreur décompte forfait:", error);
+          return res.status(400).json({
+            success: false,
+            message: error.message,
+          });
+        }
+      }
+
+      if (reservation.paiement.type === "abonnement") {
+        if (utilisateur.abonnementActif.seancesRestantesMois > 0) {
+          utilisateur.abonnementActif.seancesRestantesMois -= 1;
+          await utilisateur.save();
+          console.log(`✅ Abonnement décompté : ${utilisateur.nomComplet}`);
+        } else {
+          return res.status(400).json({
+            success: false,
+            message: "Plus de séances disponibles ce mois",
+          });
+        }
+      }
     }
 
     reservation.statut = "confirmee";
@@ -651,25 +720,12 @@ export const validerReservation = async (req, res) => {
     if (reservation.utilisateur) {
       await Notification.creer({
         type: "systeme",
-        titre: "Réservation confirmée ✅",
-        message: `Votre réservation pour "${cours.nom}" a été validée par l'admin !`,
+        titre: "Réservation confirmée",
+        message: `Votre réservation pour ${cours.nom} a été validée par l'admin !`,
         priorite: "haute",
         utilisateurId: reservation.utilisateur._id,
         coursId: cours._id,
         reservationId: reservation._id,
-      });
-    }
-
-    if (reservation.typeReservation === "invite" && reservation.emailInvite) {
-      // TODO: Envoyer email avec Nodemailer
-      // En attendant Nodemailer, créer notification admin
-      await Notification.creer({
-        type: "systeme",
-        titre: `✉️ Email envoyé - ${reservation.nomEleve}`,
-        message: `Confirmation envoyée pour ${cours.nom} le ${cours.dateDebut.toLocaleDateString()} à ${reservation.emailInvite}`,
-        priorite: "normale",
-        reservationId: reservation._id,
-        coursId: cours._id,
       });
     }
 

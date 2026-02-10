@@ -41,7 +41,7 @@ export const getMesReservations = async (filters = {}) => {
 
 export const annulerReservation = async (reservationId, raison) => {
   try {
-    const response = await api.patch(`/reservations/${reservationId}/annuler`, { raison });
+    const response = await api.put(`/reservations/${reservationId}/annuler`, { raison });
     return response.data.data;
   } catch (error) {
     throw error.response?.data || error;
@@ -52,7 +52,7 @@ const reservationService = {
   creerReservation,
   creerReservationInvite,
   getMesReservations,
-  cancelReservation: annulerReservation,
+  annulerReservation,
 };
 
 export default reservationService;

@@ -15,8 +15,16 @@ import {
   DialogContent,
   DialogActions,
   Divider,
+  Chip,
+  Stack,
 } from "@mui/material";
-import { Warning as WarningIcon } from "@mui/icons-material";
+import {
+  Warning as WarningIcon,
+  CheckCircle as CheckCircleIcon,
+  Cancel as CancelIcon,
+  CardMembership as ForfaitIcon,
+  CalendarMonth as CalendarIcon,
+} from "@mui/icons-material";
 import authService from "@services/authService";
 import reservationService from "@services/reservationService";
 
@@ -36,6 +44,8 @@ const MonCompte = () => {
   const [photoKey, setPhotoKey] = useState(0);
 
   const [openReglement, setOpenReglement] = useState(false);
+
+  const [userData, setUserData] = useState(null);
 
   const [formData, setFormData] = useState({
     prenom: "",
@@ -60,6 +70,8 @@ const MonCompte = () => {
         const profileResponse = await authService.getProfile();
 
         if (!isMounted) return;
+
+        setUserData(profileResponse.user);
 
         setFormData({
           prenom: profileResponse.user.prenom || "",
@@ -111,6 +123,12 @@ const MonCompte = () => {
       isMounted = false;
     };
   }, []);
+
+  const forfaitsActifs =
+    userData?.forfaitsActifs?.filter((f) => f.estActif && f.seancesRestantes > 0) || [];
+  const abonnementActif =
+    userData?.abonnementActif?.forfaitId &&
+    userData?.abonnementActif?.statutPaiement === "actif";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -580,6 +598,97 @@ const MonCompte = () => {
                   Mes cours
                 </Typography>
               </Box>
+
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  sx={{
+                    fontSize: "1.1rem",
+                    fontWeight: 600,
+                    color: "white",
+                    mb: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  <ForfaitIcon /> Mes forfaits & abonnements
+                </Typography>
+
+                {forfaitsActifs.length > 0 && (
+                  <Stack spacing={1} sx={{ mb: 2 }}>
+                    {forfaitsActifs.map((forfait, index) => (
+                      <Box
+                        key={index}
+                        sx={{
+                          bgcolor: "rgba(76, 175, 80, 0.1)",
+                          border: "2px solid #4CAF50",
+                          p: 2,
+                          borderRadius: 1,
+                        }}
+                      >
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}>
+                          <CheckCircleIcon sx={{ color: "#4CAF50" }} />
+                          <Typography sx={{ color: "white", fontWeight: 600 }}>
+                            {forfait.seancesRestantes} séances restantes
+                          </Typography>
+                        </Box>
+                        <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.7)" }}>
+                          Acheté le {new Date(forfait.dateAchat).toLocaleDateString('fr-FR')}
+                          {forfait.dateExpiration && (
+                            <> • Expire le {new Date(forfait.dateExpiration).toLocaleDateString('fr-FR')}</>
+                          )}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Stack>
+                )}
+
+                {abonnementActif && (
+                  <Box
+                    sx={{
+                      bgcolor: "rgba(33, 150, 243, 0.1)",
+                      border: "2px solid #2196F3",
+                      p: 2,
+                      borderRadius: 1,
+                      mb: 2,
+                    }}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}>
+                      <CalendarIcon sx={{ color: "#2196F3" }} />
+                      <Typography sx={{ color: "white", fontWeight: 600 }}>
+                        Abonnement {userData.abonnementActif.frequenceSeances} cours/semaine
+                      </Typography>
+                    </Box>
+                    <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.7)" }}>
+                      Du {new Date(userData.abonnementActif.dateDebut).toLocaleDateString('fr-FR')} au{' '}
+                      {new Date(userData.abonnementActif.dateFin).toLocaleDateString('fr-FR')}
+                    </Typography>
+                  </Box>
+                )}
+
+                {forfaitsActifs.length === 0 && !abonnementActif && (
+                  <Box
+                    sx={{
+                      bgcolor: "rgba(255, 152, 0, 0.1)",
+                      border: "2px solid #FF9800",
+                      p: 2,
+                      borderRadius: 1,
+                    }}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}>
+                      <CancelIcon sx={{ color: "#FF9800" }} />
+                      <Typography sx={{ color: "white", fontWeight: 600 }}>
+                        Aucun forfait ou abonnement actif
+                      </Typography>
+                    </Box>
+                    <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.7)" }}>
+                      Consultez la page <strong>Tarifs</strong> pour souscrire à un forfait
+                    </Typography>
+                  </Box>
+                )}
+              </Box>
+
+              <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
 
               <TextField
                 fullWidth
