@@ -14,6 +14,7 @@ import {
   utiliserSeanceForfait,
   activerAbonnement,
   utiliserSeanceAbonnement,
+  modifierSeancesForfait,
 } from "../controllers/utilisateur.controller.js";
 import { protect, admin } from "../middleware/auth.middleware.js";
 
@@ -34,9 +35,14 @@ router.put("/:id/reject", rejectUtilisateur);
 router.post("/:id/forfaits", ajouterForfait);
 router.put("/:id/abonnement", modifierAbonnement);
 
-router.post('/:id/forfait/activer', admin, activerForfait);
-router.patch('/:id/forfait/:forfaitIndex/utiliser', admin, utiliserSeanceForfait);
-router.post('/:id/abonnement/activer', admin, activerAbonnement);
-router.patch('/:id/abonnement/utiliser', admin, utiliserSeanceAbonnement);
+router.post("/:id/forfait/activer", admin, activerForfait);
+router.patch(
+  "/:id/forfait/:forfaitIndex/utiliser",
+  admin,
+  utiliserSeanceForfait,
+);
+router.post("/:id/abonnement/activer", admin, activerAbonnement);
+router.patch("/:id/abonnement/utiliser", admin, utiliserSeanceAbonnement);
+router.put("/:id/forfait/seances", protect, admin, modifierSeancesForfait);
 
 export default router;

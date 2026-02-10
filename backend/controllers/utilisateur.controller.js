@@ -435,10 +435,6 @@ export const getStats = async (req, res) => {
   }
 };
 
-// ========================================
-// GESTION MANUELLE FORFAITS & ABONNEMENTS
-// ========================================
-
 export const activerForfait = async (req, res) => {
   try {
     const { forfaitId } = req.body;
@@ -518,6 +514,58 @@ export const utiliserSeanceForfait = async (req, res) => {
       seancesRestantes: utilisateur.forfaitsActifs[index].seancesRestantes,
     });
   } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const modifierSeancesForfait = async (req, res) => {
+  try {
+    const { forfaitIndex, seancesRestantes } = req.body;
+
+    if (forfaitIndex === undefined || seancesRestantes === undefined) {
+      return res.status(400).json({
+        success: false,
+        message: "Index forfait et séances restantes requis",
+      });
+    }
+
+    const utilisateur = await Utilisateur.findById(req.params.id);
+
+    if (!utilisateur) {
+      return res.status(404).json({
+        success: false,
+        message: "Utilisateur non trouvé",
+      });
+    }
+
+    if (!utilisateur.forfaitsActifs[forfaitIndex]) {
+      return res.status(400).json({
+        success: false,
+        message: "Forfait non trouvé",
+      });
+    }
+
+    utilisateur.forfaitsActifs[forfaitIndex].seancesRestantes = Math.max(
+      0,
+      seancesRestantes,
+    );
+
+    if (utilisateur.forfaitsActifs[forfaitIndex].seancesRestantes === 0) {
+      utilisateur.forfaitsActifs[forfaitIndex].estActif = false;
+    }
+
+    await utilisateur.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Séances modifiées avec succès",
+      data: utilisateur.forfaitsActifs[forfaitIndex],
+    });
+  } catch (error) {
+    console.error("Erreur:", error);
     res.status(500).json({
       success: false,
       message: error.message,

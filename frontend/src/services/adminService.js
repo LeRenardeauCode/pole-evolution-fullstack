@@ -293,6 +293,11 @@ export const activerAbonnementUtilisateur = async (utilisateurId, forfaitId) => 
   return response.data;
 };
 
+export const modifierSeancesForfait = async (utilisateurId, forfaitIndex, seancesRestantes) => {
+  const response = await api.put(`/utilisateurs/${utilisateurId}/forfait/seances`, { forfaitIndex, seancesRestantes });
+  return response.data;
+};
+
 
 export default {
   getAdminStats,
@@ -309,6 +314,7 @@ export default {
   ajouterForfaitUtilisateur,
   activerForfaitUtilisateur,
   activerAbonnementUtilisateur,
+  modifierSeancesForfait,
   getAllCours,
   createCours,
   updateCours,
