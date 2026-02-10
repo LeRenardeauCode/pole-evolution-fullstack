@@ -283,6 +283,17 @@ export const updateParametre = async (cle, valeur) => {
   return response.data;
 };
 
+export const activerForfaitUtilisateur = async (utilisateurId, forfaitId) => {
+  const response = await api.post(`/utilisateurs/${utilisateurId}/forfait/activer`, { forfaitId });
+  return response.data;
+};
+
+export const activerAbonnementUtilisateur = async (utilisateurId, forfaitId) => {
+  const response = await api.post(`/utilisateurs/${utilisateurId}/abonnement/activer`, { forfaitId });
+  return response.data;
+};
+
+
 export default {
   getAdminStats,
   getStatsReservations,
@@ -296,6 +307,8 @@ export default {
   approveUtilisateur,
   rejectUtilisateur,
   ajouterForfaitUtilisateur,
+  activerForfaitUtilisateur,
+  activerAbonnementUtilisateur,
   getAllCours,
   createCours,
   updateCours,

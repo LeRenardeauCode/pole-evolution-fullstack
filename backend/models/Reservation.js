@@ -5,12 +5,12 @@ const reservationSchema = new mongoose.Schema(
     typeReservation: {
       type: String,
       enum: {
-        values: ['membre', 'invite'],
-        message: 'Type invalide'
+        values: ["membre", "invite"],
+        message: "Type invalide",
       },
       required: true,
-      default: 'membre',
-      index: true
+      default: "membre",
+      index: true,
     },
 
     utilisateur: {
@@ -24,50 +24,50 @@ const reservationSchema = new mongoose.Schema(
       type: String,
       required: false,
       trim: true,
-      minlength: [2, 'Le nom doit contenir au moins 2 caractères'],
-      maxlength: [100, 'Le nom ne peut pas dépasser 100 caractères']
+      minlength: [2, "Le nom doit contenir au moins 2 caractères"],
+      maxlength: [100, "Le nom ne peut pas dépasser 100 caractères"],
     },
 
     emailInvite: {
       type: String,
       required: false,
       lowercase: true,
-      trim: true
+      trim: true,
     },
 
     telephoneInvite: {
       type: String,
       required: false,
-      trim: true
+      trim: true,
     },
 
     niveauPoleInvite: {
       type: String,
-      enum: ['debutant', 'intermediaire', 'avance', 'jamais'],
-      required: false
+      enum: ["debutant", "intermediaire", "avance", "jamais"],
+      required: false,
     },
 
     tokenValidation: {
       type: String,
       required: false,
-      select: false
+      select: false,
     },
 
     estValideEmail: {
       type: Boolean,
       default: false,
-      index: true
+      index: true,
     },
 
     dateValidationEmail: {
       type: Date,
-      required: false
+      required: false,
     },
 
     ipAddress: {
       type: String,
       required: false,
-      select: false
+      select: false,
     },
 
     cours: {
@@ -89,7 +89,7 @@ const reservationSchema = new mongoose.Schema(
         values: ["en_attente", "confirmee", "annulee", "present", "absent"],
         message: "Statut invalide",
       },
-      default: "confirmee",
+      default: "en_attente",
       index: true,
     },
 
@@ -151,13 +151,16 @@ const reservationSchema = new mongoose.Schema(
     paiement: {
       type: {
         type: String,
-        enum: ['forfait', 'sur_place', 'abonnement'],
-        default: 'forfait',
+        enum: {
+          values: ["forfait", "surplace", "abonnement"],
+          message: "Type de paiement invalide",
+        },
+        default: "forfait",
       },
       montant: {
         type: Number,
         required: false,
-        min: 0
+        min: 0,
       },
       estPaye: {
         type: Boolean,
@@ -165,13 +168,16 @@ const reservationSchema = new mongoose.Schema(
       },
       datePaiement: {
         type: Date,
-        required: false
+        required: false,
       },
       moyenPaiement: {
         type: String,
-        enum: ['cb', 'especes', 'cheque', 'virement'],
-        required: false
-      }
+        enum: {
+          values: ["cb", "especes", "cheque", "virement"],
+          message: "Moyen de paiement invalide",
+        },
+        required: false,
+      },
     },
 
     presenceValidee: {
@@ -193,7 +199,10 @@ const reservationSchema = new mongoose.Schema(
     notesClient: {
       type: String,
       required: false,
-      maxlength: [500, "Les notes client ne peuvent pas dépasser 500 caractères"],
+      maxlength: [
+        500,
+        "Les notes client ne peuvent pas dépasser 500 caractères",
+      ],
     },
 
     rappelEnvoye: {
@@ -250,15 +259,15 @@ reservationSchema.virtual("heuresAvantCours").get(function () {
 reservationSchema.set("toJSON", { virtuals: true });
 reservationSchema.set("toObject", { virtuals: true });
 
-reservationSchema.pre('save', function(next) {
+reservationSchema.pre("save", function (next) {
   // Validation champs selon typeReservation
-  if (this.typeReservation === 'invite') {
+  if (this.typeReservation === "invite") {
     if (!this.nomEleve || !this.emailInvite) {
-      return next(new Error('Nom et email obligatoires pour les invités'));
+      return next(new Error("Nom et email obligatoires pour les invités"));
     }
-  } else if (this.typeReservation === 'membre') {
+  } else if (this.typeReservation === "membre") {
     if (!this.utilisateur) {
-      return next(new Error('Utilisateur obligatoire pour les membres'));
+      return next(new Error("Utilisateur obligatoire pour les membres"));
     }
   }
   next();
@@ -311,7 +320,11 @@ reservationSchema.methods.annuler = async function (
   this.annulePar = annulePar;
 
   // Rembourser la séance au forfait si applicable (MEMBRES uniquement)
-  if (this.typeReservation === 'membre' && this.forfait && annulePar === "client") {
+  if (
+    this.typeReservation === "membre" &&
+    this.forfait &&
+    annulePar === "client"
+  ) {
     const Utilisateur = mongoose.model("Utilisateur");
     const utilisateur = await Utilisateur.findById(this.utilisateur);
 
@@ -337,7 +350,7 @@ reservationSchema.methods.confirmerPresence = async function () {
   this.presenceValidee = true;
   this.dateValidationPresence = new Date();
 
-  if (this.typeReservation === 'membre' && this.utilisateur) {
+  if (this.typeReservation === "membre" && this.utilisateur) {
     await Utilisateur.findByIdAndUpdate(this.utilisateur, {
       $inc: { nombreCoursAssistes: 1 },
     });
@@ -443,13 +456,13 @@ reservationSchema.statics.aDejaReserve = async function (
   return !!reservation;
 };
 
-reservationSchema.statics.verifierLimiteIP = async function(ipAddress) {
+reservationSchema.statics.verifierLimiteIP = async function (ipAddress) {
   const debutJour = new Date();
   debutJour.setHours(0, 0, 0, 0);
 
   const count = await this.countDocuments({
     ipAddress: ipAddress,
-    dateReservation: { $gte: debutJour }
+    dateReservation: { $gte: debutJour },
   });
 
   return count < 3;

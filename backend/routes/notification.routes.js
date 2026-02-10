@@ -5,11 +5,14 @@ import {
   marquerCommeLue,
   marquerToutesLues,
   archiverNotification,
-  supprimerArchivees
+  supprimerArchivees,
+  creerDemandeForfait,
 } from '../controllers/notification.controller.js';
 import { protect, admin } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
+
+router.post('/demande-forfait', protect, creerDemandeForfait);
 
 router.get('/', protect, admin, getNotifications);
 router.get('/count', protect, admin, countNonLues);

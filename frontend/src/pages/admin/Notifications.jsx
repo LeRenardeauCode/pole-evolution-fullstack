@@ -16,9 +16,15 @@ import {
   Chip,
   Switch,
   FormControlLabel,
-  Button
+  Button,
+  Alert,
+  Divider
 } from '@mui/material';
-import { Check as CheckIcon, Close as CloseIcon } from '@mui/icons-material';
+import { 
+  Check as CheckIcon, 
+  Close as CloseIcon,
+  NotificationsActive as NotificationsActiveIcon
+} from '@mui/icons-material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { toast } from 'react-toastify';
 import {
@@ -29,9 +35,12 @@ import {
   updateParametre,
   getStatsMensuelles
 } from '@services/adminService';
+import notificationService from '@services/notificationService'; 
+import api from '@services/api';
 
 export default function NotificationsPage() {
   const [avis, setAvis] = useState([]);
+  const [notifications, setNotifications] = useState([]); 
   const [loading, setLoading] = useState(false);
   const [notificationsActives, setNotificationsActives] = useState(true);
   const [statsData, setStatsData] = useState([]);
@@ -41,13 +50,15 @@ export default function NotificationsPage() {
 
     const fetchData = async () => {
       try {
-        const [avisRes, paramRes] = await Promise.all([
+        const [avisRes, paramRes, notifsRes] = await Promise.all([
           getAllAvis({ statut: 'enattente' }),
-          getParametreByKey('notificationsactives')
+          getParametreByKey('notificationsactives'),
+          notificationService.getNotifications()
         ]);
 
         if (mounted) {
           setAvis(avisRes.data || []);
+          setNotifications(notifsRes.data || []);
           setNotificationsActives(paramRes.data?.valeur === 'true' || paramRes.data?.valeur === true);
         }
 
@@ -97,6 +108,16 @@ export default function NotificationsPage() {
     }
   };
 
+  // ← AJOUTE CETTE FONCTION
+  const loadNotifications = async () => {
+    try {
+      const response = await notificationService.getNotifications();
+      setNotifications(response.data || []);
+    } catch (err) {
+      console.error('Erreur:', err);
+    }
+  };
+
   const handleValiderAvis = async (id) => {
     setLoading(true);
     try {
@@ -128,6 +149,55 @@ export default function NotificationsPage() {
     }
   };
 
+  const handleActiverForfait = async (notificationId, metadata) => {
+    const { utilisateurId, forfaitId, forfaitNom, forfaitPrix, utilisateurNom } = metadata;
+
+    if (!utilisateurId || !forfaitId) {
+      toast.error('Données manquantes dans la notification');
+      return;
+    }
+
+    const confirmation = window.confirm(
+      `Activer le forfait "${forfaitNom}" (${forfaitPrix}€) pour ${utilisateurNom} ?\n\nAssurez-vous que le paiement a été effectué sur place.`
+    );
+
+    if (!confirmation) return;
+
+    setLoading(true);
+    try {
+      await api.post(`/utilisateurs/${utilisateurId}/forfait/activer`, {
+        forfaitId,
+      });
+
+      toast.success('Forfait activé avec succès !');
+
+      await notificationService.marquerCommeLue(notificationId);
+      await loadNotifications();
+    } catch (err) {
+      console.error('Erreur activation forfait:', err);
+      toast.error(err.response?.data?.message || 'Erreur lors de l\'activation');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRefuserDemande = async (notificationId) => {
+    const confirmation = window.confirm('Refuser cette demande de forfait ?');
+    if (!confirmation) return;
+
+    setLoading(true);
+    try {
+      await notificationService.marquerCommeLue(notificationId);
+      toast.info('Demande refusée');
+      await loadNotifications();
+    } catch (err) {
+      console.error('Erreur:', err);
+      toast.error('Erreur');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleToggleNotifications = async (checked) => {
     setLoading(true);
     try {
@@ -146,6 +216,10 @@ export default function NotificationsPage() {
     }
   };
 
+  const demandesForfaits = notifications.filter(
+    n => n.type === 'demande_forfait' && !n.estLue
+  );
+
   return (
     <Box>
       <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
@@ -153,6 +227,93 @@ export default function NotificationsPage() {
       </Typography>
 
       <Grid container spacing={3}>
+        {demandesForfaits.length > 0 && (
+          <Grid item xs={12}>
+            <Card sx={{ bgcolor: 'warning.light' }}>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <NotificationsActiveIcon sx={{ mr: 1, color: 'warning.dark' }} />
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    Demandes de forfaits en attente
+                  </Typography>
+                  <Chip 
+                    label={demandesForfaits.length} 
+                    color="error" 
+                    size="small" 
+                    sx={{ ml: 1 }}
+                  />
+                </Box>
+
+                <TableContainer component={Paper} variant="outlined">
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow sx={{ bgcolor: 'grey.100' }}>
+                        <TableCell><strong>Utilisateur</strong></TableCell>
+                        <TableCell><strong>Forfait</strong></TableCell>
+                        <TableCell><strong>Prix</strong></TableCell>
+                        <TableCell><strong>Contact</strong></TableCell>
+                        <TableCell align="right"><strong>Actions</strong></TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {demandesForfaits.map((notif) => (
+                        <TableRow key={notif._id}>
+                          <TableCell>
+                            <Typography variant="body2" fontWeight={600}>
+                              {notif.metadata?.utilisateurNom}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">
+                              {notif.metadata?.forfaitNom}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Chip 
+                              label={`${notif.metadata?.forfaitPrix}€`} 
+                              color="primary" 
+                              size="small" 
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2" fontSize="0.85rem">
+                              {notif.metadata?.utilisateurEmail}
+                            </Typography>
+                            <Typography variant="body2" fontSize="0.85rem" color="text.secondary">
+                              {notif.metadata?.utilisateurTelephone || 'Non renseigné'}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Button
+                              variant="contained"
+                              color="success"
+                              size="small"
+                              onClick={() => handleActiverForfait(notif._id, notif.metadata)}
+                              disabled={loading}
+                              sx={{ mr: 1 }}
+                            >
+                              Activer
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              color="error"
+                              size="small"
+                              onClick={() => handleRefuserDemande(notif._id)}
+                              disabled={loading}
+                            >
+                              Refuser
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </CardContent>
+            </Card>
+          </Grid>
+        )}
+
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>

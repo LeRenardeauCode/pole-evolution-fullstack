@@ -77,7 +77,7 @@ export const getReservation = async (req, res) => {
 
 export const createReservation = async (req, res) => {
   try {
-    const { coursId, forfaitId, typePaiement = "sur_place" } = req.body;
+    const { coursId, forfaitId, typePaiement = "forfait" } = req.body;
 
     const cours = await Cours.findById(coursId);
     if (!cours) {
@@ -86,6 +86,7 @@ export const createReservation = async (req, res) => {
         message: "Cours non trouvé",
       });
     }
+
     if (cours.dateDebut < new Date()) {
       return res.status(400).json({
         success: false,
@@ -108,9 +109,9 @@ export const createReservation = async (req, res) => {
     }
 
     const reservationExistante = await Reservation.findOne({
-      utilisateur: req.user._id,
+      utilisateur: req.user.id,
       cours: coursId,
-      statut: { $in: ["confirmee", "en_attente"] },
+      statut: { $in: ["confirmee", "enattente"] },
     });
 
     if (reservationExistante) {
@@ -120,11 +121,19 @@ export const createReservation = async (req, res) => {
       });
     }
 
-    const utilisateur = await Utilisateur.findById(req.user._id);
+    const utilisateur = await Utilisateur.findById(req.user.id);
+
+    if (utilisateur.statutValidationAdmin !== "approved") {
+      return res.status(403).json({
+        success: false,
+        message:
+          "Votre compte est en attente de validation par un administrateur. Vous pourrez réserver une fois votre compte validé.",
+      });
+    }
 
     const reservationData = {
       typeReservation: "membre",
-      utilisateur: req.user._id,
+      utilisateur: req.user.id,
       cours: coursId,
       statut: "en_attente",
       nombrePlaces: 1,
@@ -157,15 +166,8 @@ export const createReservation = async (req, res) => {
         });
       }
 
-      try {
-      } catch (error) {
-        return res.status(400).json({
-          success: false,
-          message: error.message,
-        });
-      }
-
       reservationData.forfait = forfaitId;
+      reservationData.paiement.montant = 0;
     } else if (typePaiement === "abonnement") {
       if (
         !utilisateur.abonnementActif ||
@@ -194,6 +196,7 @@ export const createReservation = async (req, res) => {
       reservationData.forfait = utilisateur.abonnementActif.forfaitId;
       reservationData.paiement.montant = 0;
     } else {
+      // typePaiement === 'surplace'
       const forfaitCours = await Forfait.findOne({
         categorie: "decouverte",
         estActif: true,
@@ -218,7 +221,7 @@ export const createReservation = async (req, res) => {
       titre: "Réservation en attente",
       message: `Votre réservation pour "${cours.nom}" le ${cours.dateDebut.toLocaleDateString()} est en attente de validation.`,
       priorite: "normale",
-      utilisateurId: req.user._id,
+      utilisateurId: req.user.id,
       coursId: cours._id,
       reservationId: reservation._id,
     });
@@ -233,6 +236,7 @@ export const createReservation = async (req, res) => {
       data: reservationComplete,
     });
   } catch (error) {
+    console.error("❌ Erreur createReservation:", error);
     res.status(500).json({
       success: false,
       message: error.message,

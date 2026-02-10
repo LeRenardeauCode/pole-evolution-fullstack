@@ -35,5 +35,6 @@ router.put('/:id/paiement', admin, marquerPaye);
 router.patch('/:id/valider', admin, validerReservation);
 router.patch('/:id/refuser', admin, refuserReservation);
 router.patch('/validate-email/:token', validerEmailInvite);
+router.get('/cours/:coursId', admin, getReservationsCours);
 
 export default router;

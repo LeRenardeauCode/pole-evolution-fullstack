@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -15,14 +15,17 @@ import {
   MenuItem,
   Divider,
   CircularProgress,
-  IconButton
-} from '@mui/material';
-import { Close, CheckCircle, Warning } from '@mui/icons-material';
-import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
-import { useAuth } from '@/hooks/useAuth';
-import { creerReservation, creerReservationInvite } from '@/services/reservationService';
-import { getForfaitsUtilisateur } from '@/services/forfaitService';
+  IconButton,
+} from "@mui/material";
+import { Close, CheckCircle, Warning } from "@mui/icons-material";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  creerReservation,
+  creerReservationInvite,
+} from "@/services/reservationService";
+import { getForfaitsUtilisateur } from "@/services/forfaitService";
 
 const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
   const { user } = useAuth();
@@ -30,16 +33,15 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-
   const [forfaitsActifs, setForfaitsActifs] = useState([]);
-  const [forfaitSelectionne, setForfaitSelectionne] = useState('');
-  const [typePaiement, setTypePaiement] = useState('surplace'); 
+  const [forfaitSelectionne, setForfaitSelectionne] = useState("");
+  const [typePaiement, setTypePaiement] = useState("surplace");
 
   const [inviteData, setInviteData] = useState({
-    nomEleve: '',
-    emailInvite: '',
-    telephoneInvite: '',
-    niveauPoleInvite: 'jamais'
+    nomEleve: "",
+    emailInvite: "",
+    telephoneInvite: "",
+    niveauPoleInvite: "jamais",
   });
 
   useEffect(() => {
@@ -52,14 +54,17 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
     try {
       const data = await getForfaitsUtilisateur();
       setForfaitsActifs(data.forfaitsActifs || []);
-      
-      const forfaitDisponible = data.forfaitsActifs?.find(f => f.seancesRestantes > 0);
+
+      const forfaitDisponible = data.forfaitsActifs?.find(
+        (f) => f.estActif && f.seancesRestantes > 0,
+      );
+
       if (forfaitDisponible) {
         setForfaitSelectionne(forfaitDisponible.forfaitId);
-        setTypePaiement('forfait');
+        setTypePaiement("forfait");
       }
     } catch (err) {
-      console.error('Erreur chargement forfaits:', err);
+      console.error("Erreur chargement forfaits:", err);
     }
   };
 
@@ -73,18 +78,18 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
         typePaiement: typePaiement,
       };
 
-      if (typePaiement === 'forfait' && forfaitSelectionne) {
+      if (typePaiement === "forfait" && forfaitSelectionne) {
         data.forfaitId = forfaitSelectionne;
       }
 
       await creerReservation(data);
-      
+
       setSuccess(true);
       setTimeout(() => {
         onSuccess();
       }, 1500);
     } catch (err) {
-      setError(err.message || 'Erreur lors de la réservation');
+      setError(err.message || "Erreur lors de la réservation");
     } finally {
       setLoading(false);
     }
@@ -96,14 +101,14 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
       setError(null);
 
       if (!inviteData.nomEleve || !inviteData.emailInvite) {
-        setError('Nom et email sont obligatoires');
+        setError("Nom et email sont obligatoires");
         setLoading(false);
         return;
       }
 
       await creerReservationInvite({
         coursId: cours._id,
-        ...inviteData
+        ...inviteData,
       });
 
       setSuccess(true);
@@ -111,7 +116,7 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
         onSuccess();
       }, 1500);
     } catch (err) {
-      setError(err.message || 'Erreur lors de la réservation');
+      setError(err.message || "Erreur lors de la réservation");
     } finally {
       setLoading(false);
     }
@@ -126,25 +131,22 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
   };
 
   const handleInviteChange = (field, value) => {
-    setInviteData(prev => ({ ...prev, [field]: value }));
+    setInviteData((prev) => ({ ...prev, [field]: value }));
   };
 
   if (!cours) return null;
 
   return (
-    <Dialog 
-      open={open} 
-      onClose={onClose}
-      maxWidth="sm"
-      fullWidth
-    >
-      <DialogTitle sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        borderBottom: '1px solid #E0E0E0'
-      }}>
-        <Typography variant="h6" fontWeight="bold">
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+      <DialogTitle
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          borderBottom: "1px solid #E0E0E0",
+        }}
+      >
+        <Typography variant="h6" component="span" fontWeight="bold">
           Réserver ce cours
         </Typography>
         <IconButton onClick={onClose} edge="end">
@@ -153,7 +155,7 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
       </DialogTitle>
 
       <DialogContent sx={{ pt: 3 }}>
-        <Box sx={{ bgcolor: '#F5F5F5', p: 2, borderRadius: 2, mb: 3 }}>
+        <Box sx={{ bgcolor: "#F5F5F5", p: 2, borderRadius: 2, mb: 3 }}>
           <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
             Cours sélectionné
           </Typography>
@@ -161,7 +163,9 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
             {cours.nom}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {format(new Date(cours.dateDebut), "EEEE d MMMM yyyy 'à' HH:mm", { locale: fr })}
+            {format(new Date(cours.dateDebut), "EEEE d MMMM yyyy 'à' HH:mm", {
+              locale: fr,
+            })}
           </Typography>
         </Box>
 
@@ -169,10 +173,9 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
           <Alert severity="success" icon={<CheckCircle />}>
             <strong>Réservation confirmée !</strong>
             <br />
-            {user 
-              ? 'Vous recevrez une notification une fois validée par l\'administrateur.'
-              : 'Un email de confirmation a été envoyé. Pensez à valider votre adresse email.'
-            }
+            {user
+              ? "Vous recevrez une notification une fois validée par l'administrateur."
+              : "Un email de confirmation a été envoyé. Pensez à valider votre adresse email."}
           </Alert>
         ) : (
           <>
@@ -184,26 +187,32 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
 
             {user ? (
               <Box>
-                <Typography variant="subtitle2" sx={{ mb: 2 }}>
-                  Choisissez votre mode de paiement
+                <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+                  Comment souhaitez-vous régler ce cours ?
                 </Typography>
 
                 <FormControl fullWidth sx={{ mb: 3 }}>
-                  <InputLabel>Mode de paiement</InputLabel>
+                  <InputLabel>Moyen de paiement</InputLabel>
                   <Select
                     value={typePaiement}
-                    label="Mode de paiement"
+                    label="Moyen de paiement"
                     onChange={(e) => setTypePaiement(e.target.value)}
                   >
                     {forfaitsActifs.length > 0 && (
-                      <MenuItem value="forfait">Utiliser un forfait</MenuItem>
+                      <MenuItem value="forfait">
+                        Utiliser un forfait
+                      </MenuItem>
                     )}
-                    <MenuItem value="abonnement">Utiliser mon abonnement</MenuItem>
-                    <MenuItem value="surplace">Payer sur place</MenuItem>
+                    <MenuItem value="abonnement">
+                      Utiliser mon abonnement
+                    </MenuItem>
+                    <MenuItem value="sur_place">
+                      Payer sur place le jour du cours
+                    </MenuItem>
                   </Select>
                 </FormControl>
 
-                {typePaiement === 'forfait' && (
+                {typePaiement === "forfait" && (
                   <FormControl fullWidth sx={{ mb: 2 }}>
                     <InputLabel>Sélectionner un forfait</InputLabel>
                     <Select
@@ -216,7 +225,9 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
                       ) : (
                         forfaitsActifs.map((f) => (
                           <MenuItem key={f.forfaitId} value={f.forfaitId}>
-                            {f.nom} - {f.seancesRestantes} séance{f.seancesRestantes > 1 ? 's' : ''} restante{f.seancesRestantes > 1 ? 's' : ''}
+                            {f.nom} - {f.seancesRestantes} séance
+                            {f.seancesRestantes > 1 ? "s" : ""} restante
+                            {f.seancesRestantes > 1 ? "s" : ""}
                           </MenuItem>
                         ))
                       )}
@@ -224,23 +235,27 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
                   </FormControl>
                 )}
 
-                {typePaiement === 'forfait' && forfaitsActifs.length === 0 && (
+                {typePaiement === "forfait" && forfaitsActifs.length === 0 && (
                   <Alert severity="warning" icon={<Warning />}>
-                    Vous n'avez aucun forfait actif. Veuillez en acheter un ou choisir "Payer sur place".
+                    Vous n'avez aucun forfait actif. Veuillez en acheter un ou
+                    choisir "Payer sur place".
                   </Alert>
                 )}
               </Box>
             ) : (
               <Box>
                 <Alert severity="info" sx={{ mb: 3 }}>
-                  Vous n'avez pas de compte ? Réservez en tant qu'invité. <strong>Paiement sur place uniquement.</strong>
+                  Vous n'avez pas de compte ? Réservez en tant qu'invité.{" "}
+                  <strong>Paiement sur place uniquement.</strong>
                 </Alert>
 
                 <TextField
                   fullWidth
                   label="Nom complet *"
                   value={inviteData.nomEleve}
-                  onChange={(e) => handleInviteChange('nomEleve', e.target.value)}
+                  onChange={(e) =>
+                    handleInviteChange("nomEleve", e.target.value)
+                  }
                   required
                   sx={{ mb: 2 }}
                 />
@@ -250,7 +265,9 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
                   type="email"
                   label="Email *"
                   value={inviteData.emailInvite}
-                  onChange={(e) => handleInviteChange('emailInvite', e.target.value)}
+                  onChange={(e) =>
+                    handleInviteChange("emailInvite", e.target.value)
+                  }
                   required
                   helperText="Un email de confirmation vous sera envoyé"
                   sx={{ mb: 2 }}
@@ -260,7 +277,9 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
                   fullWidth
                   label="Téléphone"
                   value={inviteData.telephoneInvite}
-                  onChange={(e) => handleInviteChange('telephoneInvite', e.target.value)}
+                  onChange={(e) =>
+                    handleInviteChange("telephoneInvite", e.target.value)
+                  }
                   sx={{ mb: 2 }}
                 />
 
@@ -269,7 +288,9 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
                   <Select
                     value={inviteData.niveauPoleInvite}
                     label="Niveau en pole dance"
-                    onChange={(e) => handleInviteChange('niveauPoleInvite', e.target.value)}
+                    onChange={(e) =>
+                      handleInviteChange("niveauPoleInvite", e.target.value)
+                    }
                   >
                     <MenuItem value="jamais">Jamais pratiqué</MenuItem>
                     <MenuItem value="debutant">Débutant</MenuItem>
@@ -287,7 +308,7 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
         )}
       </DialogContent>
 
-      <DialogActions sx={{ px: 3, py: 2, borderTop: '1px solid #E0E0E0' }}>
+      <DialogActions sx={{ px: 3, py: 2, borderTop: "1px solid #E0E0E0" }}>
         {!success && (
           <>
             <Button onClick={onClose} size="large" disabled={loading}>
@@ -297,11 +318,14 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
               variant="contained"
               size="large"
               onClick={handleSubmit}
-              disabled={loading || (user && typePaiement === 'forfait' && !forfaitSelectionne)}
+              disabled={
+                loading ||
+                (user && typePaiement === "forfait" && !forfaitSelectionne)
+              }
               startIcon={loading && <CircularProgress size={20} />}
               sx={{ px: 4 }}
             >
-              {loading ? 'Réservation...' : 'Confirmer la réservation'}
+              {loading ? "Réservation..." : "Confirmer la réservation"}
             </Button>
           </>
         )}

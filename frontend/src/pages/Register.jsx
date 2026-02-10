@@ -23,6 +23,7 @@ const Register = () => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isMinor, setIsMinor] = useState(false);
 
   const [formData, setFormData] = useState({
     prenom: "",
@@ -41,10 +42,17 @@ const Register = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+
+    if (name === "dateNaissance" && value) {
+      const age = calculateAge(value);
+      setIsMinor(age !== null && age >= 12 && age < 18);
+    }
+
     if (error) setError(null);
   };
 
@@ -71,6 +79,21 @@ const Register = () => {
         setError("Veuillez sélectionner votre niveau en pole dance");
         return;
       }
+
+      if (formData.dateNaissance) {
+        const age = calculateAge(formData.dateNaissance);
+
+        if (age === null || age < 12) {
+          setError(
+            "Vous devez avoir au moins 12 ans pour vous inscrire. Pour les mineurs, une autorisation parentale est requise.",
+          );
+          return;
+        }
+
+        if (age < 18) {
+          console.log("Autorisation parentale requise");
+        }
+      }
     }
 
     if (step === 3) {
@@ -87,6 +110,13 @@ const Register = () => {
   };
 
   const handleSubmit = async () => {
+    if (!formData.accepteCGU || !formData.accepteReglement) {
+      setError(
+        "Vous devez accepter les conditions générales et le règlement du studio pour finaliser votre inscription",
+      );
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -100,6 +130,8 @@ const Register = () => {
         dateNaissance: formData.dateNaissance || null,
         niveauPole: formData.niveauPole,
         accepteContact: formData.accepteContact,
+        accepteCGU: formData.accepteCGU,
+        accepteReglement: formData.accepteReglement,
       });
 
       setStep(4);
@@ -109,6 +141,25 @@ const Register = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const calculateAge = (birthDate) => {
+    if (!birthDate) return null;
+
+    const today = new Date();
+    const birth = new Date(birthDate);
+
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birth.getDate())
+    ) {
+      age--;
+    }
+
+    return age;
   };
 
   return (
@@ -300,6 +351,13 @@ const Register = () => {
 
           {step === 2 && (
             <Box>
+              {isMinor && (
+                <Alert severity="info" sx={{ mb: 3 }}>
+                  Une autorisation parentale sera requise avant de pouvoir
+                  réserver des cours. Vous pourrez la télécharger dans votre
+                  profil après inscription.
+                </Alert>
+              )}
               <TextField
                 fullWidth
                 label="Téléphone (optionnel)"
@@ -332,6 +390,18 @@ const Register = () => {
                     px: 1,
                   },
                 }}
+                inputProps={{
+                  max: (() => {
+                    const today = new Date();
+                    return today.toISOString().split("T")[0];
+                  })(),
+                  min: (() => {
+                    const minDate = new Date();
+                    minDate.setFullYear(minDate.getFullYear() - 100);
+                    return minDate.toISOString().split("T")[0];
+                  })(),
+                }}
+                helperText="Âge minimum : 12 ans. Pour les mineurs, une autorisation parentale est requise."
                 sx={{
                   mb: 3,
                   "& .MuiOutlinedInput-root": {
@@ -340,6 +410,10 @@ const Register = () => {
                   },
                   "& input[type='date']::-webkit-calendar-picker-indicator": {
                     filter: "invert(0.5)",
+                  },
+                  "& .MuiFormHelperText-root": {
+                    color: "white",
+                    fontSize: "0.75rem",
                   },
                 }}
               />
@@ -499,7 +573,9 @@ const Register = () => {
               <Button
                 onClick={handleSubmit}
                 fullWidth
-                disabled={loading}
+                disabled={
+                  loading || !formData.accepteCGU || !formData.accepteReglement
+                }
                 sx={{
                   backgroundColor: "transparent",
                   border: "2px solid",
@@ -509,10 +585,18 @@ const Register = () => {
                   py: 1.5,
                   fontSize: "1rem",
                   fontWeight: 600,
+                  opacity:
+                    !formData.accepteCGU || !formData.accepteReglement
+                      ? 0.5
+                      : 1,
                   "&:hover": {
                     background:
                       "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
                     color: "white",
+                  },
+                  "&:disabled": {
+                    borderColor: "grey.500",
+                    color: "grey.500",
                   },
                 }}
               >

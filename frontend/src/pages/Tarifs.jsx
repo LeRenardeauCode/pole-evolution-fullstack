@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Container,
@@ -7,11 +8,24 @@ import {
   CircularProgress,
   Alert,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { useForfaits } from "@/hooks/useForfaits";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "react-toastify";
+import notificationService from "@/services/notificationService";
 
 const Tarifs = () => {
   const [typeEngagement, setTypeEngagement] = useState("sansengagement");
+
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [selectedForfait, setSelectedForfait] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [loadingAchat, setLoadingAchat] = useState(false);
 
   const { forfaits, loading, error } = useForfaits(typeEngagement);
 
@@ -21,6 +35,62 @@ const Tarifs = () => {
     ...forfaits.prive,
     ...forfaits.abonnement,
   ];
+
+  const handleClickAcheter = (forfait) => {
+    if (forfait.categorie === "decouverte") {
+      navigate("/planning");
+      return;
+    }
+
+    if (!user) {
+      toast.info("Veuillez vous connecter pour acheter un forfait");
+      navigate("/connexion", { state: { from: "/tarifs" } });
+      return;
+    }
+
+    if (user.statutValidationAdmin !== "approved") {
+      toast.warning(
+        "Votre compte doit être validé par un administrateur avant d'acheter un forfait",
+      );
+      return;
+    }
+
+    setSelectedForfait(forfait);
+    setOpenDialog(true);
+  };
+
+  const handleConfirmAchat = async () => {
+    if (!selectedForfait) return;
+
+    setLoadingAchat(true);
+    try {
+      await notificationService.demanderForfait(
+        selectedForfait._id,
+        selectedForfait.nom,
+        selectedForfait.prix,
+        selectedForfait.categorie,
+      );
+
+      toast.success(
+        "Demande envoyée ! La professeure vous contactera pour organiser le paiement.",
+      );
+      setOpenDialog(false);
+
+      setTimeout(() => {
+        navigate("/mon-compte");
+      }, 1500);
+    } catch (err) {
+      console.error("Erreur demande forfait:", err);
+      toast.error(err.response?.data?.message || "Erreur lors de la demande");
+    } finally {
+      setLoadingAchat(false);
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedForfait(null);
+  };
 
   return (
     <Box
@@ -68,6 +138,41 @@ const Tarifs = () => {
           Du cours collectif (8-10 personnes) aux cours particuliers
         </Typography>
 
+        {!user && (
+          <Alert
+            severity="info"
+            sx={{
+              mb: 4,
+              maxWidth: "800px",
+              mx: "auto",
+              backgroundColor: "rgba(255,255,255,0.95)",
+            }}
+          >
+            <Typography variant="body1">
+              <strong>Besoin d'un compte ?</strong> Connectez-vous ou
+              inscrivez-vous pour acheter un forfait.
+            </Typography>
+          </Alert>
+        )}
+
+        {user && user.statutValidationAdmin !== "approved" && (
+          <Alert
+            severity="warning"
+            sx={{
+              mb: 4,
+              maxWidth: "800px",
+              mx: "auto",
+              backgroundColor: "rgba(255,255,255,0.95)",
+            }}
+          >
+            <Typography variant="body1">
+              <strong>Compte en attente de validation</strong> : Votre compte
+              doit être validé par un administrateur avant d'acheter un forfait.
+            </Typography>
+          </Alert>
+        )}
+
+        {/* ✅ UN SEUL Box pour les boutons (SUPPRESSION DU DOUBLON) */}
         <Box
           sx={{
             display: "flex",
@@ -289,6 +394,10 @@ const Tarifs = () => {
                       variant="contained"
                       fullWidth
                       size="large"
+                      onClick={() => handleClickAcheter(forfait)}
+                      disabled={
+                        !user || user?.statutValidationAdmin !== "approved"
+                      }
                       sx={{
                         py: 1.5,
                         fontWeight: 700,
@@ -299,9 +408,19 @@ const Tarifs = () => {
                         "&:hover": {
                           backgroundColor: "navy.dark",
                         },
+                        "&:disabled": {
+                          backgroundColor: "grey.400",
+                          color: "grey.600",
+                        },
                       }}
                     >
-                      Je m'inscris !
+                      {!user
+                        ? "Se connecter pour acheter"
+                        : user.statutValidationAdmin !== "approved"
+                          ? "Compte en attente"
+                          : forfait.categorie === "decouverte"
+                            ? "Essayer maintenant"
+                            : "Je m'inscris !"}
                     </Button>
                   </Box>
                 </Box>
@@ -326,6 +445,94 @@ const Tarifs = () => {
           </Grid>
         )}
       </Container>
+
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle
+          sx={{ bgcolor: "navy.main", color: "white", fontWeight: 700 }}
+        >
+          Demande de forfait
+        </DialogTitle>
+
+        <DialogContent sx={{ mt: 3 }}>
+          {selectedForfait && (
+            <Box>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                {selectedForfait.nom}
+              </Typography>
+
+              <Typography
+                variant="h4"
+                sx={{ mb: 2, color: "navy.main", fontWeight: 700 }}
+              >
+                {selectedForfait.prix}€
+                {selectedForfait.categorie === "abonnement" && " /mois"}
+                {selectedForfait.categorie === "prive" && " /heure"}
+              </Typography>
+
+              {selectedForfait.description && (
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                  sx={{ mb: 3 }}
+                >
+                  {selectedForfait.description}
+                </Typography>
+              )}
+
+              <Alert severity="info" sx={{ mb: 2 }}>
+                <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                  Comment ça marche ?
+                </Typography>
+                <Typography variant="body2">
+                  1. Vous validez votre demande
+                  <br />
+                  2. La professure reçoit une notification
+                  <br />
+                  3. Elle vous contacte pour organiser le paiement
+                  <br />
+                  4. Une fois le paiement effectué sur place, votre forfait est
+                  activé
+                </Typography>
+              </Alert>
+
+              <Alert severity="warning">
+                <Typography variant="body2">
+                  <strong>Moyens de paiement acceptés :</strong> Espèces,
+                  Chèque, Carte bancaire, Virement
+                </Typography>
+              </Alert>
+            </Box>
+          )}
+        </DialogContent>
+
+        <DialogActions sx={{ p: 3 }}>
+          <Button
+            onClick={handleCloseDialog}
+            disabled={loadingAchat}
+            size="large"
+          >
+            Annuler
+          </Button>
+          <Button
+            onClick={handleConfirmAchat}
+            variant="contained"
+            disabled={loadingAchat}
+            size="large"
+            sx={{ px: 4 }}
+          >
+            {loadingAchat ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "Envoyer la demande"
+            )}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

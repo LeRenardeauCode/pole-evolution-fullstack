@@ -2,8 +2,8 @@ import api from './api';
 
 export const getForfaitsUtilisateur = async () => {
   try {
-    const response = await api.get('/auth/profil');
-    return response.data.data;
+    const response = await api.get('/auth/me');;
+    return response.data.user;;
   } catch (error) {
     throw error.response?.data || error;
   }

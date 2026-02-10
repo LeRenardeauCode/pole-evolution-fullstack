@@ -1,34 +1,94 @@
-import Notification from '../models/Notification.js';
-import asyncHandler from 'express-async-handler';
+import { Notification } from "../models/index.js";
+import asyncHandler from "express-async-handler";
 
 export const getNotifications = asyncHandler(async (req, res) => {
   const { estLue, priorite, type, limite = 20 } = req.query;
 
   const query = { estArchivee: false };
-  if (estLue !== undefined) query.estLue = estLue === 'true';
+  if (estLue !== undefined) query.estLue = estLue === "true";
   if (priorite) query.priorite = priorite;
   if (type) query.type = type;
 
   const notifications = await Notification.find(query)
     .sort({ priorite: -1, dateCreation: -1 })
     .limit(Number(limite))
-    .populate('utilisateurId', 'prenom nom email')
-    .populate('coursId', 'nom dateDebut')
-    .populate('reservationId', 'statut');
+    .populate("utilisateurId", "prenom nom email")
+    .populate("coursId", "nom dateDebut")
+    .populate("reservationId", "statut");
 
   res.status(200).json({
     success: true,
     count: notifications.length,
-    data: notifications
+    data: notifications,
   });
 });
+
+export const creerDemandeForfait = async (req, res) => {
+  try {
+    const { forfaitId, forfaitNom, forfaitPrix, forfaitCategorie } = req.body; // ✅ RÉCUPÉRER
+
+    console.log("📦 Données reçues:", {
+      forfaitId,
+      forfaitNom,
+      forfaitPrix,
+      forfaitCategorie,
+    });
+
+    if (!forfaitId || !forfaitNom || !forfaitPrix) {
+      return res.status(400).json({
+        success: false,
+        message: "Données manquantes",
+      });
+    }
+
+    const utilisateur = req.user;
+
+    console.log("👤 Utilisateur:", {
+      id: utilisateur._id,
+      nom: `${utilisateur.prenom} ${utilisateur.nom}`,
+      email: utilisateur.email,
+      tel: utilisateur.telephone,
+    });
+
+    const notification = await Notification.creer({
+      type: "demande_forfait",
+      titre: `Demande de forfait : ${forfaitNom}`,
+      message: `${utilisateur.prenom} ${utilisateur.nom} souhaite acheter "${forfaitNom}" (${forfaitPrix}€).`,
+      priorite: "haute",
+      metadata: {
+        utilisateurId: utilisateur._id,
+        utilisateurNom: `${utilisateur.prenom} ${utilisateur.nom}`,
+        utilisateurEmail: utilisateur.email,
+        utilisateurTelephone: utilisateur.telephone || null,
+        forfaitId,
+        forfaitNom,
+        forfaitPrix,
+        forfaitCategorie,
+      },
+    });
+
+    console.log("✅ Notification créée:", notification.metadata);
+
+    res.status(201).json({
+      success: true,
+      message: "Demande envoyée",
+      data: notification,
+    });
+  } catch (error) {
+    console.error("Erreur:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 export const countNonLues = asyncHandler(async (req, res) => {
   const compteurs = await Notification.compterNonLues();
 
   res.status(200).json({
     success: true,
-    data: compteurs
+    data: compteurs,
   });
 });
 
@@ -37,15 +97,15 @@ export const marquerCommeLue = asyncHandler(async (req, res) => {
 
   if (!notification) {
     res.status(404);
-    throw new Error('Notification introuvable');
+    throw new Error("Notification introuvable");
   }
 
   await notification.marquerCommeLue();
 
   res.status(200).json({
     success: true,
-    message: 'Notification marquée comme lue',
-    data: notification
+    message: "Notification marquée comme lue",
+    data: notification,
   });
 });
 
@@ -54,7 +114,7 @@ export const marquerToutesLues = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: `${result.modifiedCount} notification(s) marquée(s) comme lue(s)`
+    message: `${result.modifiedCount} notification(s) marquée(s) comme lue(s)`,
   });
 });
 
@@ -63,15 +123,15 @@ export const archiverNotification = asyncHandler(async (req, res) => {
 
   if (!notification) {
     res.status(404);
-    throw new Error('Notification introuvable');
+    throw new Error("Notification introuvable");
   }
 
   await notification.archiver();
 
   res.status(200).json({
     success: true,
-    message: 'Notification archivée',
-    data: notification
+    message: "Notification archivée",
+    data: notification,
   });
 });
 
@@ -82,6 +142,6 @@ export const supprimerArchivees = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: `${result.deletedCount} notification(s) supprimée(s)`
+    message: `${result.deletedCount} notification(s) supprimée(s)`,
   });
 });

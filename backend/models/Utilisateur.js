@@ -72,9 +72,75 @@ const utilisateurSchema = new mongoose.Schema(
       validate: {
         validator: function (v) {
           if (!v) return true;
-          return v < new Date();
+
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          if (v >= today) {
+            return false;
+          }
+
+          const birthDate = new Date(v);
+          let age = today.getFullYear() - birthDate.getFullYear();
+          const monthDiff = today.getMonth() - birthDate.getMonth();
+
+          if (
+            monthDiff < 0 ||
+            (monthDiff === 0 && today.getDate() < birthDate.getDate())
+          ) {
+            age--;
+          }
+
+          if (age < 12) {
+            return false;
+          }
+
+          return true;
         },
-        message: "La date de naissance doit être dans le passé",
+        message: function (props) {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          if (props.value >= today) {
+            return "La date de naissance doit être dans le passé.";
+          }
+
+          const birthDate = new Date(props.value);
+          let age = today.getFullYear() - birthDate.getFullYear();
+          const monthDiff = today.getMonth() - birthDate.getMonth();
+
+          if (
+            monthDiff < 0 ||
+            (monthDiff === 0 && today.getDate() < birthDate.getDate())
+          ) {
+            age--;
+          }
+
+          if (age < 12) {
+            return "Vous devez avoir au moins 12 ans pour vous inscrire. Pour les mineurs, une autorisation parentale est requise.";
+          }
+
+          return "Date de naissance invalide.";
+        },
+      },
+    },
+
+    autorisationParentale: {
+      estRequise: {
+        type: Boolean,
+        default: false,
+      },
+      fichierUrl: {
+        type: String,
+        required: false,
+      },
+      dateValidation: {
+        type: Date,
+        required: false,
+      },
+      estValidee: {
+        type: Boolean,
+        default: false,
       },
     },
 

@@ -118,7 +118,7 @@ export const getPlanningSemaine = async (req, res) => {
       dateDebut: { $gte: debutSemaine, $lte: finSemaine },
       statut: { $nin: ["annule"] },
       estVisible: true,
-      type: { $in: ["collectif", "decouverte"] }, 
+      type: { $in: ["collectif", "decouverte"] },
     };
 
     if (type && type !== "tous") {
@@ -196,9 +196,16 @@ export const getCoursJour = async (req, res) => {
 
 export const createCours = async (req, res) => {
   try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Utilisateur non authentifié",
+      });
+    }
+
     const coursData = {
       ...req.body,
-      professeur: req.user._id,
+      professeur: req.user.id,
     };
 
     if (coursData.type === "evjf") {
@@ -216,8 +223,14 @@ export const createCours = async (req, res) => {
       }
     }
 
-    const cours = await Cours.create(coursData);
+    if (!coursData.dateFin && coursData.dateDebut && coursData.duree) {
+      const dateDebut = new Date(coursData.dateDebut);
+      coursData.dateFin = new Date(
+        dateDebut.getTime() + coursData.duree * 60 * 1000,
+      );
+    }
 
+    const cours = await Cours.create(coursData);
     const coursComplet = await Cours.findById(cours._id).populate(
       "professeur",
       "prenom nom",
@@ -229,6 +242,7 @@ export const createCours = async (req, res) => {
       data: coursComplet,
     });
   } catch (error) {
+    console.error("❌ Erreur createCours:", error);
     res.status(500).json({
       success: false,
       message: error.message,
