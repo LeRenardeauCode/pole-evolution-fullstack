@@ -21,7 +21,12 @@ import Login from '@pages/Login';
 import Register from '@pages/Register';
 import MonCompte from '@pages/MonCompte';
 
-
+import AdminLayout from '@pages/Admin/AdminLayout';
+import CoursPlanning from '@pages/Admin/CoursPlanning';
+import Eleves from '@pages/Admin/Eleves';
+import TarifsContenu from '@pages/Admin/TarifsContenu';
+import NotificationsPage from '@pages/Admin/Notifications';
+import Parametres from '@pages/Admin/Parametres';
 
 import theme from '@utils/theme';
 
@@ -31,66 +36,72 @@ function App() {
       <CssBaseline />
       <AuthProvider>
         <BrowserRouter>
-          <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-            <Header />
-            
-            <main style={{ flex: 1 }}>
-              <Routes>
+          <Routes>
+            {/* Routes publiques avec Header/Footer */}
+            <Route path="/*" element={
+              <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+                <Header />
+                <main style={{ flex: 1 }}>
+                  <Routes>
+                    <Route path="/" element={<Accueil />} />
+                    <Route path="/cours" element={<Cours />} />
+                    <Route path="/planning" element={<Planning/>} />
+                    <Route path="/tarifs" element={<Tarifs/>} />
+                    <Route path="/show-animations" element={<ShowAnimations/>} />
+                    <Route path="/galerie" element={<Galerie />} />
+                    <Route path="/a-propos" element={<APropos />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/connexion" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    
+                    {/* Routes protégées utilisateur */}
+                    <Route 
+                      path="/mon-compte" 
+                      element={
+                        <ProtectedRoute>
+                          <MonCompte />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/mes-reservations" 
+                      element={
+                        <ProtectedRoute>
+                          <div>Mes Réservations</div>
+                        </ProtectedRoute>
+                      } 
+                    />
+                  </Routes>
+                </main>
+                <Footer />
+              </div>
+            } />
 
-                {/* Routes publiques */}
-                <Route path="/" element={<Accueil />} />
-                <Route path="/cours" element={<Cours />} />
-                <Route path="/planning" element={<Planning/>} />
-                <Route path="/tarifs" element={<Tarifs/>} />
-                <Route path="/show-animations" element={<ShowAnimations/>} />
-                <Route path="/galerie" element={<Galerie />} />
-                <Route path="/a-propos" element={<APropos />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/connexion" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                
-                {/* Routes protégées */}
-                <Route 
-                  path="/mon-compte" 
-                  element={
-                    <ProtectedRoute>
-                      <MonCompte />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                <Route 
-                  path="/mes-reservations" 
-                  element={
-                    <ProtectedRoute>
-                      <div>Mes Réservations</div>
-                    </ProtectedRoute>
-                  } 
-                />
+            {/* Routes admin SANS Header/Footer (AdminLayout a son propre header) */}
+            <Route 
+              path="/admin/*" 
+              element={
+                <ProtectedRoute adminOnly>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route path="cours" element={<CoursPlanning />} />
+              <Route path="eleves" element={<Eleves />} />
+              <Route path="tarifs" element={<TarifsContenu />} />
+              <Route path="notifications" element={<NotificationsPage />} />
+              <Route path="parametres" element={<Parametres />} />
+            </Route>
+          </Routes>
 
-                {/* Routes admin */}
-                <Route 
-                  path="/admin/*" 
-                  element={
-                    <ProtectedRoute adminOnly>
-                      <div>Dashboard Admin</div>
-                    </ProtectedRoute>
-                  } 
-                />
-              </Routes>
-            </main>
-
-            <Footer />
-            
-            <ToastContainer 
-              position="top-right" 
-              autoClose={3000}
-              hideProgressBar={false}
-              newestOnTop
-              closeOnClick
-              pauseOnHover
-            />
-          </div>
+          <ToastContainer 
+            position="top-right" 
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            pauseOnHover
+          />
         </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>

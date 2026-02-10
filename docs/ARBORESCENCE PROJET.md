@@ -1,213 +1,152 @@
-pole-evolution/                          
+Pole-Evolution/
 │
-├── .gitignore                           
+├── INSTALLATION.md
+├── Pole-Evolution.postman_collection.json
+├── README.md
 │
-├── README.md                            
+├── docs/
+│   ├── ARBORESCENCE PROJET.md
+│   ├── CHECKLIST JURY.md
+│   ├── CONTEXTE PROJET/
+│   ├── PROMPTS CODING.md
+│   ├── SECURITY.md
+│   └── TARIFS_REFERENCE.md
 │
-├── docs/                                
-│   ├── DICTIONNAIRE DE DONNEES.xlsx     
-│   ├── TARIFS_REFERENCE.md              
-│   ├── API_DOCUMENTATION.md             
-│   └──WORKFLOW_UTILISATEUR.md          
-│                         
+├── backend/
+│   │
+│   ├── config/
+│   │   ├── cloudinary.js
+│   │   └── database.js
+│   │
+│   ├── models/
+│   │   ├── Avis.js
+│   │   ├── Cours.js
+│   │   ├── Forfait.js
+│   │   ├── Media.js
+│   │   ├── MessageContact.js
+│   │   ├── Notification.js
+│   │   ├── Parametre.js
+│   │   ├── Reservation.js
+│   │   ├── Utilisateur.js
+│   │   └── index.js
+│   │
+│   ├── controllers/
+│   │   ├── auth.controller.js
+│   │   ├── avis.controller.js
+│   │   ├── contact.controller.js
+│   │   ├── cours.controller.js
+│   │   ├── forfait.controller.js
+│   │   ├── media.controller.js
+│   │   ├── notification.controller.js
+│   │   ├── parametre.controller.js
+│   │   ├── reservation.controller.js
+│   │   └── utilisateur.controller.js
+│   │
+│   ├── routes/
+│   │   ├── auth.routes.js
+│   │   ├── avis.routes.js
+│   │   ├── contact.routes.js
+│   │   ├── cours.routes.js
+│   │   ├── forfait.routes.js
+│   │   ├── media.routes.js
+│   │   ├── notification.routes.js
+│   │   ├── parametre.routes.js
+│   │   ├── reservations.routes.js
+│   │   └── utilisateur.routes.js
+│   │
+│   ├── middleware/
+│   │   ├── auth.middleware.js
+│   │   ├── errorHandler.middleware.js
+│   │   ├── rateLimit.middleware.js
+│   │   └── upload.middleware.js
+│   │
+│   ├── utils/
+│   │   └── file.utils.js
+│   │
+│   ├── seeds/
+│   │   ├── index.js
+│   │   └── data/
+│   │       ├── cours.js
+│   │       ├── forfaits.js
+│   │       ├── parametres.js
+│   │       └── users.js
+│   │
+│   ├── uploads/
+│   │   ├── media/
+│   │   └── profiles/
+│   │
+│   ├── package.json
+│   └── server.js
 │
-│
-│
-│
-├── backend/                             
+├── frontend/
 │   │
-│   ├── config/                          
-│   │   ├── database.js                  
-│   │   ├── cloudinary.js                
-│   │   └── email.js                     
-│   │
-│   ├── models/                          
-│   │   ├── Utilisateur.js               
-│   │   ├── Cours.js                     
-│   │   ├── Reservation.js               
-│   │   ├── Forfait.js                   
-│   │   ├── Media.js                     
-│   │   ├── Avis.js                      
-│   │   ├── MessageContact.js            
-│   │   ├── Notification.js              
-│   │   └── Parametre.js                 
-│   │                     
-│   │
-│   ├── controllers/                     
-│   │   ├── auth.controller.js           
-│   │   ├── utilisateur.controller.js    
-│   │   ├── cours.controller.js          
-│   │   ├── reservation.controller.js    
-│   │   ├── forfait.controller.js        
-│   │   ├── avis.controller.js           
-│   │   ├── media.controller.js          
-│   │   ├── messageContact.controller.js 
-│   │   ├── notification.controller.js   
-│   │   ├── parametre.controller.js      
-│   │   └── stats.controller.js          
-│   │
-│   ├── routes/                          
-│   │   ├── auth.routes.js               
-│   │   ├── utilisateur.routes.js        
-│   │   ├── cours.routes.js              
-│   │   ├── reservation.routes.js        
-│   │   ├── forfait.routes.js            
-│   │   ├── avis.routes.js               
-│   │   ├── media.routes.js              
-│   │   ├── messageContact.routes.js     
-│   │   ├── notification.routes.js       
-│   │   ├── parametre.routes.js          
-│   │   ├── stats.routes.js              
-│   │   └── index.js                     
-│   │
-│   ├── middleware/                      
-│   │   ├── auth.middleware.js           
-│   │   ├── admin.middleware.js          
-│   │   ├── validation.middleware.js     
-│   │   ├── errorHandler.middleware.js   
-│   │   ├── upload.middleware.js         
-│   │   └── rateLimit.middleware.js      
-│   │
-│   ├── utils/                           
-│   │   ├── sendEmail.js                 
-│   │   ├── generateToken.js             
-│   │   ├── cloudinaryUpload.js          
-│   │   └── helpers.js                   
-│   ├── seeds/                           
-│   │   ├── index.js                     
-│   │   ├── utilisateurs.seed.js         
-│   │   ├── cours.seed.js               
-│   │   ├── forfaits.seed.js             
-│   │   ├── reservations.seed.js         
-│   │   ├── avis.seed.js                 
-│   │   └── parametres.seed.js           
-│   │
-│   ├── node_modules/                    
-│   │
-│   ├── .env                             
-│   │   # MONGODB_URI=mongodb+srv://...
-│   │   # JWT_SECRET=...
-│   │   # CLOUDINARY_API_KEY=...
-│   │   # EMAIL_USER=...
-│   │
-│   ├── .gitignore                       
-│   │   # node_modules
-│   │   # .env
-│   │   # *.log
-│   │
-│   ├── package.json                     
-│   ├── package-lock.json                
-│   └── server.js                        
-│
-│
-├── frontend/                            
-│   │
-│   ├── public/                          
-│   │   ├── index.html                   
-│   │   ├── favicon.ico                  
-│   │   └── logo-pole-evolution.png      
-│   │
-│   ├── src/                             
+│   ├── src/
 │   │   │
-│   │   ├── assets/                      
+│   │   ├── assets/
 │   │   │   ├── images/
-│   │   │   └── fonts/
+│   │   │   └── styles/
 │   │   │
-│   │   ├── components/                  
-│   │   │   ├── common/                  
-│   │   │   │   ├── Navbar.jsx
-│   │   │   │   ├── Footer.jsx
-│   │   │   │   ├── Button.jsx
-│   │   │   │   ├── Modal.jsx
-│   │   │   │   └── Loader.jsx
-│   │   │   │
-│   │   │   ├── cours/                   
-│   │   │   │   ├── CoursCard.jsx
-│   │   │   │   ├── Planning.jsx
-│   │   │   │   └── DetailsCours.jsx
-│   │   │   │
-│   │   │   ├── reservation/             
-│   │   │   │   ├── FormReservation.jsx
-│   │   │   │   └── MesReservations.jsx
-│   │   │   │
-│   │   │   ├── avis/                    
-│   │   │   │   ├── AvisCard.jsx
-│   │   │   │   └── FormAvis.jsx
-│   │   │   │
-│   │   │   └── admin/                   
-│   │   │       ├── Sidebar.jsx
-│   │   │       ├── TableauBord.jsx
-│   │   │       └── StatsCard.jsx
+│   │   ├── components/
+│   │   │   ├── coursData.js
+│   │   │   ├── admin/
+│   │   │   ├── animations/
+│   │   │   │   └── FadeIn.jsx
+│   │   │   ├── common/
+│   │   │   ├── layout/
+│   │   │   └── UI/
 │   │   │
-│   │   ├── pages/                       
-│   │   │   ├── public/                  
-│   │   │   │   ├── Home.jsx
-│   │   │   │   ├── APropos.jsx
-│   │   │   │   ├── LesCours.jsx
-│   │   │   │   ├── Tarifs.jsx
-│   │   │   │   ├── EVJF.jsx
-│   │   │   │   ├── Galerie.jsx
-│   │   │   │   ├── Avis.jsx
-│   │   │   │   ├── Contact.jsx
-│   │   │   │   └── MentionsLegales.jsx
-│   │   │   │
-│   │   │   ├── auth/                    
-│   │   │   │   ├── Login.jsx
-│   │   │   │   ├── Register.jsx
-│   │   │   │   └── ResetPassword.jsx
-│   │   │   │
-│   │   │   ├── client/                 
-│   │   │   │   ├── Dashboard.jsx
-│   │   │   │   ├── Profil.jsx
-│   │   │   │   ├── MesReservations.jsx
-│   │   │   │   └── MesForfaits.jsx
-│   │   │   │
-│   │   │   └── admin/                   
-│   │   │       ├── Dashboard.jsx
-│   │   │       ├── GestionUtilisateurs.jsx
-│   │   │       ├── GestionCours.jsx
-│   │   │       ├── GestionReservations.jsx
-│   │   │       ├── GestionForfaits.jsx
-│   │   │       ├── GestionAvis.jsx
-│   │   │       ├── GestionGalerie.jsx
-│   │   │       ├── MessagesContact.jsx
-│   │   │       ├── Notifications.jsx
-│   │   │       ├── Parametres.jsx
-│   │   │       └── Statistiques.jsx
+│   │   ├── context/
+│   │   │   ├── authContext.jsx
+│   │   │   └── authProvider.jsx
 │   │   │
-│   │   ├── context/                     
-│   │   │   ├── AuthContext.jsx          
-│   │   │   ├── CoursContext.jsx        
-│   │   │   └── NotificationContext.jsx  
-│   │   │
-│   │   ├── hooks/                       
+│   │   ├── hooks/
+│   │   │   ├── useAbout.js
 │   │   │   ├── useAuth.js
+│   │   │   ├── useContact.js
 │   │   │   ├── useCours.js
-│   │   │   └── useNotifications.js
+│   │   │   ├── useEVJFForfaits.js
+│   │   │   ├── useForfaits.js
+│   │   │   └── useGallery.js
 │   │   │
-│   │   ├── services/                    
-│   │   │   ├── api.js                  
-│   │   │   ├── authService.js           
-│   │   │   ├── coursService.js          
-│   │   │   ├── reservationService.js    
-│   │   │   └── ...
+│   │   ├── pages/
+│   │   │   ├── APropos.jsx
+│   │   │   ├── Contact.jsx
+│   │   │   ├── Cours.jsx
+│   │   │   ├── Galerie.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── MonCompte.jsx
+│   │   │   ├── Planning.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── ShowAnimations.jsx
+│   │   │   ├── Tarifs.jsx
+│   │   │   ├── Accueil/
+│   │   │   └── admin/
 │   │   │
-│   │   ├── utils/                       
-│   │   │   ├── formatDate.js
-│   │   │   ├── validation.js
-│   │   │   └── constants.js
+│   │   ├── services/
+│   │   │   ├── api.js
+│   │   │   ├── authService.js
+│   │   │   ├── avisService.js
+│   │   │   ├── contactService.js
+│   │   │   ├── coursService.js
+│   │   │   ├── forfaitService.js
+│   │   │   ├── mediaService.js
+│   │   │   ├── parametreService.js
+│   │   │   └── reservationService.js
 │   │   │
-│   │   ├── App.jsx                      
-│   │   ├── index.jsx                    
-│   │   └── App.css                      
+│   │   ├── utils/
+│   │   │   ├── dateHelpers.js
+│   │   │   └── theme.js
+│   │   │
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
 │   │
-│   ├── node_modules/                    
-│   ├── .env                             
-│   │   # REACT_APP_API_URL=http://localhost:5000/api
-│   │
-│   ├── package.json                     
-│   ├── package-lock.json
-│   └── .gitignore
-│
+│   ├── public/
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package.json
+│   ├── README.md
+│   └── vite.config.js
 │
 └── .git/                                

@@ -1,4 +1,3 @@
-// middleware/auth.middleware.js
 import jwt from "jsonwebtoken";
 import { Utilisateur } from "../models/index.js";
 

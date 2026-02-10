@@ -11,6 +11,7 @@ import {
   Divider,
   LinearProgress,
   Alert,
+  AlertTitle,
   IconButton
 } from '@mui/material';
 import {
@@ -20,7 +21,8 @@ import {
   CalendarToday,
   CheckCircle,
   Block,
-  Info
+  Info,
+  Warning as WarningIcon
 } from '@mui/icons-material';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -33,6 +35,11 @@ const CourseDetailsModal = ({ open, onClose, cours, onReservationSuccess }) => {
 
   const placesDisponibles = cours.capaciteMax - cours.placesReservees;
   const tauxRemplissage = (cours.placesReservees / cours.capaciteMax) * 100;
+
+  const estCoursUnique = cours.type === 'collectif' && cours.niveau === 'initiation';
+  const estCoursDecouverte = cours.type === 'decouverte';
+  const paiementAvantObligatoire = estCoursUnique || estCoursDecouverte;
+  const prixCours = estCoursDecouverte ? 15 : 25;
 
   const getTypeColor = (type) => {
     const colors = {
@@ -123,6 +130,41 @@ const CourseDetailsModal = ({ open, onClose, cours, onReservationSuccess }) => {
         </DialogTitle>
 
         <DialogContent sx={{ pt: 3 }}>
+          {paiementAvantObligatoire && (
+            <Alert 
+              severity="warning" 
+              icon={<WarningIcon />} 
+              sx={{ 
+                mb: 3,
+                border: '2px solid #FF9800',
+                bgcolor: 'rgba(255, 152, 0, 0.1)'
+              }}
+            >
+              <AlertTitle sx={{ fontWeight: 700 }}>
+                Paiement AVANT le cours obligatoire
+              </AlertTitle>
+              <Typography variant="body2" paragraph>
+                Ce cours nécessite un <strong>paiement sur place AVANT le début du cours</strong>.
+              </Typography>
+              <Typography variant="body2" paragraph>
+                Merci de vous présenter <strong>5 à 15 minutes à l'avance</strong> au studio avec votre règlement :
+              </Typography>
+              <Box sx={{ pl: 2, mb: 1 }}>
+                <Typography variant="body2">• Espèces</Typography>
+                <Typography variant="body2">• Chèque</Typography>
+                <Typography variant="body2">• Carte bancaire</Typography>
+              </Box>
+              <Typography variant="body2" sx={{ fontWeight: 700, color: '#FF1966', mt: 1 }}>
+                Prix : {prixCours}€
+              </Typography>
+              <Divider sx={{ my: 1.5 }} />
+              <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+                <strong>Conditions d'annulation :</strong> Annulation gratuite jusqu'à 24h avant le cours.
+                En cas d'annulation tardive ou d'absence, le cours reste dû.
+              </Typography>
+            </Alert>
+          )}
+
           {cours.description && (
             <Box sx={{ mb: 3 }}>
               <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.7 }}>
@@ -247,6 +289,11 @@ const CourseDetailsModal = ({ open, onClose, cours, onReservationSuccess }) => {
               </Box>
             </>
           )}
+
+          <Alert severity="info" sx={{ mt: 3 }}>
+            <strong>Validation requise :</strong> Votre réservation sera en attente de validation par l'administrateur. 
+            Vous recevrez une notification une fois confirmée.
+          </Alert>
 
           {!cours.reservationOuverte && cours.statut !== 'annule' && (
             <Alert severity="warning" sx={{ mt: 2 }}>

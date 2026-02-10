@@ -32,6 +32,15 @@ const parametres = [
     estModifiable: true,
   },
   {
+    cle: "notificationsactives",
+    valeur: "true",
+    type: "booleen",
+    categorie: "emails",
+    description:
+      "Activer/désactiver les notifications emails automatiques pour l'admin",
+    estModifiable: true,
+  },
+  {
     cle: "telephone_contact",
     valeur: "0612345678",
     type: "texte",

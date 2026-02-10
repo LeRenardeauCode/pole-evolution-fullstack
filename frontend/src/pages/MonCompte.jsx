@@ -10,12 +10,18 @@ import {
   Alert,
   CircularProgress,
   Avatar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Divider,
 } from "@mui/material";
+import { Warning as WarningIcon } from "@mui/icons-material";
 import authService from "@services/authService";
 import reservationService from "@services/reservationService";
 
 import backgroundImg from "@assets/images/img_hero2.png";
-import logo from '@assets/images/thumbnail_LOGO_POLE_EVOLUTION-removebg-preview.png';
+import logo from "@assets/images/thumbnail_LOGO_POLE_EVOLUTION-removebg-preview.png";
 
 const MonCompte = () => {
   const navigate = useNavigate();
@@ -28,6 +34,8 @@ const MonCompte = () => {
   const [nextReservation, setNextReservation] = useState(null);
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [photoKey, setPhotoKey] = useState(0);
+
+  const [openReglement, setOpenReglement] = useState(false);
 
   const [formData, setFormData] = useState({
     prenom: "",
@@ -65,9 +73,10 @@ const MonCompte = () => {
           setProfilePhoto(profileResponse.user.photoUrl);
         }
 
-        const reservationsResponse = await reservationService.getMesReservations({ 
-          statut: "confirmee" 
-        });
+        const reservationsResponse =
+          await reservationService.getMesReservations({
+            statut: "confirmee",
+          });
 
         if (!isMounted) return;
 
@@ -142,7 +151,7 @@ const MonCompte = () => {
       const response = await authService.uploadPhoto(formDataPhoto);
 
       setProfilePhoto(response.user.photoUrl);
-      setPhotoKey(prev => prev + 1);
+      setPhotoKey((prev) => prev + 1);
 
       const currentUser = JSON.parse(localStorage.getItem("user"));
       currentUser.photoUrl = response.user.photoUrl;
@@ -252,7 +261,6 @@ const MonCompte = () => {
           display: { xs: "none", md: "block" },
         }}
       />
-
 
       <Box
         sx={{
@@ -576,19 +584,21 @@ const MonCompte = () => {
               <TextField
                 fullWidth
                 label="Prochain cours à venir"
-                value={nextReservation?.cours?.nom || "Aucune réservation à venir"}
+                value={
+                  nextReservation?.cours?.nom || "Aucune réservation à venir"
+                }
                 InputProps={{ readOnly: true }}
                 variant="outlined"
-                sx={{ 
+                sx={{
                   mb: 3,
-                  '& .MuiOutlinedInput-root': {
-                    color: 'white',
-                    '& fieldset': {
-                      borderColor: 'rgba(255, 255, 255, 0.3)',
+                  "& .MuiOutlinedInput-root": {
+                    color: "white",
+                    "& fieldset": {
+                      borderColor: "rgba(255, 255, 255, 0.3)",
                     },
                   },
-                  '& .MuiInputLabel-root': {
-                    color: 'rgba(255, 255, 255, 0.7)',
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
                   },
                 }}
               />
@@ -598,28 +608,31 @@ const MonCompte = () => {
                 label="Date / Heure"
                 value={
                   nextReservation?.cours?.dateDebut
-                    ? new Date(nextReservation.cours.dateDebut).toLocaleString('fr-FR', {
-                        weekday: 'long',
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })
+                    ? new Date(nextReservation.cours.dateDebut).toLocaleString(
+                        "fr-FR",
+                        {
+                          weekday: "long",
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        },
+                      )
                     : "Aucune réservation à venir"
                 }
                 InputProps={{ readOnly: true }}
                 variant="outlined"
-                sx={{ 
+                sx={{
                   mb: 3,
-                  '& .MuiOutlinedInput-root': {
-                    color: 'white',
-                    '& fieldset': {
-                      borderColor: 'rgba(255, 255, 255, 0.3)',
+                  "& .MuiOutlinedInput-root": {
+                    color: "white",
+                    "& fieldset": {
+                      borderColor: "rgba(255, 255, 255, 0.3)",
                     },
                   },
-                  '& .MuiInputLabel-root': {
-                    color: 'rgba(255, 255, 255, 0.7)',
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
                   },
                 }}
               />
@@ -629,21 +642,21 @@ const MonCompte = () => {
                 label="Type de cours"
                 value={
                   nextReservation?.cours?.type
-                    ? `${nextReservation.cours.type} - Niveau ${nextReservation.cours.niveau || ''}`
+                    ? `${nextReservation.cours.type} - Niveau ${nextReservation.cours.niveau || ""}`
                     : "Aucune réservation à venir"
                 }
                 InputProps={{ readOnly: true }}
                 variant="outlined"
-                sx={{ 
+                sx={{
                   mb: 3,
-                  '& .MuiOutlinedInput-root': {
-                    color: 'white',
-                    '& fieldset': {
-                      borderColor: 'rgba(255, 255, 255, 0.3)',
+                  "& .MuiOutlinedInput-root": {
+                    color: "white",
+                    "& fieldset": {
+                      borderColor: "rgba(255, 255, 255, 0.3)",
                     },
                   },
-                  '& .MuiInputLabel-root': {
-                    color: 'rgba(255, 255, 255, 0.7)',
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
                   },
                 }}
               />
@@ -655,21 +668,21 @@ const MonCompte = () => {
                   nextReservation?.statut === "confirmee"
                     ? "Confirmée"
                     : nextReservation?.statut === "enattente"
-                    ? "En attente"
-                    : "Aucune réservation à venir"
+                      ? "En attente"
+                      : "Aucune réservation à venir"
                 }
                 InputProps={{ readOnly: true }}
                 variant="outlined"
-                sx={{ 
+                sx={{
                   mb: 4,
-                  '& .MuiOutlinedInput-root': {
-                    color: 'white',
-                    '& fieldset': {
-                      borderColor: 'rgba(255, 255, 255, 0.3)',
+                  "& .MuiOutlinedInput-root": {
+                    color: "white",
+                    "& fieldset": {
+                      borderColor: "rgba(255, 255, 255, 0.3)",
                     },
                   },
-                  '& .MuiInputLabel-root': {
-                    color: 'rgba(255, 255, 255, 0.7)',
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255, 255, 255, 0.7)",
                   },
                 }}
               />
@@ -688,7 +701,8 @@ const MonCompte = () => {
                   textTransform: "uppercase",
                   mb: 2,
                   "&:hover": {
-                    background: "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
+                    background:
+                      "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
                   },
                 }}
               >
@@ -702,18 +716,25 @@ const MonCompte = () => {
                 sx={{
                   backgroundColor: "transparent",
                   border: "2px solid",
-                  borderColor: nextReservation ? "primary.main" : "rgba(255, 255, 255, 0.3)",
-                  color: nextReservation ? "primary.main" : "rgba(255, 255, 255, 0.5)",
+                  borderColor: nextReservation
+                    ? "primary.main"
+                    : "rgba(255, 255, 255, 0.3)",
+                  color: nextReservation
+                    ? "primary.main"
+                    : "rgba(255, 255, 255, 0.5)",
                   py: 1.5,
                   fontSize: "1rem",
                   fontWeight: 600,
                   textTransform: "uppercase",
                   mb: 2,
-                  "&:hover": nextReservation ? {
-                    background: "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                    color: "white",
-                    borderColor: "transparent",
-                  } : {},
+                  "&:hover": nextReservation
+                    ? {
+                        background:
+                          "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
+                        color: "white",
+                        borderColor: "transparent",
+                      }
+                    : {},
                 }}
               >
                 Annuler une réservation*
@@ -731,7 +752,7 @@ const MonCompte = () => {
                     color: "white",
                   },
                 }}
-                onClick={() => window.open('/reglement-interieur', '_blank')}
+                onClick={() => setOpenReglement(true)}
               >
                 *Voir conditions d'annulations
               </Typography>
@@ -739,6 +760,170 @@ const MonCompte = () => {
           </Box>
         </Container>
       </Box>
+
+      <Dialog
+        open={openReglement}
+        onClose={() => setOpenReglement(false)}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: {
+            bgcolor: "#1a1a1a",
+            color: "white",
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            bgcolor: "#8B5CF6",
+            color: "white",
+            fontWeight: 700,
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
+          <WarningIcon />
+          Conditions d'annulation - Règlement intérieur
+        </DialogTitle>
+
+        <DialogContent sx={{ mt: 2 }}>
+          <Box
+            sx={{
+              mb: 3,
+              p: 2,
+              bgcolor: "rgba(139, 92, 246, 0.1)",
+              border: "2px solid #8B5CF6",
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 700, mb: 2, color: "#FF1966" }}
+            >
+              Article 4 - Accueil et annulation
+            </Typography>
+
+            <Typography variant="body1">
+              Merci d'arriver <strong>5 à 15 minutes à l'avance</strong> afin de
+              commencer le cours à l'heure. Merci de prévenir en cas de retard.
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ fontWeight: 700, fontSize: "1.1rem", color: "#FF1966" }}
+            >
+              ⚠️ Tout cours non décommandé au maximum <strong>24 heures</strong>{" "}
+              à l'avance sera dû.
+            </Typography>
+          </Box>
+
+          <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
+
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 700, mb: 2, color: "#FF1966" }}
+          >
+            Paiement obligatoire AVANT le cours pour les cours à l'unité et découverte
+          </Typography>
+          <Typography variant="body2">
+            Le paiement doit être effectué SUR PLACE mais AVANT le début du
+            cours.
+            <br />
+            Merci de vous présenter 5 à 15 minutes à l'avance avec votre
+            règlement.
+          </Typography>
+
+          <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
+
+          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
+            Qu'est-ce que cela signifie concrètement ?
+          </Typography>
+
+          <Typography variant="body1">
+            <strong>Si vous annulez PLUS de 24h avant le cours :</strong>
+          </Typography>
+          <Typography variant="body2" sx={{ pl: 2 }}>
+            • Aucune pénalité
+            <br />
+            • Votre séance reste disponible dans votre forfait
+            <br />• Vous pouvez réserver un autre cours sans problème
+          </Typography>
+
+          <Typography variant="body1" sx={{ mt: 2 }}>
+            <strong>Si vous annulez MOINS de 24h avant le cours :</strong>
+          </Typography>
+          <Typography variant="body2" sx={{ pl: 2 }}>
+            • <strong>Forfait :</strong> La séance sera déduite de votre forfait
+            (même si vous ne venez pas)
+            <br />• <strong>Cours à l'unité :</strong> Le cours étant déjà payé,
+            aucun remboursement ne sera effectué.
+          </Typography>
+
+          <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
+
+          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
+            Exemple concret
+          </Typography>
+          <Typography variant="body2">
+            Vous avez un cours le <strong>Lundi à 18h</strong>.
+          </Typography>
+          <Typography variant="body2" sx={{ pl: 2 }}>
+            ✅ Vous pouvez annuler <strong>jusqu'à Dimanche 18h</strong> sans
+            pénalité
+            <br />❌ Si vous annulez <strong>après Dimanche 18h</strong>, la
+            séance sera déduite
+          </Typography>
+
+          <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
+
+          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
+            Autres règles importantes
+          </Typography>
+
+          <Typography variant="body2">
+            <strong>Tenue idéale (Article 3) :</strong>
+            <br />
+            • Short de sport / brassière (ventre, bras, jambes et aisselles
+            dénudés)
+            <br />
+            • Bijoux retirés avant le cours
+            <br />• Interdit d'appliquer crème ou huile le jour du cours
+          </Typography>
+
+          <Typography variant="body2">
+            <strong>Certificat médical (Article 1) :</strong>
+            <br />
+            • Non obligatoire mais vivement recommandé
+            <br />
+            • Valable 3 ans
+            <br />• Pratique déconseillée en cas de grossesse, problème
+            cardiaque, hémophilie
+          </Typography>
+
+          <Typography variant="body2">
+            <strong>Déroulement des cours (Article 5) :</strong>
+            <br />
+            • Durée : 1h15 à 1h30
+            <br />
+            • Minimum 5 élèves / Maximum 10 élèves
+            <br />• Paiement : chèque, espèces ou virement bancaire
+          </Typography>
+        </DialogContent>
+
+        <DialogActions sx={{ p: 2 }}>
+          <Button
+            onClick={() => setOpenReglement(false)}
+            variant="contained"
+            sx={{
+              bgcolor: "#8B5CF6",
+              "&:hover": {
+                bgcolor: "#FF1966",
+              },
+            }}
+          >
+            J'ai compris
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

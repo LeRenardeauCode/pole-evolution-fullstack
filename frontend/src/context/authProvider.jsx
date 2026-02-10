@@ -1,6 +1,5 @@
-// src/context/AuthProvider.jsx
 import { useState, useEffect } from 'react';
-import AuthContext from './AuthContext';
+import AuthContext from './authContext';
 import authService from '@services/authService';
 
 export const AuthProvider = ({ children }) => {
