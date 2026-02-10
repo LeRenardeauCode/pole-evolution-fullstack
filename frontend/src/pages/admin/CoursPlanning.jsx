@@ -64,6 +64,7 @@ export default function CoursPlanning() {
     duree: 90,
     capaciteMax: 10,
     capaciteMin: 5,
+    notes: "",
   });
 
   const [raisonAnnulation, setRaisonAnnulation] = useState("");
@@ -75,7 +76,10 @@ export default function CoursPlanning() {
       try {
         const response = await getAllCours();
         if (mounted) {
-          setCours(response.data || []);
+          const coursFiltres = (response.data || []).filter(
+            (c) => !["evjf", "prestation"].includes(c.type),
+          );
+          setCours(coursFiltres);
         }
       } catch (err) {
         console.error("Erreur chargement cours:", err);
@@ -96,7 +100,12 @@ export default function CoursPlanning() {
     setLoading(true);
     try {
       const response = await getAllCours();
-      setCours(response.data || []);
+
+      const coursFiltres = (response.data || []).filter(
+        (c) => !["evjf", "prestation"].includes(c.type),
+      );
+
+      setCours(coursFiltres);
     } catch (err) {
       console.error("Erreur:", err);
       toast.error("Erreur lors du chargement");
@@ -124,6 +133,7 @@ export default function CoursPlanning() {
         duree: 90,
         capaciteMax: 10,
         capaciteMin: 5,
+        notes: "",
       });
       await loadCours();
     } catch (err) {
@@ -145,6 +155,7 @@ export default function CoursPlanning() {
       duree: coursItem.duree,
       capaciteMax: coursItem.capaciteMax,
       capaciteMin: coursItem.capaciteMin || 5,
+      notes: coursItem.notes || "",
     });
     setDialogMode("edit");
     setOpenDialog(true);
@@ -317,6 +328,18 @@ export default function CoursPlanning() {
                   rows={2}
                   sx={{ mb: 2 }}
                 />
+                <TextField
+                  fullWidth
+                  label="Informations complémentaires"
+                  name="notes"
+                  value={formData.notes}
+                  onChange={handleInputChange}
+                  multiline
+                  rows={3}
+                  placeholder="Ex: Prévoir une tenue confortable, bouteille d'eau..."
+                  helperText="Ces informations seront affichées dans les détails du cours"
+                  sx={{ mb: 2 }}
+                />
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <TextField
@@ -329,8 +352,6 @@ export default function CoursPlanning() {
                     >
                       <MenuItem value="collectif">Collectif</MenuItem>
                       <MenuItem value="prive">Privé</MenuItem>
-                      <MenuItem value="evjf">EVJF</MenuItem>
-                      <MenuItem value="prestation">Prestation</MenuItem>
                       <MenuItem value="decouverte">Découverte</MenuItem>
                     </TextField>
                   </Grid>
@@ -345,7 +366,7 @@ export default function CoursPlanning() {
                     >
                       <MenuItem value="debutant">Débutant</MenuItem>
                       <MenuItem value="intermediaire">Intermédiaire</MenuItem>
-                      <MenuItem value="tousniveaux">Tous niveaux</MenuItem>
+                      <MenuItem value="tous_niveaux">Tous niveaux</MenuItem>
                       <MenuItem value="initiation">Initiation</MenuItem>
                     </TextField>
                   </Grid>
@@ -571,6 +592,18 @@ export default function CoursPlanning() {
                 rows={2}
                 sx={{ mb: 2 }}
               />
+              <TextField
+                fullWidth
+                label="Informations complémentaires"
+                name="notes"
+                value={formData.notes}
+                onChange={handleInputChange}
+                multiline
+                rows={3}
+                placeholder="Ex: Prévoir une tenue confortable, bouteille d'eau..."
+                helperText="Ces informations seront affichées dans les détails du cours"
+                sx={{ mb: 2 }}
+              />
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
@@ -583,8 +616,7 @@ export default function CoursPlanning() {
                   >
                     <MenuItem value="collectif">Collectif</MenuItem>
                     <MenuItem value="prive">Privé</MenuItem>
-                    <MenuItem value="evjf">EVJF</MenuItem>
-                    <MenuItem value="prestation">Prestation</MenuItem>
+                    <MenuItem value="decouverte">Découverte</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item xs={6}>
@@ -598,7 +630,8 @@ export default function CoursPlanning() {
                   >
                     <MenuItem value="debutant">Débutant</MenuItem>
                     <MenuItem value="intermediaire">Intermédiaire</MenuItem>
-                    <MenuItem value="tousniveaux">Tous niveaux</MenuItem>
+                    <MenuItem value="tous_niveaux">Tous niveaux</MenuItem>
+                    <MenuItem value="initiation">Initiation</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item xs={12}>

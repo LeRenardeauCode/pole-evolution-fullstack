@@ -111,7 +111,7 @@ export const createReservation = async (req, res) => {
     const reservationExistante = await Reservation.findOne({
       utilisateur: req.user.id,
       cours: coursId,
-      statut: { $in: ["confirmee", "enattente"] },
+      statut: { $in: ["confirmee", "en_attente"] },
     });
 
     if (reservationExistante) {
@@ -131,6 +131,8 @@ export const createReservation = async (req, res) => {
       });
     }
 
+    const prixCours = cours.type === "decouverte" ? 15 : 25;
+
     const reservationData = {
       typeReservation: "membre",
       utilisateur: req.user.id,
@@ -138,10 +140,6 @@ export const createReservation = async (req, res) => {
       statut: "en_attente",
       nombrePlaces: 1,
       dateReservation: new Date(),
-      paiement: {
-        type: typePaiement,
-        estPaye: false,
-      },
     };
 
     if (typePaiement === "forfait") {
@@ -167,7 +165,11 @@ export const createReservation = async (req, res) => {
       }
 
       reservationData.forfait = forfaitId;
-      reservationData.paiement.montant = 0;
+      reservationData.paiement = {
+        type: "forfait",
+        montant: 0,
+        estPaye: true,
+      };
     } else if (typePaiement === "abonnement") {
       if (
         !utilisateur.abonnementActif ||
@@ -194,15 +196,18 @@ export const createReservation = async (req, res) => {
       }
 
       reservationData.forfait = utilisateur.abonnementActif.forfaitId;
-      reservationData.paiement.montant = 0;
+      reservationData.paiement = {
+        type: "abonnement",
+        montant: 0,
+        estPaye: true,
+      };
     } else {
-      // typePaiement === 'surplace'
-      const forfaitCours = await Forfait.findOne({
-        categorie: "decouverte",
-        estActif: true,
-      });
-
-      reservationData.paiement.montant = forfaitCours ? forfaitCours.prix : 25;
+      reservationData.paiement = {
+        type: "surplace",
+        montant: prixCours,
+        estPaye: false,
+        moyenPaiement: null,
+      };
     }
 
     const reservation = await Reservation.create(reservationData);
@@ -236,7 +241,7 @@ export const createReservation = async (req, res) => {
       data: reservationComplete,
     });
   } catch (error) {
-    console.error("❌ Erreur createReservation:", error);
+    console.error("Erreur createReservation:", error);
     res.status(500).json({
       success: false,
       message: error.message,
@@ -314,9 +319,10 @@ export const createReservationInvite = async (req, res) => {
       nombrePlaces: 1,
       dateReservation: new Date(),
       paiement: {
-        type: "sur_place",
-        montant: 25,
+        type: "surplace",
+        montant: cours.type === "decouverte" ? 15 : 25,
         estPaye: false,
+        moyenPaiement: null,
       },
       ipAddress: req.ip,
     });

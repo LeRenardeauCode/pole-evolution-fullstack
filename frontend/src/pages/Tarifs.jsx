@@ -36,8 +36,15 @@ const Tarifs = () => {
     ...forfaits.abonnement,
   ];
 
+  const isAccesLibre = (forfait) => {
+    return (
+      forfait.categorie === "decouverte" ||
+      (forfait.categorie === "collectif" && forfait.nombreSeances === 1)
+    );
+  };
+
   const handleClickAcheter = (forfait) => {
-    if (forfait.categorie === "decouverte") {
+    if (isAccesLibre(forfait)) {
       navigate("/planning");
       return;
     }
@@ -149,8 +156,9 @@ const Tarifs = () => {
             }}
           >
             <Typography variant="body1">
-              <strong>Besoin d'un compte ?</strong> Connectez-vous ou
-              inscrivez-vous pour acheter un forfait.
+              <strong>Cours découverte et cours à l'unité :</strong> Accessibles sans compte. Cliquez sur "Essayer maintenant" pour réserver.
+              <br />
+              <strong>Cartes de cours et abonnements :</strong> Connectez-vous ou inscrivez-vous pour acheter.
             </Typography>
           </Alert>
         )}
@@ -166,13 +174,11 @@ const Tarifs = () => {
             }}
           >
             <Typography variant="body1">
-              <strong>Compte en attente de validation</strong> : Votre compte
-              doit être validé par un administrateur avant d'acheter un forfait.
+              <strong>Compte en attente de validation</strong> : Vous pouvez réserver des cours découverte et à l'unité. Les cartes de cours et abonnements nécessitent la validation de votre compte.
             </Typography>
           </Alert>
         )}
 
-        {/* ✅ UN SEUL Box pour les boutons (SUPPRESSION DU DOUBLON) */}
         <Box
           sx={{
             display: "flex",
@@ -263,169 +269,174 @@ const Tarifs = () => {
 
         {!loading && !error && (
           <Grid container spacing={4} justifyContent="center">
-            {allForfaits.map((forfait) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={forfait._id}>
-                <Box
-                  sx={{
-                    height: "100%",
-                    width: "300px",
-                    display: "flex",
-                    flexDirection: "column",
-                    borderRadius: 0,
-                    overflow: "hidden",
-                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
-                    transition: "all 0.3s",
-                    "&:hover": {
-                      transform: "translateY(-8px)",
-                      boxShadow: "0 8px 30px rgba(0, 0, 0, 0.5)",
-                    },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      backgroundColor: "navy.main",
-                      color: "white",
-                      py: 3,
-                      px: 2,
-                      textAlign: "center",
-                      minHeight: "100px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: 700,
-                        fontSize: "1.1rem",
-                        lineHeight: 1.3,
-                      }}
-                    >
-                      {forfait.nom}
-                    </Typography>
-                  </Box>
+            {allForfaits.map((forfait) => {
+              const acceLibre = isAccesLibre(forfait);
 
+              return (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={forfait._id}>
                   <Box
                     sx={{
-                      bgcolor: "white",
-                      py: 3,
-                      px: 3,
-                      flexGrow: 1,
+                      height: "100%",
+                      width: "300px",
                       display: "flex",
                       flexDirection: "column",
-                      justifyContent: "space-between",
+                      borderRadius: 0,
+                      overflow: "hidden",
+                      boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
+                      transition: "all 0.3s",
+                      "&:hover": {
+                        transform: "translateY(-8px)",
+                        boxShadow: "0 8px 30px rgba(0, 0, 0, 0.5)",
+                      },
                     }}
                   >
-                    <Box>
-                      <Typography
-                        variant="h3"
-                        sx={{
-                          fontWeight: 700,
-                          color: "navy.main",
-                          mb: 2,
-                          textAlign: "center",
-                        }}
-                      >
-                        {forfait.prix}€
-                        {forfait.categorie === "abonnement" && "/mois"}
-                        {forfait.categorie === "prive" && "/heure"}
-                      </Typography>
-
-                      {forfait.description && (
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{
-                            textAlign: "center",
-                            fontSize: "0.9rem",
-                            mb: 2,
-                            minHeight: "60px",
-                          }}
-                        >
-                          {forfait.description}
-                        </Typography>
-                      )}
-                    </Box>
-
-                    <Box sx={{ textAlign: "center", mb: 2 }}>
-                      {forfait.dureeEngagementMois && (
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ fontSize: "0.85rem", mb: 0.5 }}
-                        >
-                          Engagement {forfait.dureeEngagementMois} mois
-                        </Typography>
-                      )}
-
-                      {forfait.validiteMois && (
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ fontSize: "0.85rem", mb: 0.5 }}
-                        >
-                          Valable {forfait.validiteMois} mois
-                        </Typography>
-                      )}
-
-                      {forfait.prixUnitaire && (
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ fontSize: "0.85rem", mb: 0.5 }}
-                        >
-                          {forfait.prixUnitaire.toFixed(2)}€ par cours
-                        </Typography>
-                      )}
-
-                      {forfait.nombreSeancesParSemaine && (
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ fontSize: "0.85rem", mb: 0.5 }}
-                        >
-                          {forfait.nombreSeancesParSemaine} cours/semaine
-                        </Typography>
-                      )}
-                    </Box>
-
-                    <Button
-                      variant="contained"
-                      fullWidth
-                      size="large"
-                      onClick={() => handleClickAcheter(forfait)}
-                      disabled={
-                        !user || user?.statutValidationAdmin !== "approved"
-                      }
+                    <Box
                       sx={{
-                        py: 1.5,
-                        fontWeight: 700,
-                        fontSize: "1rem",
-                        textTransform: "none",
                         backgroundColor: "navy.main",
-                        borderRadius: 0,
-                        "&:hover": {
-                          backgroundColor: "navy.dark",
-                        },
-                        "&:disabled": {
-                          backgroundColor: "grey.400",
-                          color: "grey.600",
-                        },
+                        color: "white",
+                        py: 3,
+                        px: 2,
+                        textAlign: "center",
+                        minHeight: "100px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
-                      {!user
-                        ? "Se connecter pour acheter"
-                        : user.statutValidationAdmin !== "approved"
-                          ? "Compte en attente"
-                          : forfait.categorie === "decouverte"
-                            ? "Essayer maintenant"
-                            : "Je m'inscris !"}
-                    </Button>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 700,
+                          fontSize: "1.1rem",
+                          lineHeight: 1.3,
+                        }}
+                      >
+                        {forfait.nom}
+                      </Typography>
+                    </Box>
+
+                    <Box
+                      sx={{
+                        bgcolor: "white",
+                        py: 3,
+                        px: 3,
+                        flexGrow: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Box>
+                        <Typography
+                          variant="h3"
+                          sx={{
+                            fontWeight: 700,
+                            color: "navy.main",
+                            mb: 2,
+                            textAlign: "center",
+                          }}
+                        >
+                          {forfait.prix}€
+                          {forfait.categorie === "abonnement" && "/mois"}
+                          {forfait.categorie === "prive" && "/heure"}
+                        </Typography>
+
+                        {forfait.description && (
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{
+                              textAlign: "center",
+                              fontSize: "0.9rem",
+                              mb: 2,
+                              minHeight: "60px",
+                            }}
+                          >
+                            {forfait.description}
+                          </Typography>
+                        )}
+                      </Box>
+
+                      <Box sx={{ textAlign: "center", mb: 2 }}>
+                        {forfait.dureeEngagementMois && (
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ fontSize: "0.85rem", mb: 0.5 }}
+                          >
+                            Engagement {forfait.dureeEngagementMois} mois
+                          </Typography>
+                        )}
+
+                        {forfait.validiteMois && (
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ fontSize: "0.85rem", mb: 0.5 }}
+                          >
+                            Valable {forfait.validiteMois} mois
+                          </Typography>
+                        )}
+
+                        {forfait.prixUnitaire && (
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ fontSize: "0.85rem", mb: 0.5 }}
+                          >
+                            {forfait.prixUnitaire.toFixed(2)}€ par cours
+                          </Typography>
+                        )}
+
+                        {forfait.nombreSeancesParSemaine && (
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ fontSize: "0.85rem", mb: 0.5 }}
+                          >
+                            {forfait.nombreSeancesParSemaine} cours/semaine
+                          </Typography>
+                        )}
+                      </Box>
+
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        size="large"
+                        onClick={() => handleClickAcheter(forfait)}
+                        disabled={
+                          !acceLibre && 
+                          (!user || user?.statutValidationAdmin !== "approved")
+                        }
+                        sx={{
+                          py: 1.5,
+                          fontWeight: 700,
+                          fontSize: "1rem",
+                          textTransform: "none",
+                          backgroundColor: "navy.main",
+                          borderRadius: 0,
+                          "&:hover": {
+                            backgroundColor: "navy.dark",
+                          },
+                          "&:disabled": {
+                            backgroundColor: "grey.400",
+                            color: "grey.600",
+                          },
+                        }}
+                      >
+                        {acceLibre
+                          ? "Essayer maintenant" 
+                          : !user
+                            ? "Se connecter pour acheter"
+                            : user.statutValidationAdmin !== "approved"
+                              ? "Compte en attente"
+                              : "Je m'inscris !"}
+                      </Button>
+                    </Box>
                   </Box>
-                </Box>
-              </Grid>
-            ))}
+                </Grid>
+              );
+            })}
 
             {allForfaits.length === 0 && (
               <Grid item xs={12}>
@@ -491,7 +502,7 @@ const Tarifs = () => {
                 <Typography variant="body2">
                   1. Vous validez votre demande
                   <br />
-                  2. La professure reçoit une notification
+                  2. La professeure reçoit une notification
                   <br />
                   3. Elle vous contacte pour organiser le paiement
                   <br />
