@@ -26,7 +26,6 @@ import { tableHeaderRow, sectionTitle } from "@/styles/pageStyles";
 
 export default function ElevesTable({
   users,
-  loading,
   onEdit,
   onSuspend,
   onDelete,
