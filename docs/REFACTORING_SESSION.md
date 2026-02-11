@@ -144,7 +144,8 @@ Frontend Structure (Current):
 └── assets/             (images, styles)
 
 Issues Identified:
-❌ Pages are too large (Tarifs 552 lines, MonCompte 1041 lines)
+❌ **CRITICAL: Admin pages MASSIVE** (CoursPlanning 812 lines, Eleves 762 lines, TarifsContenu 690 lines)
+❌ Pages are too large (MonCompte 1041 lines, Tarifs 552 lines, ShowAnimations 600+ lines)
 ❌ Mixing data-fetching + rendering (no clear container/presentational split)
 ❌ Inline sx={{...}} objects repeated (1000+ line files)
 ❌ No memoization on frequently-rendered components
@@ -178,7 +179,7 @@ Issues Identified:
 | **Routing** | ✅ COMPLETE | Single root AuthProvider, proper 401 handling |
 | **Lazy-loading** | 🟡 PARTIAL | 3 routes done; 5+ candidates remaining |
 | **Code Organization** | 🟡 PARTIAL | Type-based OK; feature folders pending |
-| **Component Structure** | 🟡 WEAK | Large pages, mixed logic needed splitting |
+| **Component Structure** | � CRITICAL | Large pages, mixed logic needed splitting |
 | **Performance** | 🟡 WEAK | No memoization, recalculating hooks |
 | **Error Handling** | 🔴 NONE | Scattered logging, no retry logic |
 | **Tests** | 🔴 NONE | No unit tests |
@@ -255,6 +256,75 @@ git push origin feature/refactor-xyz
 - Should feature folders be priority before or after component memoization?
 - Which page should be refactored first? (Tarifs, MonCompte, or ShowAnimations?)
 - Timeline for TypeScript migration decision?
+
+---
+
+## 📊 PAGES SIZE AUDIT
+
+### **Critical Offenders (>600 lines)**
+
+**🔴 Admin Pages (src/pages/admin/)**
+```
+CoursPlanning.jsx   │ 812 lines │ ⚠️  HIGHEST PRIORITY
+├─ Calendar grid/table logic (200+ lines)
+├─ Drag-drop handlers (150+ lines)
+├─ Reservation modal & state (150+ lines)
+├─ Week navigator & filters (100+ lines)
+
+Eleves.jsx          │ 762 lines │ ⚠️  HIGHEST PRIORITY
+├─ Student table with columns (200+ lines)
+├─ Filters & search logic (100+ lines)
+├─ Action buttons & modals (150+ lines)
+├─ Abonnement manager UI (150+ lines)
+
+TarifsContenu.jsx   │ 690 lines │ 🔴 HIGH PRIORITY
+├─ Forfait CRUD form (200+ lines)
+├─ Table display & edit (150+ lines)
+├─ Demandes tab & management (150+ lines)
+├─ Mode paiement logic (100+ lines)
+
+Notifications.jsx   │ 418 lines │ 🟡 MEDIUM
+├─ Notification list (150+ lines)
+├─ Filters & actions (100+ lines)
+└─ Modal forms (100+ lines)
+
+Parametres.jsx      │ 253 lines │ 🟢 SMALL
+├─ Settings form (150+ lines)
+└─ Text editor integration (100+ lines)
+```
+
+**🔴 Frontend Pages (src/pages/)**
+```
+MonCompte.jsx       │ 1041 lines │ ⚠️  LARGEST (Refactor 2nd)
+├─ Profile form (300+ lines)
+├─ Reservations list & display (250+ lines)
+├─ Photo upload & crop (200+ lines)
+└─ Password change (150+ lines)
+
+ShowAnimations.jsx  │ 600+ lines │ 🔴 HIGH
+├─ Multiple animation sections (200+ lines each)
+├─ Modal logic (100+ lines)
+└─ Data state (100+ lines)
+
+Tarifs.jsx          │ 552 lines │ 🔴 HIGH
+├─ Forfait card grid (200+ lines)
+├─ Purchase dialog & logic (150+ lines)
+├─ Filtering & search (100+ lines)
+└─ State management (100+ lines)
+```
+
+### **Recommendation Order for Refactoring**
+
+1. **Phase 1 (CRITICAL)** → Split largest admin pages:
+   - CoursPlanning.jsx (812 → 4 components 200 lines each)
+   - Eleves.jsx (762 → 4 components 190 lines each)
+
+2. **Phase 2 (HIGH)** → Frontend heavy pages:
+   - MonCompte.jsx (1041 → 4 components 260 lines each)
+   - TarifsContenu.jsx (690 → 4 components 170 lines each)
+
+3. **Phase 3 (FOLLOW-UP)** → Medium complexity:
+   - ShowAnimations.jsx, Notifications.jsx, etc.
 
 ---
 
