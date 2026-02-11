@@ -42,6 +42,21 @@ import {
   annulerCours,
 } from "@services/adminService";
 import api from "@/services/api";
+import {
+  headerTitle,
+  cardBorder,
+  fieldMb,
+  createButton,
+  sectionTitle,
+  centerBox,
+  tableHeaderRow,
+  dialogTitle,
+  loadingBox,
+  alertMt2,
+  tableContainerMt2,
+  summaryBox,
+  fieldMt2,
+} from "@/styles/pageStyles";
 
 export default function CoursPlanning() {
   const [cours, setCours] = useState([]);
@@ -297,15 +312,15 @@ export default function CoursPlanning() {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
+      <Typography variant="h4" sx={headerTitle}>
         Cours & Planning
       </Typography>
 
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Card elevation={0} sx={{ border: "1px solid #e0e0e0" }}>
+          <Card elevation={0} sx={cardBorder}>
             <CardContent>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              <Typography variant="h6" sx={sectionTitle}>
                 Ajouter un cours
               </Typography>
               <Box component="form" onSubmit={handleCreateCours}>
@@ -316,7 +331,7 @@ export default function CoursPlanning() {
                   value={formData.nom}
                   onChange={handleInputChange}
                   required
-                  sx={{ mb: 2 }}
+                  sx={fieldMb}
                 />
                 <TextField
                   fullWidth
@@ -326,7 +341,7 @@ export default function CoursPlanning() {
                   onChange={handleInputChange}
                   multiline
                   rows={2}
-                  sx={{ mb: 2 }}
+                  sx={fieldMb}
                 />
                 <TextField
                   fullWidth
@@ -338,7 +353,7 @@ export default function CoursPlanning() {
                   rows={3}
                   placeholder="Ex: Prévoir une tenue confortable, bouteille d'eau..."
                   helperText="Ces informations seront affichées dans les détails du cours"
-                  sx={{ mb: 2 }}
+                  sx={fieldMb}
                 />
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
@@ -420,7 +435,7 @@ export default function CoursPlanning() {
                   variant="contained"
                   fullWidth
                   disabled={loading}
-                  sx={{ mt: 2 }}
+                  sx={createButton}
                 >
                   Créer le cours
                 </Button>
@@ -430,16 +445,16 @@ export default function CoursPlanning() {
         </Grid>
 
         <Grid item xs={12}>
-          <Card elevation={0} sx={{ border: "1px solid #e0e0e0" }}>
+          <Card elevation={0} sx={cardBorder}>
             <CardContent>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              <Typography variant="h6" sx={sectionTitle}>
                 Modifier / Annuler un cours
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              <Typography variant="body2" color="text.secondary" sx={fieldMb}>
                 Sélectionnez un cours dans la liste ci-dessous pour le modifier
                 ou l'annuler.
               </Typography>
-              <Box sx={{ textAlign: "center", py: 4 }}>
+              <Box sx={centerBox}>
                 <Typography variant="body2" color="text.secondary">
                   Utilisez les actions dans le tableau
                 </Typography>
@@ -449,15 +464,15 @@ export default function CoursPlanning() {
         </Grid>
 
         <Grid item xs={12}>
-          <Card elevation={0} sx={{ border: "1px solid #e0e0e0" }}>
+          <Card elevation={0} sx={cardBorder}>
             <CardContent>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              <Typography variant="h6" sx={sectionTitle}>
                 Voir les cours déjà créés
               </Typography>
               <TableContainer component={Paper} variant="outlined">
                 <Table>
                   <TableHead>
-                    <TableRow sx={{ bgcolor: "grey.100" }}>
+                    <TableRow sx={tableHeaderRow}>
                       <TableCell>
                         <strong>Nom</strong>
                       </TableCell>
@@ -657,7 +672,7 @@ export default function CoursPlanning() {
               multiline
               rows={3}
               required
-              sx={{ mt: 2 }}
+              sx={fieldMt2}
             />
           )}
         </DialogContent>
@@ -683,13 +698,7 @@ export default function CoursPlanning() {
         maxWidth="md"
         fullWidth
       >
-        <DialogTitle
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <DialogTitle sx={dialogTitle}>
           <Typography variant="h6" component="span">
             Réservations - {coursSelectionne?.nom}
           </Typography>
@@ -700,16 +709,16 @@ export default function CoursPlanning() {
 
         <DialogContent>
           {loadingReservations ? (
-            <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
+            <Box sx={loadingBox}>
               <CircularProgress />
             </Box>
           ) : reservations.length === 0 ? (
-            <Alert severity="info" sx={{ mt: 2 }}>
+            <Alert severity="info" sx={alertMt2}>
               Aucune réservation pour ce cours
             </Alert>
           ) : (
             <>
-              <TableContainer sx={{ mt: 2 }}>
+              <TableContainer sx={tableContainerMt2}>
                 <Table size="small">
                   <TableHead>
                     <TableRow sx={{ bgcolor: "grey.100" }}>
@@ -802,7 +811,7 @@ export default function CoursPlanning() {
                 </Table>
               </TableContainer>
 
-              <Box sx={{ mt: 3, p: 2, bgcolor: "#F5F5F5", borderRadius: 1 }}>
+              <Box sx={summaryBox}>
                 <Typography
                   variant="body2"
                   color="text.secondary"

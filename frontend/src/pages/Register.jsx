@@ -17,6 +17,26 @@ import {
 import authService from "@services/authService";
 
 import logo from "@assets/images/thumbnail_LOGO_POLE_EVOLUTION-removebg-preview.png";
+import {
+  layoutFullHeight,
+  leftPanel,
+  logoImg,
+  titleH3,
+  subtitlePrimary,
+  rightPanel,
+  textFieldWhite,
+  textFieldWhiteHelper,
+  smallWhiteText,
+  whiteTextMb1,
+  whiteTextMb2,
+  linkPrimary,
+  radioPrimary,
+  primaryButton,
+  primaryButtonDisabled,
+  centerBox,
+  bodyMb3,
+  whiteText,
+} from "../styles/pageStyles";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -163,51 +183,27 @@ const Register = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+    <Box sx={layoutFullHeight}>
       <Box
-        sx={{
-          flex: { xs: "0 0 100%", md: "0 0 30%" },
-          background:
-            "linear-gradient(180deg, #574A78 0%, #AB326F 36%, #574A78 63%, #5E1A5C 100%)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          p: 4,
-        }}
+        sx={leftPanel}
       >
         <Box
           component="img"
           src={logo}
           alt="Pole Evolution"
-          sx={{
-            width: 300,
-            height: "auto",
-            mb: 3,
-          }}
+          sx={logoImg}
         />
 
         <Typography
           variant="h3"
-          sx={{
-            fontSize: "2.5rem",
-            fontWeight: 800,
-            color: "white",
-            textAlign: "center",
-          }}
+          sx={titleH3}
         >
           Inscription
         </Typography>
 
         {step === 4 && (
           <Typography
-            sx={{
-              fontSize: "1.2rem",
-              fontWeight: 600,
-              color: "primary.main",
-              textAlign: "center",
-              mt: 2,
-            }}
+            sx={subtitlePrimary}
           >
             terminée
           </Typography>
@@ -215,18 +211,11 @@ const Register = () => {
       </Box>
 
       <Box
-        sx={{
-          flex: 1,
-          backgroundColor: "#100249",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          p: { xs: 3, md: 6 },
-        }}
+        sx={rightPanel}
       >
         <Container maxWidth="sm">
           {error && (
-            <Alert severity="error" sx={{ mb: 3 }}>
+            <Alert severity="error" sx={bodyMb3}>
               {error}
             </Alert>
           )}
@@ -240,13 +229,7 @@ const Register = () => {
                 value={formData.prenom}
                 onChange={handleChange}
                 variant="outlined"
-                sx={{
-                  mb: 3,
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 0,
-                    backgroundColor: "white",
-                  },
-                }}
+                sx={textFieldWhite}
               />
 
               <TextField
@@ -256,13 +239,7 @@ const Register = () => {
                 value={formData.nom}
                 onChange={handleChange}
                 variant="outlined"
-                sx={{
-                  mb: 3,
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 0,
-                    backgroundColor: "white",
-                  },
-                }}
+                sx={textFieldWhite}
               />
 
               <TextField
@@ -274,13 +251,7 @@ const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
                 variant="outlined"
-                sx={{
-                  mb: 3,
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 0,
-                    backgroundColor: "white",
-                  },
-                }}
+                sx={textFieldWhite}
               />
 
               <TextField
@@ -291,13 +262,7 @@ const Register = () => {
                 value={formData.motDePasse}
                 onChange={handleChange}
                 variant="outlined"
-                sx={{
-                  mb: 3,
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 0,
-                    backgroundColor: "white",
-                  },
-                }}
+                sx={textFieldWhite}
               />
 
               <TextField
@@ -309,41 +274,14 @@ const Register = () => {
                 onChange={handleChange}
                 variant="outlined"
                 helperText="minimum de 12 caractères"
-                sx={{
-                  mb: 4,
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 0,
-                    backgroundColor: "white",
-                  },
-                  "& .MuiFormHelperText-root": {
-                    color: "white",
-                  },
-                }}
+                sx={textFieldWhiteHelper}
               />
 
-              <Typography sx={{ color: "white", fontSize: "0.9rem", mb: 4 }}>
+              <Typography sx={smallWhiteText}>
                 Vos données restent confidentielles
               </Typography>
 
-              <Button
-                onClick={handleNext}
-                fullWidth
-                sx={{
-                  backgroundColor: "transparent",
-                  border: "2px solid",
-                  borderColor: "primary.main",
-                  borderRadius: 3,
-                  color: "primary.main",
-                  py: 1.5,
-                  fontSize: "1rem",
-                  fontWeight: 600,
-                  "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                    color: "white",
-                  },
-                }}
-              >
+              <Button onClick={handleNext} fullWidth sx={primaryButton}>
                 Étape suivante
               </Button>
             </Box>
@@ -352,7 +290,7 @@ const Register = () => {
           {step === 2 && (
             <Box>
               {isMinor && (
-                <Alert severity="info" sx={{ mb: 3 }}>
+                <Alert severity="info" sx={bodyMb3}>
                   Une autorisation parentale sera requise avant de pouvoir
                   réserver des cours. Vous pourrez la télécharger dans votre
                   profil après inscription.
@@ -365,13 +303,7 @@ const Register = () => {
                 value={formData.telephone}
                 onChange={handleChange}
                 variant="outlined"
-                sx={{
-                  mb: 3,
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 0,
-                    backgroundColor: "white",
-                  },
-                }}
+                sx={textFieldWhite}
               />
 
               <TextField
@@ -405,18 +337,9 @@ const Register = () => {
                 }}
                 helperText="Âge minimum : 12 ans. Pour les mineurs, une autorisation parentale est requise."
                 sx={{
-                  mb: 3,
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 0,
-                    backgroundColor: "white",
-                  },
-                  "& input[type='date']::-webkit-calendar-picker-indicator": {
-                    filter: "invert(0.5)",
-                  },
-                  "& .MuiFormHelperText-root": {
-                    color: "white",
-                    fontSize: "0.75rem",
-                  },
+                  ...textFieldWhite,
+                  '& input[type="date"]::-webkit-calendar-picker-indicator': { filter: 'invert(0.5)' },
+                  '& .MuiFormHelperText-root': { color: 'white', fontSize: '0.75rem' },
                 }}
               />
 
@@ -428,13 +351,7 @@ const Register = () => {
                 value={formData.niveauPole}
                 onChange={handleChange}
                 variant="outlined"
-                sx={{
-                  mb: 4,
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 0,
-                    backgroundColor: "white",
-                  },
-                }}
+                sx={textFieldWhiteHelper}
               >
                 <MenuItem value="jamais">Jamais pratiqué</MenuItem>
                 <MenuItem value="debutant">Débutant</MenuItem>
@@ -442,25 +359,7 @@ const Register = () => {
                 <MenuItem value="avance">Avancé</MenuItem>
               </TextField>
 
-              <Button
-                onClick={handleNext}
-                fullWidth
-                sx={{
-                  backgroundColor: "transparent",
-                  border: "2px solid",
-                  borderColor: "primary.main",
-                  borderRadius: 3,
-                  color: "primary.main",
-                  py: 1.5,
-                  fontSize: "1rem",
-                  fontWeight: 600,
-                  "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                    color: "white",
-                  },
-                }}
-              >
+              <Button onClick={handleNext} fullWidth sx={primaryButton}>
                 Étape suivante
               </Button>
             </Box>
@@ -468,7 +367,7 @@ const Register = () => {
 
           {step === 3 && (
             <Box>
-              <Typography sx={{ color: "white", fontSize: "1rem", mb: 2 }}>
+              <Typography sx={whiteTextMb2}>
                 Comment avez-vous connu le studio ? (optionnel)
               </Typography>
 
@@ -479,21 +378,21 @@ const Register = () => {
               >
                 <FormControlLabel
                   value="reseaux-sociaux"
-                  control={<Radio sx={{ color: "primary.main" }} />}
+                  control={<Radio sx={radioPrimary} />}
                   label="Réseaux sociaux"
-                  sx={{ color: "white", mb: 1 }}
+                  sx={whiteTextMb1}
                 />
                 <FormControlLabel
                   value="bouche-a-oreille"
-                  control={<Radio sx={{ color: "primary.main" }} />}
+                  control={<Radio sx={radioPrimary} />}
                   label="Bouche à oreille"
-                  sx={{ color: "white", mb: 1 }}
+                  sx={whiteTextMb1}
                 />
                 <FormControlLabel
                   value="navigation-internet"
-                  control={<Radio sx={{ color: "primary.main" }} />}
+                  control={<Radio sx={radioPrimary} />}
                   label="Navigation internet"
-                  sx={{ color: "white", mb: 3 }}
+                  sx={{ color: 'white', mb: 3 }}
                 />
               </RadioGroup>
 
@@ -503,11 +402,11 @@ const Register = () => {
                     name="accepteContact"
                     checked={formData.accepteContact}
                     onChange={handleChange}
-                    sx={{ color: "primary.main" }}
+                    sx={radioPrimary}
                   />
                 }
                 label="J'accepte de recevoir des communications par email (Optionnel)"
-                sx={{ color: "white", mb: 2 }}
+                sx={whiteTextMb2}
               />
 
               <FormControlLabel
@@ -517,11 +416,11 @@ const Register = () => {
                     checked={formData.accepteCGU}
                     onChange={handleChange}
                     required
-                    sx={{ color: "primary.main" }}
+                    sx={radioPrimary}
                   />
                 }
                 label="J'accepte les conditions générales"
-                sx={{ color: "white", mb: 1 }}
+                sx={whiteTextMb1}
               />
 
               <Typography
@@ -529,14 +428,7 @@ const Register = () => {
                 href="/conditions"
                 target="_blank"
                 rel="noopener noreferrer"
-                sx={{
-                  color: "primary.main",
-                  fontSize: "0.9rem",
-                  mb: 2,
-                  display: "block",
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                }}
+                sx={linkPrimary}
               >
                 Voir les conditions générales d'utilisation
               </Typography>
@@ -547,12 +439,12 @@ const Register = () => {
                     name="accepteReglement"
                     checked={formData.accepteReglement}
                     onChange={handleChange}
-                    sx={{ color: "primary.main" }}
+                    sx={radioPrimary}
                     required
                   />
                 }
                 label="J'ai pris connaissance des règles du studio"
-                sx={{ color: "white", mb: 1 }}
+                sx={whiteTextMb1}
               />
 
               <Typography
@@ -560,14 +452,7 @@ const Register = () => {
                 href="/reglement"
                 target="_blank"
                 rel="noopener noreferrer"
-                sx={{
-                  color: "primary.main",
-                  fontSize: "0.9rem",
-                  mb: 4,
-                  display: "block",
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                }}
+                sx={{ ...linkPrimary, mb: 4 }}
               >
                 Voir le règlement du studio
               </Typography>
@@ -575,32 +460,8 @@ const Register = () => {
               <Button
                 onClick={handleSubmit}
                 fullWidth
-                disabled={
-                  loading || !formData.accepteCGU || !formData.accepteReglement
-                }
-                sx={{
-                  backgroundColor: "transparent",
-                  border: "2px solid",
-                  borderColor: "primary.main",
-                  borderRadius: 3,
-                  color: "primary.main",
-                  py: 1.5,
-                  fontSize: "1rem",
-                  fontWeight: 600,
-                  opacity:
-                    !formData.accepteCGU || !formData.accepteReglement
-                      ? 0.5
-                      : 1,
-                  "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                    color: "white",
-                  },
-                  "&:disabled": {
-                    borderColor: "grey.500",
-                    color: "grey.500",
-                  },
-                }}
+                disabled={loading || !formData.accepteCGU || !formData.accepteReglement}
+                sx={{ ...primaryButton, opacity: !formData.accepteCGU || !formData.accepteReglement ? 0.5 : 1, ...primaryButtonDisabled }}
               >
                 {loading ? <CircularProgress size={24} /> : "Finaliser"}
               </Button>
@@ -608,76 +469,23 @@ const Register = () => {
           )}
 
           {step === 4 && (
-            <Box sx={{ textAlign: "center" }}>
-              <Typography
-                sx={{
-                  color: "white",
-                  fontSize: "1.5rem",
-                  fontWeight: 600,
-                  mb: 3,
-                }}
-              >
+            <Box sx={centerBox}>
+              <Typography sx={{ ...whiteText, fontSize: '1.5rem', fontWeight: 600, mb: 3 }}>
                 Félicitations ! Votre compte chez Pole Evolution a bien été créé
               </Typography>
 
-              <Typography sx={{ color: "white", mb: 4 }}>
+              <Typography sx={{ ...whiteText, mb: 4 }}>
                 Afin de valider votre compte, nous avons envoyé un mail de
                 confirmation à votre adresse mail. Veuillez cliquer sur le lien
                 dans le mail.
               </Typography>
 
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: { xs: "column", sm: "row" },
-                  gap: 2,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Button
-                  onClick={() => navigate("/connexion")}
-                  sx={{
-                    backgroundColor: "transparent",
-                    border: "2px solid",
-                    borderColor: "primary.main",
-                    borderRadius: 3,
-                    color: "primary.main",
-                    py: 1.5,
-                    px: 4,
-                    fontSize: "1rem",
-                    fontWeight: 600,
-                    width: { xs: "100%", sm: "auto" },
-                    "&:hover": {
-                      background:
-                        "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                      color: "white",
-                    },
-                  }}
-                >
+              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, justifyContent: 'center', alignItems: 'center' }}>
+                <Button onClick={() => navigate('/connexion')} sx={{ ...primaryButton, px: 4, width: { xs: '100%', sm: 'auto' } }}>
                   Se connecter
                 </Button>
 
-                <Button
-                  onClick={() => navigate("/")}
-                  sx={{
-                    backgroundColor: "transparent",
-                    border: "2px solid",
-                    borderColor: "primary.main",
-                    borderRadius: 3,
-                    color: "primary.main",
-                    py: 1.5,
-                    px: 4,
-                    fontSize: "1rem",
-                    fontWeight: 600,
-                    width: { xs: "100%", sm: "auto" },
-                    "&:hover": {
-                      background:
-                        "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                      color: "white",
-                    },
-                  }}
-                >
+                <Button onClick={() => navigate('/')} sx={{ ...primaryButton, px: 4, width: { xs: '100%', sm: 'auto' } }}>
                   Aller sur la page d'accueil
                 </Button>
               </Box>

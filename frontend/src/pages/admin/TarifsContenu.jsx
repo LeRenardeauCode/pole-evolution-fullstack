@@ -37,6 +37,23 @@ import {
   activerAbonnementUtilisateur,
 } from "@services/adminService";
 import notificationService from "@services/notificationService";
+import {
+  headerTitle,
+  sectionTitle,
+  fieldMb,
+  tableHeaderRow,
+  flexCenterGap,
+  tabsBorder,
+  flexGap1,
+  mr1,
+  mt2mb2,
+  navyDialogTitle,
+  dialogContentPt3,
+  bodyMb1,
+  bodyMb3,
+  dialogActionsPadding,
+  centerBox,
+} from "@/styles/pageStyles";
 
 export default function TarifsContenu() {
   const [currentTab, setCurrentTab] = useState(0);
@@ -255,19 +272,19 @@ export default function TarifsContenu() {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
+      <Typography variant="h4" sx={headerTitle}>
         Tarifs & Contenu
       </Typography>
 
       <Tabs
         value={currentTab}
         onChange={(e, newValue) => setCurrentTab(newValue)}
-        sx={{ mb: 3, borderBottom: 1, borderColor: "divider" }}
+        sx={tabsBorder}
       >
         <Tab label="Forfaits" />
         <Tab
           label={
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Box sx={flexCenterGap}>
               Demandes
               {demandesForfaits.length > 0 && (
                 <Chip
@@ -286,7 +303,7 @@ export default function TarifsContenu() {
           <Grid item xs={12} md={6}>
             <Card>
               <CardContent>
-                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                <Typography variant="h6" sx={sectionTitle}>
                   {editingForfait ? "Modifier un tarif" : "Ajouter un tarif"}
                 </Typography>
                 <Box component="form" onSubmit={handleSubmitForfait}>
@@ -297,7 +314,7 @@ export default function TarifsContenu() {
                     value={formData.nom}
                     onChange={handleInputChange}
                     required
-                    sx={{ mb: 2 }}
+                    sx={fieldMb}
                   />
                   <Grid container spacing={2}>
                     <Grid item xs={6}>
@@ -389,9 +406,9 @@ export default function TarifsContenu() {
                     onChange={handleInputChange}
                     multiline
                     rows={2}
-                    sx={{ mt: 2, mb: 2 }}
+                      sx={mt2mb2}
                   />
-                  <Box sx={{ display: "flex", gap: 1 }}>
+                  <Box sx={flexGap1}>
                     <Button
                       type="submit"
                       variant="contained"
@@ -436,7 +453,7 @@ export default function TarifsContenu() {
                 <TableContainer component={Paper} variant="outlined">
                   <Table size="small">
                     <TableHead>
-                      <TableRow sx={{ bgcolor: "grey.100" }}>
+                      <TableRow sx={tableHeaderRow}>
                         <TableCell>
                           <strong>Nom</strong>
                         </TableCell>
@@ -523,7 +540,7 @@ export default function TarifsContenu() {
                 </Typography>
 
                 {demandesForfaits.length === 0 ? (
-                  <Box sx={{ py: 3, textAlign: "center" }}>
+                  <Box sx={centerBox}>
                     <Typography variant="body2" color="text.secondary">
                       Aucune demande en attente
                     </Typography>
@@ -624,7 +641,7 @@ export default function TarifsContenu() {
                                     setDialogOpen(true);
                                   }}
                                   disabled={loading}
-                                  sx={{ mr: 1 }}
+                                  sx={mr1}
                                 >
                                   Valider
                                 </Button>
@@ -666,28 +683,26 @@ export default function TarifsContenu() {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle
-          sx={{ bgcolor: "navy.main", color: "white", fontWeight: 700 }}
-        >
+        <DialogTitle sx={navyDialogTitle}>
           Valider le paiement
         </DialogTitle>
-        <DialogContent sx={{ pt: 3 }}>
+        <DialogContent sx={dialogContentPt3}>
           {selectedDemande && selectedDemande.metadata && (
             <Box>
-              <Typography variant="body1" sx={{ mb: 1 }}>
+              <Typography variant="body1" sx={bodyMb1}>
                 <strong>Utilisateur :</strong>{" "}
                 {selectedDemande.metadata.utilisateurNom}
               </Typography>
-              <Typography variant="body1" sx={{ mb: 1 }}>
+              <Typography variant="body1" sx={bodyMb1}>
                 <strong>Type :</strong>{" "}
                 {selectedDemande.metadata.forfaitCategorie === "abonnement"
                   ? "Abonnement"
                   : "Forfait"}
               </Typography>
-              <Typography variant="body1" sx={{ mb: 1 }}>
+              <Typography variant="body1" sx={bodyMb1}>
                 <strong>Forfait :</strong> {selectedDemande.metadata.forfaitNom}
               </Typography>
-              <Typography variant="body1" sx={{ mb: 3 }}>
+              <Typography variant="body1" sx={bodyMb3}>
                 <strong>Montant :</strong>{" "}
                 {selectedDemande.metadata.forfaitPrix}€
               </Typography>
@@ -707,7 +722,7 @@ export default function TarifsContenu() {
             </Box>
           )}
         </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
+        <DialogActions sx={dialogActionsPadding}>
           <Button onClick={() => setDialogOpen(false)} disabled={loading}>
             Annuler
           </Button>

@@ -46,6 +46,13 @@ import {
   rejectUtilisateur,
   modifierSeancesForfait,
 } from "@services/adminService";
+import {
+  headerTitle,
+  sectionTitle,
+  fieldMb,
+  tableHeaderRow,
+  fieldMt2,
+} from "@/styles/pageStyles";
 
 export default function Eleves() {
   const [utilisateurs, setUtilisateurs] = useState([]);
@@ -289,7 +296,7 @@ export default function Eleves() {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
+      <Typography variant="h4" sx={headerTitle}>
         Élèves
       </Typography>
 
@@ -297,7 +304,7 @@ export default function Eleves() {
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              <Typography variant="h6" sx={sectionTitle}>
                 Modifier un nom
               </Typography>
               <TextField
@@ -306,7 +313,7 @@ export default function Eleves() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Nom, prénom ou email..."
-                sx={{ mb: 2 }}
+                sx={fieldMb}
               />
               <Typography variant="body2" color="text.secondary">
                 Recherchez un élève dans le tableau ci-dessous, puis cliquez sur
@@ -321,10 +328,10 @@ export default function Eleves() {
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              <Typography variant="h6" sx={sectionTitle}>
                 Suspendre / Supprimer un utilisateur
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              <Typography variant="body2" color="text.secondary" sx={fieldMb}>
                 • <strong>Suspendre</strong> : L'utilisateur ne peut plus se
                 connecter (estActif = false)
               </Typography>
@@ -339,13 +346,13 @@ export default function Eleves() {
         <Grid item xs={12}>
           <Card>
             <CardContent>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              <Typography variant="h6" sx={sectionTitle}>
                 Voir les membres inscrits sur le site
               </Typography>
               <TableContainer component={Paper} variant="outlined">
                 <Table>
                   <TableHead>
-                    <TableRow sx={{ bgcolor: "grey.100" }}>
+                    <TableRow sx={tableHeaderRow}>
                       <TableCell>
                         <strong>Prénom</strong>
                       </TableCell>
@@ -530,7 +537,7 @@ export default function Eleves() {
         </DialogTitle>
         <DialogContent>
           {dialogMode === "edit" && (
-            <Box sx={{ mt: 2 }}>
+            <Box sx={fieldMt2}>
               <TextField
                 fullWidth
                 label="Prénom"
@@ -594,10 +601,10 @@ export default function Eleves() {
               {selectedUser.forfaitsActifs?.filter((f) => f.estActif).length >
               0 ? (
                 <List>
-                  {selectedUser.forfaitsActifs
-                    .filter((f) => f.estActif)
-                    .map((forfait, index) => (
-                      <Card key={index} sx={{ mb: 2 }}>
+                  {selectedUser.forfaitsActifs.map((forfait, originalIndex) => {
+                    if (!forfait.estActif) return null;
+                    return (
+                      <Card key={originalIndex} sx={{ mb: 2 }}>
                         <CardContent>
                           <Stack
                             direction="row"
@@ -641,7 +648,7 @@ export default function Eleves() {
                                 size="small"
                                 color="error"
                                 onClick={() =>
-                                  handleModifierSeances(index, "remove")
+                                  handleModifierSeances(originalIndex, "remove")
                                 }
                                 disabled={forfait.seancesRestantes === 0}
                               >
@@ -659,7 +666,7 @@ export default function Eleves() {
                                 size="small"
                                 color="success"
                                 onClick={() =>
-                                  handleModifierSeances(index, "add")
+                                  handleModifierSeances(originalIndex, "add")
                                 }
                               >
                                 <AddIcon />
@@ -668,13 +675,15 @@ export default function Eleves() {
                                 variant="outlined"
                                 color="error"
                                 size="small"
-                                onClick={() => handleDesactiverForfait(index)}
+                                onClick={() =>
+                                  handleDesactiverForfait(originalIndex)
+                                }
                               >
                                 Désactiver
                               </Button>
                             </Box>
                           </Stack>
-                          <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
+                          <Box sx={{ ...fieldMt2, display: "flex", gap: 1 }}>
                             <TextField
                               type="number"
                               size="small"
@@ -689,7 +698,7 @@ export default function Eleves() {
                               variant="contained"
                               size="small"
                               onClick={() =>
-                                handleModifierSeances(index, "set")
+                                handleModifierSeances(originalIndex, "set")
                               }
                             >
                               Appliquer
@@ -697,7 +706,8 @@ export default function Eleves() {
                           </Box>
                         </CardContent>
                       </Card>
-                    ))}
+                    );
+                  })}
                 </List>
               ) : (
                 <Typography
