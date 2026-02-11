@@ -301,6 +301,12 @@ MonCompte.jsx       │ 1041 lines │ ⚠️  LARGEST (Refactor 2nd)
 ├─ Photo upload & crop (200+ lines)
 └─ Password change (150+ lines)
 
+Register.jsx        │ 693 lines │ 🔴 HIGH (Refactor 3rd)
+├─ Form with validation (250+ lines)
+├─ Role selection & conditional fields (150+ lines)
+├─ Activity/interests checkboxes (100+ lines)
+└─ Submit handlers & error management (100+ lines)
+
 ShowAnimations.jsx  │ 600+ lines │ 🔴 HIGH
 ├─ Multiple animation sections (200+ lines each)
 ├─ Modal logic (100+ lines)
@@ -321,10 +327,11 @@ Tarifs.jsx          │ 552 lines │ 🔴 HIGH
 
 2. **Phase 2 (HIGH)** → Frontend heavy pages:
    - MonCompte.jsx (1041 → 4 components 260 lines each)
+   - Register.jsx (693 → 4 components 170 lines each)
    - TarifsContenu.jsx (690 → 4 components 170 lines each)
 
 3. **Phase 3 (FOLLOW-UP)** → Medium complexity:
-   - ShowAnimations.jsx, Notifications.jsx, etc.
+   - ShowAnimations.jsx (600 lines), Tarifs.jsx (552 lines), Notifications.jsx, etc.
 
 ---
 
