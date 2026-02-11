@@ -29,6 +29,25 @@ import {
   showAnimationsButton,
   showAnimationsButtonAlt,
 } from "@/styles/pageStyles";
+
+const ShowAnimations = () => {
+  const navigate = useNavigate();
+  const { forfaitsEVJF, loading, error } = useEVJFForfaits();
+
+  const handleDownloadPlaquette = () => {
+    const link = document.createElement("a");
+    link.href = "/documents/plaquette-evjf.pdf";
+    link.download = "Plaquette-EVJF-Pole-Evolution.pdf";
+    link.click();
+  };
+
+  const handleContactDevis = () => {
+    navigate("/contact");
+  };
+
+  const handleContactPrestations = () => {
+    navigate("/contact");
+  };
   return (
     <>
       <Box sx={showAnimationsRoot}>
@@ -169,25 +188,6 @@ import {
             <Grid container spacing={3} sx={{ maxWidth: '700px' }}>
               <Grid size={{ xs: 12, sm: 4 }}>
                 <Button variant="contained" fullWidth size="large" startIcon={<Download />} onClick={handleDownloadPlaquette} sx={showAnimationsButtonAlt}>
-                  Plaquette EVJF
-                </Button>
-                  variant="contained"
-                  fullWidth
-                  size="large"
-                  startIcon={<Download />}
-                  onClick={handleDownloadPlaquette}
-                  sx={{
-                    py: 2,
-                    fontWeight: 700,
-                    fontSize: "1rem",
-                    textTransform: "none",
-                    backgroundColor: "navy.main",
-                    borderRadius: 1,
-                    "&:hover": {
-                      backgroundColor: "gradient.primary",
-                    },
-                  }}
-                >
                   Plaquette EVJF
                 </Button>
               </Grid>
