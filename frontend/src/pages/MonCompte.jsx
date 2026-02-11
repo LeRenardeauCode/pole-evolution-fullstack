@@ -1,66 +1,24 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Container,
-  Typography,
-  TextField,
-  MenuItem,
-  Button,
-  Alert,
-  CircularProgress,
-  Avatar,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Divider,
-  Chip,
-  Stack,
-} from "@mui/material";
-import {
-  Warning as WarningIcon,
-  CheckCircle as CheckCircleIcon,
-  Cancel as CancelIcon,
-  CardMembership as ForfaitIcon,
-  CalendarMonth as CalendarIcon,
-} from "@mui/icons-material";
+import { Box, Container, Typography, Alert, CircularProgress } from "@mui/material";
 import authService from "@services/authService";
 import reservationService from "@services/reservationService";
 import {
   loadingContainer,
   monCompteLayout,
   monCompteSidebar,
-  monCompteMainPanel,
-  monCompteTitle,
-  textFieldWhiteBg,
-  textFieldMb4White,
-  avatarProfile,
-  buttonSaveProfile,
-  badgeSuccess,
-  badgeWarning,
-  badgeInfo,
-  badgeLabel,
-  dividerLight,
-  buttonViewPlan,
-  linkUnderline,
-  dialogPaperDark,
-  dialogTitleViolet,
-  dialogBoxHighlight,
-  typographyPrimary,
-  typographySecondary,
-  boxIndent,
-  bodyMb3,
-  whiteText,
   monCompteMainPanelBg,
-} from "../styles/pageStyles";
-
+  monCompteTitle,
+  bodyMb3,
+} from "@/styles/pageStyles";
+import MonCompteProfile from "@/components/MonCompte/MonCompteProfile";
+import MonComptePassword from "@/components/MonCompte/MonComptePassword";
+import MonCompteCourses from "@/components/MonCompte/MonCompteCourses";
+import MonCompteReglement from "@/components/MonCompte/MonCompteReglement";
 import backgroundImg from "@assets/images/img_hero2.png";
-import logo from "@assets/images/thumbnail_LOGO_POLE_EVOLUTION-removebg-preview.png";
 
 const MonCompte = () => {
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -169,10 +127,6 @@ const MonCompte = () => {
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswordData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handlePhotoClick = () => {
-    fileInputRef.current?.click();
   };
 
   const handlePhotoChange = async (e) => {
@@ -317,6 +271,7 @@ const MonCompte = () => {
               gap: 4,
             }}
           >
+            {/* Profil et mot de passe */}
             <Box
               sx={{
                 flex: 1,
@@ -325,609 +280,44 @@ const MonCompte = () => {
                 p: 4,
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 3,
-                  mb: 4,
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 100,
-                    height: 100,
-                    border: "3px solid",
-                    borderColor: "primary.main",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    p: 1,
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={logo}
-                    alt="Logo"
-                    sx={{
-                      width: "100%",
-                      height: "auto",
-                    }}
-                  />
-                </Box>
-
-                <Box sx={{ flex: 1 }}>
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      fontSize: "2rem",
-                      fontWeight: 700,
-                      color: "white",
-                      mb: 1,
-                    }}
-                  >
-                    Mon profil
-                  </Typography>
-
-                  <Typography
-                    onClick={handlePhotoClick}
-                    sx={{
-                      fontSize: "0.9rem",
-                      color: "primary.main",
-                      cursor: "pointer",
-                      textDecoration: "underline",
-                      "&:hover": {
-                        color: "white",
-                      },
-                    }}
-                  >
-                    Éditer ma photo de profil
-                  </Typography>
-
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoChange}
-                    style={{ display: "none" }}
-                  />
-                </Box>
-
-                <Avatar
-                  src={profilePhoto || undefined}
-                  key={photoKey}
-                  sx={{ ...avatarProfile, bgcolor: profilePhoto ? "transparent" : "primary.main" }}
-                >
-                  {!profilePhoto &&
-                    (formData.prenom?.[0]?.toUpperCase() || "U")}
-                </Avatar>
-              </Box>
-
-              <TextField
-                fullWidth
-                label="Prénom"
-                name="prenom"
-                value={formData.prenom}
-                onChange={handleChange}
-                variant="filled"
-                sx={textFieldWhiteBg}
+              <MonCompteProfile
+                formData={formData}
+                onFormChange={handleChange}
+                profilePhoto={profilePhoto}
+                photoKey={photoKey}
+                onPhotoChange={handlePhotoChange}
+                onSaveProfile={handleUpdateProfile}
+                loading={loading}
               />
 
-              <TextField
-                fullWidth
-                label="Nom"
-                name="nom"
-                value={formData.nom}
-                onChange={handleChange}
-                variant="filled"
-                sx={textFieldWhiteBg}
+              <MonComptePassword
+                passwordData={passwordData}
+                onPasswordChange={handlePasswordChange}
+                onSubmit={handleUpdatePassword}
+                loading={loading}
               />
-
-              <TextField
-                fullWidth
-                label="E-Mail"
-                name="email"
-                value={formData.email}
-                disabled
-                variant="outlined"
-                helperText="Mail en lecture seule"
-                sx={{ mb: 3 }}
-              />
-
-              <TextField
-                fullWidth
-                label="Téléphone"
-                name="telephone"
-                value={formData.telephone}
-                onChange={handleChange}
-                variant="filled"
-                sx={textFieldWhiteBg}
-              />
-
-              <TextField
-                fullWidth
-                select
-                label="Niveau en pole dance*"
-                name="niveauPole"
-                value={formData.niveauPole}
-                onChange={handleChange}
-                variant="filled"
-                sx={textFieldMb4White}
-              >
-                <MenuItem value="jamais">Jamais pratiqué</MenuItem>
-                <MenuItem value="debutant">Débutant</MenuItem>
-                <MenuItem value="intermediaire">Intermédiaire</MenuItem>
-                <MenuItem value="avance">Avancé</MenuItem>
-              </TextField>
-
-              <Button
-                onClick={handleUpdateProfile}
-                fullWidth
-                sx={buttonSaveProfile}
-              >
-                Enregistrer
-              </Button>
-
-              <Typography
-                sx={{
-                  fontSize: "1.2rem",
-                  fontWeight: 600,
-                  color: "white",
-                  mb: 3,
-                }}
-              >
-                Modifier mon mot de passe
-              </Typography>
-
-              <Box component="form" onSubmit={handleUpdatePassword}>
-                <TextField
-                  fullWidth
-                  type="password"
-                  label="Ancien mot de passe"
-                  name="ancienMotDePasse"
-                  value={passwordData.ancienMotDePasse}
-                  onChange={handlePasswordChange}
-                  variant="filled"
-                  sx={{ mb: 3, bgcolor: "white" }}
-                />
-
-                <TextField
-                  fullWidth
-                  type="password"
-                  label="Nouveau mot de passe"
-                  name="nouveauMotDePasse"
-                  value={passwordData.nouveauMotDePasse}
-                  onChange={handlePasswordChange}
-                  variant="filled"
-                  sx={{ mb: 3, bgcolor: "white" }}
-                />
-
-                <Button
-                  type="submit"
-                  fullWidth
-                  sx={{
-                    backgroundColor: "navy.main",
-                    color: "white",
-                    border: 1,
-                    borderColor: "primary.main",
-                    py: 1.5,
-                    fontSize: "1rem",
-                    fontWeight: 600,
-                    textTransform: "uppercase",
-                    "&:hover": {
-                      background:
-                        "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                    },
-                  }}
-                >
-                  Modifier le mot de passe
-                </Button>
-              </Box>
             </Box>
 
-            <Box
-              sx={{
-                flex: 1,
-                backgroundColor: "navy.main",
-                borderRadius: 0,
-                p: 4,
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 3,
-                  mb: 4,
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 100,
-                    height: 100,
-                    border: "3px solid",
-                    borderColor: "primary.main",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    p: 1,
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={logo}
-                    alt="Logo"
-                    sx={{
-                      width: "100%",
-                      height: "auto",
-                    }}
-                  />
-                </Box>
-
-                <Typography
-                  variant="h4"
-                  sx={{
-                    fontSize: "2rem",
-                    fontWeight: 700,
-                    color: "white",
-                  }}
-                >
-                  Mes cours
-                </Typography>
-              </Box>
-
-              <Box sx={{ mb: 3 }}>
-                <Typography sx={{ fontSize: '1.1rem', fontWeight: 600, color: 'white', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <ForfaitIcon /> Mes forfaits & abonnements
-                </Typography>
-
-                {forfaitsActifs.length > 0 && (
-                  <Stack spacing={1} sx={{ mb: 2 }}>
-                    {forfaitsActifs.map((forfait, index) => (
-                      <Box key={index} sx={badgeSuccess}>
-                        <Box sx={badgeLabel}>
-                          <CheckCircleIcon sx={{ color: "#4CAF50" }} />
-                          <Typography sx={{ color: "white", fontWeight: 600 }}>
-                            {forfait.seancesRestantes} séances restantes
-                          </Typography>
-                        </Box>
-                        <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.7)" }}>
-                          Acheté le {new Date(forfait.dateAchat).toLocaleDateString('fr-FR')}
-                          {forfait.dateExpiration && (
-                            <> • Expire le {new Date(forfait.dateExpiration).toLocaleDateString('fr-FR')}</>
-                          )}
-                        </Typography>
-                      </Box>
-                    ))}
-                  </Stack>
-                )}
-
-                {abonnementActif && (
-                  <Box sx={badgeInfo}>
-                    <Box sx={badgeLabel}>
-                      <CalendarIcon sx={{ color: "#2196F3" }} />
-                      <Typography sx={{ color: "white", fontWeight: 600 }}>
-                        Abonnement {userData.abonnementActif.frequenceSeances} cours/semaine
-                      </Typography>
-                    </Box>
-                    <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.7)" }}>
-                      Du {new Date(userData.abonnementActif.dateDebut).toLocaleDateString('fr-FR')} au{' '}
-                      {new Date(userData.abonnementActif.dateFin).toLocaleDateString('fr-FR')}
-                    </Typography>
-                  </Box>
-                )}
-
-                {forfaitsActifs.length === 0 && !abonnementActif && (
-                  <Box sx={badgeWarning}>
-                    <Box sx={badgeLabel}>
-                      <CancelIcon sx={{ color: "#FF9800" }} />
-                      <Typography sx={{ color: "white", fontWeight: 600 }}>
-                        Aucun forfait ou abonnement actif
-                      </Typography>
-                    </Box>
-                    <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.7)" }}>
-                      Consultez la page <strong>Tarifs</strong> pour souscrire à un forfait
-                    </Typography>
-                  </Box>
-                )}
-              </Box>
-
-              <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
-
-              <TextField
-                fullWidth
-                label="Prochain cours à venir"
-                value={
-                  nextReservation?.cours?.nom || "Aucune réservation à venir"
-                }
-                slotProps={{ input: { readOnly: true } }}
-                variant="outlined"
-                sx={{
-                  mb: 3,
-                  "& .MuiOutlinedInput-root": {
-                    color: "white",
-                    "& fieldset": {
-                      borderColor: "rgba(255, 255, 255, 0.3)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "rgba(255, 255, 255, 0.7)",
-                  },
-                }}
-              />
-
-              <TextField
-                fullWidth
-                label="Date / Heure"
-                value={
-                  nextReservation?.cours?.dateDebut
-                    ? new Date(nextReservation.cours.dateDebut).toLocaleString(
-                        "fr-FR",
-                        {
-                          weekday: "long",
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        },
-                      )
-                    : "Aucune réservation à venir"
-                }
-                slotProps={{ input: { readOnly: true } }}
-                variant="outlined"
-                sx={{
-                  mb: 3,
-                  "& .MuiOutlinedInput-root": {
-                    color: "white",
-                    "& fieldset": {
-                      borderColor: "rgba(255, 255, 255, 0.3)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "rgba(255, 255, 255, 0.7)",
-                  },
-                }}
-              />
-
-              <TextField
-                fullWidth
-                label="Type de cours"
-                value={
-                  nextReservation?.cours?.type
-                    ? `${nextReservation.cours.type} - Niveau ${nextReservation.cours.niveau || ""}`
-                    : "Aucune réservation à venir"
-                }
-                slotProps={{ input: { readOnly: true } }}
-                variant="outlined"
-                sx={{
-                  mb: 3,
-                  "& .MuiOutlinedInput-root": {
-                    color: "white",
-                    "& fieldset": {
-                      borderColor: "rgba(255, 255, 255, 0.3)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "rgba(255, 255, 255, 0.7)",
-                  },
-                }}
-              />
-
-              <TextField
-                fullWidth
-                label="Statut de réservation"
-                value={
-                  nextReservation?.statut === "confirmee"
-                    ? "Confirmée"
-                    : nextReservation?.statut === "enattente"
-                      ? "En attente"
-                      : "Aucune réservation à venir"
-                }
-                slotProps={{ input: { readOnly: true } }}
-                variant="outlined"
-                sx={{
-                  mb: 4,
-                  "& .MuiOutlinedInput-root": {
-                    color: "white",
-                    "& fieldset": {
-                      borderColor: "rgba(255, 255, 255, 0.3)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "rgba(255, 255, 255, 0.7)",
-                  },
-                }}
-              />
-
-              <Button
-                onClick={() => navigate("/planning")}
-                fullWidth
-                sx={buttonViewPlan}
-              >
-                Voir planning
-              </Button>
-
-              <Button
-                onClick={handleCancelReservation}
-                disabled={!nextReservation}
-                fullWidth
-                sx={{
-                  backgroundColor: "transparent",
-                  border: "2px solid",
-                  borderColor: nextReservation
-                    ? "primary.main"
-                    : "rgba(255, 255, 255, 0.3)",
-                  color: nextReservation
-                    ? "primary.main"
-                    : "rgba(255, 255, 255, 0.5)",
-                  py: 1.5,
-                  fontSize: "1rem",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  mb: 2,
-                  "&:hover": nextReservation
-                    ? {
-                        background:
-                          "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                        color: "white",
-                        borderColor: "transparent",
-                      }
-                    : {},
-                }}
-              >
-                Annuler une réservation*
-              </Button>
-
-              <Typography
-                sx={linkUnderline}
-                onClick={() => setOpenReglement(true)}
-              >
-                *Voir conditions d'annulations
-              </Typography>
-            </Box>
+            {/* Mes cours et réservations */}
+            <MonCompteCourses
+              forfaitsActifs={forfaitsActifs}
+              abonnementActif={abonnementActif}
+              nextReservation={nextReservation}
+              userData={userData}
+              onNavigatePlanning={() => navigate("/planning")}
+              onCancelReservation={handleCancelReservation}
+              onOpenReglement={() => setOpenReglement(true)}
+              loading={loading}
+            />
           </Box>
         </Container>
       </Box>
 
-      <Dialog
+      {/* Dialog règlement */}
+      <MonCompteReglement
         open={openReglement}
         onClose={() => setOpenReglement(false)}
-        maxWidth="md"
-        fullWidth
-        PaperProps={{
-          sx: dialogPaperDark,
-        }}
-      >
-        <DialogTitle sx={dialogTitleViolet}>
-          <WarningIcon />
-          Conditions d'annulation - Règlement intérieur
-        </DialogTitle>
-
-        <DialogContent sx={{ mt: 2 }}>
-          <Box sx={dialogBoxHighlight}>
-            <Typography variant="h6" sx={typographyPrimary}>
-              Article 4 - Accueil et annulation
-            </Typography>
-
-            <Typography variant="body1">
-              Merci d'arriver <strong>5 à 15 minutes à l'avance</strong> afin de
-              commencer le cours à l'heure. Merci de prévenir en cas de retard.
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={typographySecondary}
-            >
-              ⚠️ Tout cours non décommandé au maximum <strong>24 heures</strong>{" "}
-              à l'avance sera dû.
-            </Typography>
-          </Box>
-
-          <Divider sx={dividerLight} />
-
-          <Typography variant="h6" sx={typographyPrimary}>
-            Paiement obligatoire AVANT le cours pour les cours à l'unité et découverte
-          </Typography>
-          <Typography variant="body2">
-            Le paiement doit être effectué SUR PLACE mais AVANT le début du
-            cours.
-            <br />
-            Merci de vous présenter 5 à 15 minutes à l'avance avec votre
-            règlement.
-          </Typography>
-
-          <Divider sx={dividerLight} />
-
-          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-            Qu'est-ce que cela signifie concrètement ?
-          </Typography>
-
-          <Typography variant="body1">
-            <strong>Si vous annulez PLUS de 24h avant le cours :</strong>
-          </Typography>
-          <Typography variant="body2" sx={boxIndent}>
-            • Aucune pénalité
-            <br />
-            • Votre séance reste disponible dans votre forfait
-            <br />• Vous pouvez réserver un autre cours sans problème
-          </Typography>
-
-          <Typography variant="body1" sx={{ mt: 2 }}>
-            <strong>Si vous annulez MOINS de 24h avant le cours :</strong>
-          </Typography>
-          <Typography variant="body2" sx={boxIndent}>
-            • <strong>Forfait :</strong> La séance sera déduite de votre forfait
-            (même si vous ne venez pas)
-            <br />• <strong>Cours à l'unité :</strong> Le cours étant déjà payé,
-            aucun remboursement ne sera effectué.
-          </Typography>
-
-          <Divider sx={dividerLight} />
-
-          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-            Exemple concret
-          </Typography>
-          <Typography variant="body2">
-            Vous avez un cours le <strong>Lundi à 18h</strong>.
-          </Typography>
-          <Typography variant="body2" sx={boxIndent}>
-            ✅ Vous pouvez annuler <strong>jusqu'à Dimanche 18h</strong> sans
-            pénalité
-            <br />❌ Si vous annulez <strong>après Dimanche 18h</strong>, la
-            séance sera déduite
-          </Typography>
-
-          <Divider sx={dividerLight} />
-
-          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-            Autres règles importantes
-          </Typography>
-
-          <Typography variant="body2">
-            <strong>Tenue idéale (Article 3) :</strong>
-            <br />
-            • Short de sport / brassière (ventre, bras, jambes et aisselles
-            dénudés)
-            <br />
-            • Bijoux retirés avant le cours
-            <br />• Interdit d'appliquer crème ou huile le jour du cours
-          </Typography>
-
-          <Typography variant="body2">
-            <strong>Certificat médical (Article 1) :</strong>
-            <br />
-            • Non obligatoire mais vivement recommandé
-            <br />
-            • Valable 3 ans
-            <br />• Pratique déconseillée en cas de grossesse, problème
-            cardiaque, hémophilie
-          </Typography>
-
-          <Typography variant="body2">
-            <strong>Déroulement des cours (Article 5) :</strong>
-            <br />
-            • Durée : 1h15 à 1h30
-            <br />
-            • Minimum 5 élèves / Maximum 10 élèves
-            <br />• Paiement : chèque, espèces ou virement bancaire
-          </Typography>
-        </DialogContent>
-
-        <DialogActions sx={{ p: 2 }}>
-          <Button
-            onClick={() => setOpenReglement(false)}
-            variant="contained"
-            sx={{
-              bgcolor: "#8B5CF6",
-              "&:hover": {
-                bgcolor: "#FF1966",
-              },
-            }}
-          >
-            J'ai compris
-          </Button>
-        </DialogActions>
-      </Dialog>
+      />
     </Box>
   );
 };
