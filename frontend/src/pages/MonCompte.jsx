@@ -1,19 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Container,
-  Typography,
-  Alert,
-  CircularProgress,
-} from "@mui/material";
+import { Box, Container, Typography, Alert, CircularProgress } from "@mui/material";
 import authService from "@services/authService";
 import reservationService from "@services/reservationService";
 import {
   loadingContainer,
   monCompteLayout,
   monCompteSidebar,
-  monCompteMainPanel,
+  monCompteMainPanelBg,
   monCompteTitle,
   bodyMb3,
 } from "@/styles/pageStyles";
@@ -252,7 +246,7 @@ const MonCompte = () => {
     <Box sx={monCompteLayout}>
       <Box sx={{ ...monCompteSidebar, backgroundImage: `url(${backgroundImg})` }} />
 
-      <Box sx={{ ...monCompteMainPanel, background: 'radial-gradient(circle, #C3135F 0%, #FF1966 0%, #870E58 0%, #4C0850 69%, #574A78 100%)' }}>
+      <Box sx={monCompteMainPanelBg}>
         <Container maxWidth="xl">
           <Typography variant="h2" sx={monCompteTitle}>
             Mon Compte
