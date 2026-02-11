@@ -91,6 +91,63 @@ export const tarifsRoot = {
   pb: 8,
 };
 
+// Tarifs reusable components
+export const engagementButton = {
+  px: 5,
+  py: 1.5,
+  fontSize: '1.1rem',
+  fontWeight: 600,
+  textTransform: 'none',
+  borderRadius: 1,
+  borderWidth: 2,
+  borderColor: 'white',
+  color: 'white',
+};
+
+export const engagementButtonActive = {
+  backgroundColor: 'navy.main',
+  '&:hover': { backgroundColor: 'navy.dark', borderWidth: 2, borderColor: 'white' },
+};
+
+export const forfaitCardRoot = {
+  height: '100%',
+  width: 300,
+  display: 'flex',
+  flexDirection: 'column',
+  borderRadius: 0,
+  overflow: 'hidden',
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+  transition: 'all 0.3s',
+  '&:hover': { transform: 'translateY(-8px)', boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)' },
+};
+
+export const forfaitCardHeader = {
+  backgroundColor: 'navy.main',
+  color: 'white',
+  py: 3,
+  px: 2,
+  textAlign: 'center',
+  minHeight: 100,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
+export const forfaitCardContent = { bgcolor: 'white', py: 3, px: 3, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' };
+
+export const forfaitPrice = { fontWeight: 700, color: 'navy.main', mb: 2, textAlign: 'center' };
+
+export const forfaitButton = {
+  py: 1.5,
+  fontWeight: 700,
+  fontSize: '1rem',
+  textTransform: 'none',
+  backgroundColor: 'navy.main',
+  borderRadius: 0,
+  '&:hover': { backgroundColor: 'navy.dark' },
+  '&:disabled': { backgroundColor: 'grey.400', color: 'grey.600' },
+};
+
 // ShowAnimations styles (extracted from ShowAnimations.jsx)
 export const showAnimationsRoot = { minHeight: '100vh', display: 'flex' };
 export const showAnimationsLeftPanel = { width: '40%', display: { xs: 'none', md: 'block' }, position: 'relative', overflow: 'hidden' };

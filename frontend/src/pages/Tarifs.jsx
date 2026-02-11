@@ -17,7 +17,16 @@ import { useForfaits } from "@/hooks/useForfaits";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 import notificationService from "@/services/notificationService";
-import { tarifsRoot } from "@/styles/pageStyles";
+import {
+  tarifsRoot,
+  engagementButton,
+  engagementButtonActive,
+  forfaitCardRoot,
+  forfaitCardHeader,
+  forfaitCardContent,
+  forfaitPrice,
+  forfaitButton,
+} from "@/styles/pageStyles";
 
 const Tarifs = () => {
   const [typeEngagement, setTypeEngagement] = useState("sansengagement");
@@ -172,81 +181,25 @@ const Tarifs = () => {
           </Alert>
         )}
 
-        <Box
-          sx={{
-            display: "flex",
-            gap: 2,
-            flexWrap: "wrap",
-            justifyContent: "center",
-            mb: 8,
-          }}
-        >
-          <Button
-            onClick={() => setTypeEngagement("sansengagement")}
-            variant={
-              typeEngagement === "sansengagement" ? "contained" : "outlined"
-            }
-            size="large"
-            sx={{
-              px: 5,
-              py: 1.5,
-              fontSize: "1.1rem",
-              fontWeight: 600,
-              textTransform: "none",
-              borderRadius: 1,
-              borderWidth: 2,
-              borderColor: "white",
-              color: "white",
-              backgroundColor:
-                typeEngagement === "sansengagement"
-                  ? "navy.main"
-                  : "transparent",
-              "&:hover": {
-                borderWidth: 2,
-                borderColor: "white",
-                backgroundColor:
-                  typeEngagement === "sansengagement"
-                    ? "navy.dark"
-                    : "rgba(255,255,255,0.1)",
-              },
-            }}
-          >
-            Sans engagement
-          </Button>
+         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center', mb: 8 }}>
+           <Button
+             onClick={() => setTypeEngagement("sansengagement")}
+             variant={typeEngagement === "sansengagement" ? "contained" : "outlined"}
+             size="large"
+             sx={{ ...engagementButton, ...(typeEngagement === 'sansengagement' ? engagementButtonActive : {}) }}
+           >
+             Sans engagement
+           </Button>
 
-          <Button
-            onClick={() => setTypeEngagement("engagement12mois")}
-            variant={
-              typeEngagement === "engagement12mois" ? "contained" : "outlined"
-            }
-            size="large"
-            sx={{
-              px: 5,
-              py: 1.5,
-              fontSize: "1.1rem",
-              fontWeight: 600,
-              textTransform: "none",
-              borderRadius: 1,
-              borderWidth: 2,
-              borderColor: "white",
-              color: "white",
-              backgroundColor:
-                typeEngagement === "engagement12mois"
-                  ? "navy.main"
-                  : "transparent",
-              "&:hover": {
-                borderWidth: 2,
-                borderColor: "white",
-                backgroundColor:
-                  typeEngagement === "engagement12mois"
-                    ? "navy.dark"
-                    : "rgba(255,255,255,0.1)",
-              },
-            }}
-          >
-            Avec engagement 12 mois
-          </Button>
-        </Box>
+           <Button
+             onClick={() => setTypeEngagement("engagement12mois")}
+             variant={typeEngagement === "engagement12mois" ? "contained" : "outlined"}
+             size="large"
+             sx={{ ...engagementButton, ...(typeEngagement === 'engagement12mois' ? engagementButtonActive : {}) }}
+           >
+             Avec engagement 12 mois
+           </Button>
+         </Box>
 
         {loading && (
           <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
@@ -266,168 +219,61 @@ const Tarifs = () => {
               const acceLibre = isAccesLibre(forfait);
 
               return (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={forfait._id}>
-                  <Box
-                    sx={{
-                      height: "100%",
-                      width: "300px",
-                      display: "flex",
-                      flexDirection: "column",
-                      borderRadius: 0,
-                      overflow: "hidden",
-                      boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
-                      transition: "all 0.3s",
-                      "&:hover": {
-                        transform: "translateY(-8px)",
-                        boxShadow: "0 8px 30px rgba(0, 0, 0, 0.5)",
-                      },
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        backgroundColor: "navy.main",
-                        color: "white",
-                        py: 3,
-                        px: 2,
-                        textAlign: "center",
-                        minHeight: "100px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          fontWeight: 700,
-                          fontSize: "1.1rem",
-                          lineHeight: 1.3,
-                        }}
-                      >
-                        {forfait.nom}
-                      </Typography>
-                    </Box>
+                 <Grid item xs={12} sm={6} md={4} lg={3} key={forfait._id}>
+                   <Box sx={forfaitCardRoot}>
+                     <Box sx={forfaitCardHeader}>
+                       <Typography variant="h6" sx={{ fontWeight: 700, fontSize: '1.1rem', lineHeight: 1.3 }}>
+                         {forfait.nom}
+                       </Typography>
+                     </Box>
 
-                    <Box
-                      sx={{
-                        bgcolor: "white",
-                        py: 3,
-                        px: 3,
-                        flexGrow: 1,
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Box>
-                        <Typography
-                          variant="h3"
-                          sx={{
-                            fontWeight: 700,
-                            color: "navy.main",
-                            mb: 2,
-                            textAlign: "center",
-                          }}
-                        >
-                          {forfait.prix}€
-                          {forfait.categorie === "abonnement" && "/mois"}
-                          {forfait.categorie === "prive" && "/heure"}
-                        </Typography>
+                     <Box sx={forfaitCardContent}>
+                       <Box>
+                         <Typography variant="h3" sx={{ ...forfaitPrice, fontSize: 'inherit' }}>
+                           {forfait.prix}€
+                           {forfait.categorie === "abonnement" && "/mois"}
+                           {forfait.categorie === "prive" && "/heure"}
+                         </Typography>
 
-                        {forfait.description && (
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{
-                              textAlign: "center",
-                              fontSize: "0.9rem",
-                              mb: 2,
-                              minHeight: "60px",
-                            }}
-                          >
-                            {forfait.description}
-                          </Typography>
-                        )}
-                      </Box>
+                         {forfait.description && (
+                           <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', fontSize: '0.9rem', mb: 2, minHeight: '60px' }}>
+                             {forfait.description}
+                           </Typography>
+                         )}
+                       </Box>
 
-                      <Box sx={{ textAlign: "center", mb: 2 }}>
-                        {forfait.dureeEngagementMois && (
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ fontSize: "0.85rem", mb: 0.5 }}
-                          >
-                            Engagement {forfait.dureeEngagementMois} mois
-                          </Typography>
-                        )}
+                       <Box sx={{ textAlign: 'center', mb: 2 }}>
+                         {forfait.dureeEngagementMois && (
+                           <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mb: 0.5 }}>
+                             Engagement {forfait.dureeEngagementMois} mois
+                           </Typography>
+                         )}
 
-                        {forfait.validiteMois && (
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ fontSize: "0.85rem", mb: 0.5 }}
-                          >
-                            Valable {forfait.validiteMois} mois
-                          </Typography>
-                        )}
+                         {forfait.validiteMois && (
+                           <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mb: 0.5 }}>
+                             Valable {forfait.validiteMois} mois
+                           </Typography>
+                         )}
 
-                        {forfait.prixUnitaire && (
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ fontSize: "0.85rem", mb: 0.5 }}
-                          >
-                            {forfait.prixUnitaire.toFixed(2)}€ par cours
-                          </Typography>
-                        )}
+                         {forfait.prixUnitaire && (
+                           <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mb: 0.5 }}>
+                             {forfait.prixUnitaire.toFixed(2)}€ par cours
+                           </Typography>
+                         )}
 
-                        {forfait.nombreSeancesParSemaine && (
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ fontSize: "0.85rem", mb: 0.5 }}
-                          >
-                            {forfait.nombreSeancesParSemaine} cours/semaine
-                          </Typography>
-                        )}
-                      </Box>
+                         {forfait.nombreSeancesParSemaine && (
+                           <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem', mb: 0.5 }}>
+                             {forfait.nombreSeancesParSemaine} cours/semaine
+                           </Typography>
+                         )}
+                       </Box>
 
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        size="large"
-                        onClick={() => handleClickAcheter(forfait)}
-                        disabled={
-                          !acceLibre && 
-                          (!user || user?.statutValidationAdmin !== "approved")
-                        }
-                        sx={{
-                          py: 1.5,
-                          fontWeight: 700,
-                          fontSize: "1rem",
-                          textTransform: "none",
-                          backgroundColor: "navy.main",
-                          borderRadius: 0,
-                          "&:hover": {
-                            backgroundColor: "navy.dark",
-                          },
-                          "&:disabled": {
-                            backgroundColor: "grey.400",
-                            color: "grey.600",
-                          },
-                        }}
-                      >
-                        {acceLibre
-                          ? "Essayer maintenant" 
-                          : !user
-                            ? "Se connecter pour acheter"
-                            : user.statutValidationAdmin !== "approved"
-                              ? "Compte en attente"
-                              : "Je m'inscris !"}
-                      </Button>
-                    </Box>
-                  </Box>
-                </Grid>
+                       <Button variant="contained" fullWidth size="large" onClick={() => handleClickAcheter(forfait)} disabled={!acceLibre && (!user || user?.statutValidationAdmin !== 'approved')} sx={forfaitButton}>
+                         {acceLibre ? 'Essayer maintenant' : !user ? 'Se connecter pour acheter' : user.statutValidationAdmin !== 'approved' ? 'Compte en attente' : 'Je m\'inscris !'}
+                       </Button>
+                     </Box>
+                   </Box>
+                 </Grid>
               );
             })}
 
