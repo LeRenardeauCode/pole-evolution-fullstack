@@ -1,8 +1,6 @@
 import {
   Card,
   CardContent,
-  DeleteIcon,
-  EditIcon,
   IconButton,
   Paper,
   Table,
@@ -13,7 +11,9 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { tableHeaderRow } from "../../../assets/styles/pageStyles";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { tableHeaderRow } from "../../../styles/pageStyles";
 
 export default function TarifsTable({ forfaits, onEdit, onDelete }) {
   return (
