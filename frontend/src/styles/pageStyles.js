@@ -56,6 +56,9 @@ export const monCompteSidebar = { flex: '0 0 20%', backgroundSize: 'cover', back
 export const monCompteMainPanel = { flex: 1, p: { xs: 3, md: 12 } };
 export const monCompteTitle = { fontSize: { xs: '2rem', md: '3rem' }, fontWeight: 800, color: 'white', mb: 6 };
 
+// MonCompte variant with background used in MonCompte.jsx
+export const monCompteMainPanelBg = { ...monCompteMainPanel, background: 'radial-gradient(circle, #C3135F 0%, #FF1966 0%, #870E58 0%, #4C0850 69%, #574A78 100%)' };
+
 export const textFieldWhiteBg = { mb: 3, bgcolor: 'white' };
 export const textFieldMb4White = { mb: 4, bgcolor: 'white' };
 export const avatarProfile = { width: 80, height: 80, fontSize: '2rem', ml: 'auto' };
@@ -76,6 +79,17 @@ export const dialogBoxHighlight = { mb: 3, p: 2, bgcolor: 'rgba(139, 92, 246, 0.
 export const typographyPrimary = { fontWeight: 700, mb: 2, color: '#FF1966' };
 export const typographySecondary = { fontWeight: 700, fontSize: '1.1rem', color: '#FF1966' };
 export const boxIndent = { pl: 2 };
+
+// Tarifs page root styles
+export const tarifsRoot = {
+  minHeight: '100vh',
+  display: 'flex',
+  flexDirection: 'column',
+  background:
+    'linear-gradient(180deg, #574A78 0%, #AB326F 36%, #574A78 63%, #5E1A5C 100%)',
+  pt: { xs: 12, md: 16 },
+  pb: 8,
+};
 
 // ShowAnimations styles (extracted from ShowAnimations.jsx)
 export const showAnimationsRoot = { minHeight: '100vh', display: 'flex' };
@@ -142,6 +156,7 @@ export default {
   monCompteSidebar,
   monCompteMainPanel,
   monCompteTitle,
+  monCompteMainPanelBg,
   textFieldWhiteBg,
   textFieldMb4White,
   avatarProfile,
@@ -159,4 +174,5 @@ export default {
   typographyPrimary,
   typographySecondary,
   boxIndent,
+  tarifsRoot,
 };

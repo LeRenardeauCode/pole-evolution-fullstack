@@ -17,6 +17,7 @@ import { useForfaits } from "@/hooks/useForfaits";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "react-toastify";
 import notificationService from "@/services/notificationService";
+import { tarifsRoot } from "@/styles/pageStyles";
 
 const Tarifs = () => {
   const [typeEngagement, setTypeEngagement] = useState("sansengagement");
@@ -101,15 +102,7 @@ const Tarifs = () => {
 
   return (
     <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        background:
-          "linear-gradient(180deg, #574A78 0%, #AB326F 36%, #574A78 63%, #5E1A5C 100%)",
-        pt: { xs: 12, md: 16 },
-        pb: 8,
-      }}
+      sx={tarifsRoot}
     >
       <Container maxWidth="xl">
         <Typography
