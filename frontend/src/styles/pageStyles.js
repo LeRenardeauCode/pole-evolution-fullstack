@@ -77,6 +77,25 @@ export const typographyPrimary = { fontWeight: 700, mb: 2, color: '#FF1966' };
 export const typographySecondary = { fontWeight: 700, fontSize: '1.1rem', color: '#FF1966' };
 export const boxIndent = { pl: 2 };
 
+// ShowAnimations styles (extracted from ShowAnimations.jsx)
+export const showAnimationsRoot = { minHeight: '100vh', display: 'flex' };
+export const showAnimationsLeftPanel = { width: '40%', display: { xs: 'none', md: 'block' }, position: 'relative', overflow: 'hidden' };
+export const showAnimationsLeftHero = { width: '100%', height: '100%', backgroundImage: 'url("/images/show-animations-hero.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: '#1a1a2e' };
+export const showAnimationsRightPanel = { width: { xs: '100%', md: '60%' }, background: 'linear-gradient(180deg, #574A78 0%, #AB326F 36%, #574A78 63%, #5E1A5C 100%)', display: 'flex', alignItems: 'center', py: { xs: 6, md: 8 } };
+export const showAnimationsContainer = { p: 4 };
+export const showAnimationsTitle = { fontWeight: 700, fontSize: { xs: '2.5rem', md: '4rem' }, mb: 2, textAlign: 'left', color: 'white', letterSpacing: '0.02em' };
+export const showAnimationsSubtitle = { fontWeight: 600, fontSize: { xs: '1.5rem', md: '2rem' }, mb: 4, color: 'white' };
+export const showAnimationsBody = { fontSize: { xs: '1rem', md: '1.1rem' }, color: 'white', mb: 4, lineHeight: 1.8, maxWidth: '700px' };
+export const showAnimationsList = { color: 'white', fontSize: { xs: '0.95rem', md: '1rem' }, lineHeight: 2, pl: 3, '& li': { mb: 1 } };
+export const showAnimationsLoading = { display: 'flex', justifyContent: 'center', py: 4, mb: 5 };
+export const showAnimationsError = { mb: 5, maxWidth: '600px' };
+export const showAnimationsCard = { height: '100%', minHeight: '450px', display: 'flex', flexDirection: 'column', borderRadius: 0, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)', transition: 'all 0.3s', '&:hover': { transform: 'translateY(-8px)', boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)' } };
+export const showAnimationsCardHeader = { backgroundColor: 'navy.main', color: 'white', py: 3, px: 2, textAlign: 'center', minHeight: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' };
+export const showAnimationsCardContent = { bgcolor: 'white', py: 3, px: 3, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' };
+export const showAnimationsPrice = { fontWeight: 700, color: 'navy.main', mb: 1, textAlign: 'center', fontSize: '2rem' };
+export const showAnimationsButton = { py: 1.5, mt: 3, fontWeight: 700, fontSize: '1rem', textTransform: 'none', backgroundColor: 'navy.main', borderRadius: 0, '&:hover': { backgroundColor: 'navy.gradient.primary' } };
+export const showAnimationsButtonAlt = { py: 2, fontWeight: 700, fontSize: '1rem', textTransform: 'none', backgroundColor: 'navy.main', borderRadius: 1, '&:hover': { backgroundColor: 'gradient.primary' } };
+
 export default {
   headerTitle,
   cardBorder,
