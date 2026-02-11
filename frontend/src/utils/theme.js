@@ -409,6 +409,15 @@ const theme = createTheme({
         },
       },
     },
+
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          h0: 'h1',
+          titre: 'h2',
+        },
+      },
+    },
   },
 });
 

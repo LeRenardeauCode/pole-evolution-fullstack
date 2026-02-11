@@ -22,8 +22,10 @@ const FilterBar = ({ filters, onFilterChange }) => {
       justifyContent: { xs: 'center', md: 'flex-start' }
     }}>
       <FormControl sx={{ minWidth: 180 }} size="small">
-        <InputLabel>Type de cours</InputLabel>
+        <InputLabel id="type-label">Type de cours</InputLabel>
         <Select
+          labelId="type-label"
+          id="type-select"
           value={filters.type}
           label="Type de cours"
           onChange={handleTypeChange}
@@ -35,8 +37,10 @@ const FilterBar = ({ filters, onFilterChange }) => {
       </FormControl>
 
       <FormControl sx={{ minWidth: 180 }} size="small">
-        <InputLabel>Niveau</InputLabel>
+        <InputLabel id="niveau-label">Niveau</InputLabel>
         <Select
+          labelId="niveau-label"
+          id="niveau-select"
           value={filters.niveau}
           label="Niveau"
           onChange={handleNiveauChange}
