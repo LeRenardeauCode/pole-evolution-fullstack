@@ -27,6 +27,32 @@ import {
 } from "@mui/icons-material";
 import authService from "@services/authService";
 import reservationService from "@services/reservationService";
+import {
+  loadingContainer,
+  monCompteLayout,
+  monCompteSidebar,
+  monCompteMainPanel,
+  monCompteTitle,
+  textFieldWhiteBg,
+  textFieldMb4White,
+  avatarProfile,
+  buttonSaveProfile,
+  badgeSuccess,
+  badgeWarning,
+  badgeInfo,
+  badgeLabel,
+  dividerLight,
+  buttonViewPlan,
+  linkUnderline,
+  dialogPaperDark,
+  dialogTitleViolet,
+  dialogBoxHighlight,
+  typographyPrimary,
+  typographySecondary,
+  boxIndent,
+  bodyMb3,
+  whiteText,
+} from "../styles/pageStyles";
 
 import backgroundImg from "@assets/images/img_hero2.png";
 import logo from "@assets/images/thumbnail_LOGO_POLE_EVOLUTION-removebg-preview.png";
@@ -255,60 +281,30 @@ const MonCompte = () => {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+      <Box sx={loadingContainer}>
         <CircularProgress size={60} sx={{ color: "primary.main" }} />
       </Box>
     );
   }
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
-      <Box
-        sx={{
-          flex: "0 0 20%",
-          backgroundImage: `url(${backgroundImg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          display: { xs: "none", md: "block" },
-        }}
-      />
+    <Box sx={monCompteLayout}>
+      <Box sx={{ ...monCompteSidebar, backgroundImage: `url(${backgroundImg})` }} />
 
-      <Box
-        sx={{
-          flex: 1,
-          background:
-            "radial-gradient(circle, #C3135F 0%, #FF1966 0%, #870E58 0%, #4C0850 69%, #574A78 100%)",
-          p: { xs: 3, md: 12 },
-        }}
-      >
+      <Box sx={{ ...monCompteMainPanel, background: 'radial-gradient(circle, #C3135F 0%, #FF1966 0%, #870E58 0%, #4C0850 69%, #574A78 100%)' }}>
         <Container maxWidth="xl">
-          <Typography
-            variant="h2"
-            sx={{
-              fontSize: { xs: "2rem", md: "3rem" },
-              fontWeight: 800,
-              color: "white",
-              mb: 6,
-            }}
-          >
+          <Typography variant="h2" sx={monCompteTitle}>
             Mon Compte
           </Typography>
 
           {error && (
-            <Alert severity="error" sx={{ mb: 3 }}>
+            <Alert severity="error" sx={bodyMb3}>
               {error}
             </Alert>
           )}
 
           {success && (
-            <Alert severity="success" sx={{ mb: 3 }}>
+            <Alert severity="success" sx={bodyMb3}>
               {success}
             </Alert>
           )}
@@ -399,13 +395,7 @@ const MonCompte = () => {
                 <Avatar
                   src={profilePhoto || undefined}
                   key={photoKey}
-                  sx={{
-                    width: 80,
-                    height: 80,
-                    bgcolor: profilePhoto ? "transparent" : "primary.main",
-                    fontSize: "2rem",
-                    ml: "auto",
-                  }}
+                  sx={{ ...avatarProfile, bgcolor: profilePhoto ? "transparent" : "primary.main" }}
                 >
                   {!profilePhoto &&
                     (formData.prenom?.[0]?.toUpperCase() || "U")}
@@ -419,7 +409,7 @@ const MonCompte = () => {
                 value={formData.prenom}
                 onChange={handleChange}
                 variant="filled"
-                sx={{ mb: 3, bgcolor: "white" }}
+                sx={textFieldWhiteBg}
               />
 
               <TextField
@@ -429,7 +419,7 @@ const MonCompte = () => {
                 value={formData.nom}
                 onChange={handleChange}
                 variant="filled"
-                sx={{ mb: 3, bgcolor: "white" }}
+                sx={textFieldWhiteBg}
               />
 
               <TextField
@@ -450,7 +440,7 @@ const MonCompte = () => {
                 value={formData.telephone}
                 onChange={handleChange}
                 variant="filled"
-                sx={{ mb: 3, bgcolor: "white" }}
+                sx={textFieldWhiteBg}
               />
 
               <TextField
@@ -461,7 +451,7 @@ const MonCompte = () => {
                 value={formData.niveauPole}
                 onChange={handleChange}
                 variant="filled"
-                sx={{ mb: 4, bgcolor: "white" }}
+                sx={textFieldMb4White}
               >
                 <MenuItem value="jamais">Jamais pratiqué</MenuItem>
                 <MenuItem value="debutant">Débutant</MenuItem>
@@ -472,21 +462,7 @@ const MonCompte = () => {
               <Button
                 onClick={handleUpdateProfile}
                 fullWidth
-                sx={{
-                  backgroundColor: "navy.main",
-                  border: 1,
-                  borderColor: "primary.main",
-                  color: "white",
-                  py: 1.5,
-                  fontSize: "1rem",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  mb: 4,
-                  "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                  },
-                }}
+                sx={buttonSaveProfile}
               >
                 Enregistrer
               </Button>
@@ -600,33 +576,15 @@ const MonCompte = () => {
               </Box>
 
               <Box sx={{ mb: 3 }}>
-                <Typography
-                  sx={{
-                    fontSize: "1.1rem",
-                    fontWeight: 600,
-                    color: "white",
-                    mb: 2,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                  }}
-                >
+                <Typography sx={{ fontSize: '1.1rem', fontWeight: 600, color: 'white', mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
                   <ForfaitIcon /> Mes forfaits & abonnements
                 </Typography>
 
                 {forfaitsActifs.length > 0 && (
                   <Stack spacing={1} sx={{ mb: 2 }}>
                     {forfaitsActifs.map((forfait, index) => (
-                      <Box
-                        key={index}
-                        sx={{
-                          bgcolor: "rgba(76, 175, 80, 0.1)",
-                          border: "2px solid #4CAF50",
-                          p: 2,
-                          borderRadius: 1,
-                        }}
-                      >
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}>
+                      <Box key={index} sx={badgeSuccess}>
+                        <Box sx={badgeLabel}>
                           <CheckCircleIcon sx={{ color: "#4CAF50" }} />
                           <Typography sx={{ color: "white", fontWeight: 600 }}>
                             {forfait.seancesRestantes} séances restantes
@@ -644,16 +602,8 @@ const MonCompte = () => {
                 )}
 
                 {abonnementActif && (
-                  <Box
-                    sx={{
-                      bgcolor: "rgba(33, 150, 243, 0.1)",
-                      border: "2px solid #2196F3",
-                      p: 2,
-                      borderRadius: 1,
-                      mb: 2,
-                    }}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}>
+                  <Box sx={badgeInfo}>
+                    <Box sx={badgeLabel}>
                       <CalendarIcon sx={{ color: "#2196F3" }} />
                       <Typography sx={{ color: "white", fontWeight: 600 }}>
                         Abonnement {userData.abonnementActif.frequenceSeances} cours/semaine
@@ -667,15 +617,8 @@ const MonCompte = () => {
                 )}
 
                 {forfaitsActifs.length === 0 && !abonnementActif && (
-                  <Box
-                    sx={{
-                      bgcolor: "rgba(255, 152, 0, 0.1)",
-                      border: "2px solid #FF9800",
-                      p: 2,
-                      borderRadius: 1,
-                    }}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}>
+                  <Box sx={badgeWarning}>
+                    <Box sx={badgeLabel}>
                       <CancelIcon sx={{ color: "#FF9800" }} />
                       <Typography sx={{ color: "white", fontWeight: 600 }}>
                         Aucun forfait ou abonnement actif
@@ -799,21 +742,7 @@ const MonCompte = () => {
               <Button
                 onClick={() => navigate("/planning")}
                 fullWidth
-                sx={{
-                  backgroundColor: "navy.main",
-                  color: "white",
-                  border: 1,
-                  borderColor: "primary.main",
-                  py: 1.5,
-                  fontSize: "1rem",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  mb: 2,
-                  "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                  },
-                }}
+                sx={buttonViewPlan}
               >
                 Voir planning
               </Button>
@@ -850,17 +779,7 @@ const MonCompte = () => {
               </Button>
 
               <Typography
-                sx={{
-                  fontSize: "0.85rem",
-                  color: "primary.main",
-                  textAlign: "center",
-                  fontStyle: "italic",
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                  "&:hover": {
-                    color: "white",
-                  },
-                }}
+                sx={linkUnderline}
                 onClick={() => setOpenReglement(true)}
               >
                 *Voir conditions d'annulations
@@ -876,39 +795,17 @@ const MonCompte = () => {
         maxWidth="md"
         fullWidth
         PaperProps={{
-          sx: {
-            bgcolor: "#1a1a1a",
-            color: "white",
-          },
+          sx: dialogPaperDark,
         }}
       >
-        <DialogTitle
-          sx={{
-            bgcolor: "#8B5CF6",
-            color: "white",
-            fontWeight: 700,
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-          }}
-        >
+        <DialogTitle sx={dialogTitleViolet}>
           <WarningIcon />
           Conditions d'annulation - Règlement intérieur
         </DialogTitle>
 
         <DialogContent sx={{ mt: 2 }}>
-          <Box
-            sx={{
-              mb: 3,
-              p: 2,
-              bgcolor: "rgba(139, 92, 246, 0.1)",
-              border: "2px solid #8B5CF6",
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{ fontWeight: 700, mb: 2, color: "#FF1966" }}
-            >
+          <Box sx={dialogBoxHighlight}>
+            <Typography variant="h6" sx={typographyPrimary}>
               Article 4 - Accueil et annulation
             </Typography>
 
@@ -918,19 +815,16 @@ const MonCompte = () => {
             </Typography>
             <Typography
               variant="body1"
-              sx={{ fontWeight: 700, fontSize: "1.1rem", color: "#FF1966" }}
+              sx={typographySecondary}
             >
               ⚠️ Tout cours non décommandé au maximum <strong>24 heures</strong>{" "}
               à l'avance sera dû.
             </Typography>
           </Box>
 
-          <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
+          <Divider sx={dividerLight} />
 
-          <Typography
-            variant="h6"
-            sx={{ fontWeight: 700, mb: 2, color: "#FF1966" }}
-          >
+          <Typography variant="h6" sx={typographyPrimary}>
             Paiement obligatoire AVANT le cours pour les cours à l'unité et découverte
           </Typography>
           <Typography variant="body2">
@@ -941,7 +835,7 @@ const MonCompte = () => {
             règlement.
           </Typography>
 
-          <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
+          <Divider sx={dividerLight} />
 
           <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
             Qu'est-ce que cela signifie concrètement ?
@@ -950,7 +844,7 @@ const MonCompte = () => {
           <Typography variant="body1">
             <strong>Si vous annulez PLUS de 24h avant le cours :</strong>
           </Typography>
-          <Typography variant="body2" sx={{ pl: 2 }}>
+          <Typography variant="body2" sx={boxIndent}>
             • Aucune pénalité
             <br />
             • Votre séance reste disponible dans votre forfait
@@ -960,14 +854,14 @@ const MonCompte = () => {
           <Typography variant="body1" sx={{ mt: 2 }}>
             <strong>Si vous annulez MOINS de 24h avant le cours :</strong>
           </Typography>
-          <Typography variant="body2" sx={{ pl: 2 }}>
+          <Typography variant="body2" sx={boxIndent}>
             • <strong>Forfait :</strong> La séance sera déduite de votre forfait
             (même si vous ne venez pas)
             <br />• <strong>Cours à l'unité :</strong> Le cours étant déjà payé,
             aucun remboursement ne sera effectué.
           </Typography>
 
-          <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
+          <Divider sx={dividerLight} />
 
           <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
             Exemple concret
@@ -975,14 +869,14 @@ const MonCompte = () => {
           <Typography variant="body2">
             Vous avez un cours le <strong>Lundi à 18h</strong>.
           </Typography>
-          <Typography variant="body2" sx={{ pl: 2 }}>
+          <Typography variant="body2" sx={boxIndent}>
             ✅ Vous pouvez annuler <strong>jusqu'à Dimanche 18h</strong> sans
             pénalité
             <br />❌ Si vous annulez <strong>après Dimanche 18h</strong>, la
             séance sera déduite
           </Typography>
 
-          <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
+          <Divider sx={dividerLight} />
 
           <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
             Autres règles importantes

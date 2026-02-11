@@ -50,6 +50,33 @@ export const primaryButton = { backgroundColor: 'transparent', border: '2px soli
 export const primaryButtonDisabled = { '&:disabled': { borderColor: 'grey.500', color: 'grey.500' } };
 export const fullWidthButtonPx = { px: 4, width: { xs: '100%', sm: 'auto' } };
 
+export const loadingContainer = { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' };
+export const monCompteLayout = { display: 'flex', minHeight: '100vh' };
+export const monCompteSidebar = { flex: '0 0 20%', backgroundSize: 'cover', backgroundPosition: 'center', display: { xs: 'none', md: 'block' } };
+export const monCompteMainPanel = { flex: 1, p: { xs: 3, md: 12 } };
+export const monCompteTitle = { fontSize: { xs: '2rem', md: '3rem' }, fontWeight: 800, color: 'white', mb: 6 };
+
+export const textFieldWhiteBg = { mb: 3, bgcolor: 'white' };
+export const textFieldMb4White = { mb: 4, bgcolor: 'white' };
+export const avatarProfile = { width: 80, height: 80, fontSize: '2rem', ml: 'auto' };
+export const buttonSaveProfile = { backgroundColor: 'navy.main', border: 1, borderColor: 'primary.main', color: 'white', py: 1.5, fontSize: '1rem', fontWeight: 600, textTransform: 'uppercase', mb: 4, '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)' } };
+
+export const badgeSuccess = { bgcolor: 'rgba(76, 175, 80, 0.1)', border: '2px solid #4CAF50', p: 2, borderRadius: 1 };
+export const badgeWarning = { bgcolor: 'rgba(255, 152, 0, 0.1)', border: '2px solid #FF9800', p: 2, borderRadius: 1 };
+export const badgeInfo = { bgcolor: 'rgba(33, 150, 243, 0.1)', border: '2px solid #2196F3', p: 2, borderRadius: 1, mb: 2 };
+export const badgeLabel = { display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 };
+
+export const dividerLight = { my: 3, bgcolor: 'rgba(255,255,255,0.2)' };
+export const buttonViewPlan = { backgroundColor: 'navy.main', color: 'white', border: 1, borderColor: 'primary.main', py: 1.5, fontSize: '1rem', fontWeight: 600, textTransform: 'uppercase', mb: 2, '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)' } };
+
+export const linkUnderline = { fontSize: '0.85rem', color: 'primary.main', textAlign: 'center', fontStyle: 'italic', cursor: 'pointer', textDecoration: 'underline', '&:hover': { color: 'white' } };
+export const dialogPaperDark = { bgcolor: '#1a1a1a', color: 'white' };
+export const dialogTitleViolet = { bgcolor: '#8B5CF6', color: 'white', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 1 };
+export const dialogBoxHighlight = { mb: 3, p: 2, bgcolor: 'rgba(139, 92, 246, 0.1)', border: '2px solid #8B5CF6' };
+export const typographyPrimary = { fontWeight: 700, mb: 2, color: '#FF1966' };
+export const typographySecondary = { fontWeight: 700, fontSize: '1.1rem', color: '#FF1966' };
+export const boxIndent = { pl: 2 };
+
 export default {
   headerTitle,
   cardBorder,
@@ -91,4 +118,26 @@ export default {
   primaryButton,
   primaryButtonDisabled,
   fullWidthButtonPx,
+  loadingContainer,
+  monCompteLayout,
+  monCompteSidebar,
+  monCompteMainPanel,
+  monCompteTitle,
+  textFieldWhiteBg,
+  textFieldMb4White,
+  avatarProfile,
+  buttonSaveProfile,
+  badgeSuccess,
+  badgeWarning,
+  badgeInfo,
+  badgeLabel,
+  dividerLight,
+  buttonViewPlan,
+  linkUnderline,
+  dialogPaperDark,
+  dialogTitleViolet,
+  dialogBoxHighlight,
+  typographyPrimary,
+  typographySecondary,
+  boxIndent,
 };
