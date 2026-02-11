@@ -1,38 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  TextField,
-  Button,
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Chip,
-  CircularProgress,
-  Alert,
-} from "@mui/material";
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Cancel as CancelIcon,
-  Visibility,
-  Close,
-  CheckCircle,
-  Block,
-} from "@mui/icons-material";
+import { Box, Grid, Typography, Card, CardContent } from "@mui/material";
 import { toast } from "react-toastify";
 import {
   getAllCours,
@@ -42,21 +9,11 @@ import {
   annulerCours,
 } from "@services/adminService";
 import api from "@/services/api";
-import {
-  headerTitle,
-  cardBorder,
-  fieldMb,
-  createButton,
-  sectionTitle,
-  centerBox,
-  tableHeaderRow,
-  dialogTitle,
-  loadingBox,
-  alertMt2,
-  tableContainerMt2,
-  summaryBox,
-  fieldMt2,
-} from "@/styles/pageStyles";
+import { headerTitle, cardBorder, sectionTitle, centerBox, fieldMb } from "@/styles/pageStyles";
+import CoursForm from "@/components/admin/CoursPlanning/CoursForm";
+import CoursTable from "@/components/admin/CoursPlanning/CoursTable";
+import CoursEditDialog from "@/components/admin/CoursPlanning/CoursEditDialog";
+import ReservationsModal from "@/components/admin/CoursPlanning/ReservationsModal";
 
 export default function CoursPlanning() {
   const [cours, setCours] = useState([]);
@@ -317,133 +274,17 @@ export default function CoursPlanning() {
       </Typography>
 
       <Grid container spacing={3}>
+        {/* Formulaire de création */}
         <Grid item xs={12}>
-          <Card elevation={0} sx={cardBorder}>
-            <CardContent>
-              <Typography variant="h6" sx={sectionTitle}>
-                Ajouter un cours
-              </Typography>
-              <Box component="form" onSubmit={handleCreateCours}>
-                <TextField
-                  fullWidth
-                  label="Nom du cours"
-                  name="nom"
-                  value={formData.nom}
-                  onChange={handleInputChange}
-                  required
-                  sx={fieldMb}
-                />
-                <TextField
-                  fullWidth
-                  label="Description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  multiline
-                  rows={2}
-                  sx={fieldMb}
-                />
-                <TextField
-                  fullWidth
-                  label="Informations complémentaires"
-                  name="notes"
-                  value={formData.notes}
-                  onChange={handleInputChange}
-                  multiline
-                  rows={3}
-                  placeholder="Ex: Prévoir une tenue confortable, bouteille d'eau..."
-                  helperText="Ces informations seront affichées dans les détails du cours"
-                  sx={fieldMb}
-                />
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      select
-                      label="Type"
-                      name="type"
-                      value={formData.type}
-                      onChange={handleInputChange}
-                    >
-                      <MenuItem value="collectif">Collectif</MenuItem>
-                      <MenuItem value="prive">Privé</MenuItem>
-                      <MenuItem value="decouverte">Découverte</MenuItem>
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      select
-                      label="Niveau"
-                      name="niveau"
-                      value={formData.niveau}
-                      onChange={handleInputChange}
-                    >
-                      <MenuItem value="debutant">Débutant</MenuItem>
-                      <MenuItem value="intermediaire">Intermédiaire</MenuItem>
-                      <MenuItem value="tous_niveaux">Tous niveaux</MenuItem>
-                      <MenuItem value="initiation">Initiation</MenuItem>
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      type="datetime-local"
-                      label="Date et heure"
-                      name="dateDebut"
-                      value={formData.dateDebut}
-                      onChange={handleInputChange}
-                      required
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      fullWidth
-                      type="number"
-                      label="Durée (min)"
-                      name="duree"
-                      value={formData.duree}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      fullWidth
-                      type="number"
-                      label="Capacité max"
-                      name="capaciteMax"
-                      value={formData.capaciteMax}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <TextField
-                      fullWidth
-                      type="number"
-                      label="Capacité min"
-                      name="capaciteMin"
-                      value={formData.capaciteMin}
-                      onChange={handleInputChange}
-                    />
-                  </Grid>
-                </Grid>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  fullWidth
-                  disabled={loading}
-                  sx={createButton}
-                >
-                  Créer le cours
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
+          <CoursForm
+            formData={formData}
+            onInputChange={handleInputChange}
+            onSubmit={handleCreateCours}
+            loading={loading}
+          />
         </Grid>
 
+        {/* Section modification/annulation */}
         <Grid item xs={12}>
           <Card elevation={0} sx={cardBorder}>
             <CardContent>
@@ -463,395 +304,53 @@ export default function CoursPlanning() {
           </Card>
         </Grid>
 
+        {/* Tableau des cours */}
         <Grid item xs={12}>
           <Card elevation={0} sx={cardBorder}>
             <CardContent>
               <Typography variant="h6" sx={sectionTitle}>
                 Voir les cours déjà créés
               </Typography>
-              <TableContainer component={Paper} variant="outlined">
-                <Table>
-                  <TableHead>
-                    <TableRow sx={tableHeaderRow}>
-                      <TableCell>
-                        <strong>Nom</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Type</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Niveau</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Date</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Places</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Statut</strong>
-                      </TableCell>
-                      <TableCell align="right">
-                        <strong>Actions</strong>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {cours.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={7} align="center">
-                          Aucun cours créé
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      cours.map((coursItem) => (
-                        <TableRow key={coursItem._id}>
-                          <TableCell>{coursItem.nom}</TableCell>
-                          <TableCell>{coursItem.type}</TableCell>
-                          <TableCell>{coursItem.niveau}</TableCell>
-                          <TableCell>
-                            {new Date(coursItem.dateDebut).toLocaleDateString(
-                              "fr-FR",
-                              {
-                                day: "2-digit",
-                                month: "short",
-                                year: "numeric",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              },
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            {coursItem.placesReservees || 0} /{" "}
-                            {coursItem.capaciteMax}
-                          </TableCell>
-                          <TableCell>
-                            <Chip
-                              label={coursItem.statut}
-                              color={getStatutColor(coursItem.statut)}
-                              size="small"
-                            />
-                          </TableCell>
-                          <TableCell align="right">
-                            <IconButton
-                              size="small"
-                              color="primary"
-                              onClick={() => handleVoirReservations(coursItem)}
-                              title="Voir les réservations"
-                            >
-                              <Visibility fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              onClick={() => handleEditCours(coursItem)}
-                              title="Modifier"
-                            >
-                              <EditIcon fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              onClick={() => handleAnnulerCours(coursItem)}
-                              disabled={coursItem.statut === "annule"}
-                              title="Annuler"
-                            >
-                              <CancelIcon fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              onClick={() => handleDeleteCours(coursItem._id)}
-                              color="error"
-                              title="Supprimer"
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+              <CoursTable
+                cours={cours}
+                loading={loading}
+                onViewReservations={handleVoirReservations}
+                onEdit={handleEditCours}
+                onCancel={handleAnnulerCours}
+                onDelete={handleDeleteCours}
+                getStatutColor={getStatutColor}
+              />
             </CardContent>
           </Card>
         </Grid>
       </Grid>
 
-      <Dialog
+      {/* Dialog de modification/annulation */}
+      <CoursEditDialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>
-          {dialogMode === "edit" && "Modifier le cours"}
-          {dialogMode === "cancel" && "Annuler le cours"}
-        </DialogTitle>
-        <DialogContent>
-          {dialogMode === "edit" && (
-            <Box sx={{ mt: 2 }}>
-              <TextField
-                fullWidth
-                label="Nom du cours"
-                name="nom"
-                value={formData.nom}
-                onChange={handleInputChange}
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                fullWidth
-                label="Description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                multiline
-                rows={2}
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                fullWidth
-                label="Informations complémentaires"
-                name="notes"
-                value={formData.notes}
-                onChange={handleInputChange}
-                multiline
-                rows={3}
-                placeholder="Ex: Prévoir une tenue confortable, bouteille d'eau..."
-                helperText="Ces informations seront affichées dans les détails du cours"
-                sx={{ mb: 2 }}
-              />
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    select
-                    label="Type"
-                    name="type"
-                    value={formData.type}
-                    onChange={handleInputChange}
-                  >
-                    <MenuItem value="collectif">Collectif</MenuItem>
-                    <MenuItem value="prive">Privé</MenuItem>
-                    <MenuItem value="decouverte">Découverte</MenuItem>
-                  </TextField>
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    select
-                    label="Niveau"
-                    name="niveau"
-                    value={formData.niveau}
-                    onChange={handleInputChange}
-                  >
-                    <MenuItem value="debutant">Débutant</MenuItem>
-                    <MenuItem value="intermediaire">Intermédiaire</MenuItem>
-                    <MenuItem value="tous_niveaux">Tous niveaux</MenuItem>
-                    <MenuItem value="initiation">Initiation</MenuItem>
-                  </TextField>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    type="datetime-local"
-                    label="Date et heure"
-                    name="dateDebut"
-                    value={formData.dateDebut}
-                    onChange={handleInputChange}
-                    InputLabelProps={{ shrink: true }}
-                  />
-                </Grid>
-              </Grid>
-            </Box>
-          )}
-          {dialogMode === "cancel" && (
-            <TextField
-              fullWidth
-              label="Raison de l'annulation"
-              value={raisonAnnulation}
-              onChange={(e) => setRaisonAnnulation(e.target.value)}
-              multiline
-              rows={3}
-              required
-              sx={fieldMt2}
-            />
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>Annuler</Button>
-          <Button
-            onClick={
-              dialogMode === "edit"
-                ? handleUpdateCours
-                : handleConfirmAnnulation
-            }
-            variant="contained"
-            disabled={loading}
-          >
-            Confirmer
-          </Button>
-        </DialogActions>
-      </Dialog>
+        mode={dialogMode}
+        formData={formData}
+        onInputChange={handleInputChange}
+        onConfirm={
+          dialogMode === "edit" ? handleUpdateCours : handleConfirmAnnulation
+        }
+        loading={loading}
+        raisonAnnulation={raisonAnnulation}
+        onRaisonChange={(e) => setRaisonAnnulation(e.target.value)}
+      />
 
-      <Dialog
+      {/* Modal des réservations */}
+      <ReservationsModal
         open={reservationsModal}
         onClose={handleCloseReservationsModal}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle sx={dialogTitle}>
-          <Typography variant="h6" component="span">
-            Réservations - {coursSelectionne?.nom}
-          </Typography>
-          <IconButton onClick={handleCloseReservationsModal} edge="end">
-            <Close />
-          </IconButton>
-        </DialogTitle>
-
-        <DialogContent>
-          {loadingReservations ? (
-            <Box sx={loadingBox}>
-              <CircularProgress />
-            </Box>
-          ) : reservations.length === 0 ? (
-            <Alert severity="info" sx={alertMt2}>
-              Aucune réservation pour ce cours
-            </Alert>
-          ) : (
-            <>
-              <TableContainer sx={tableContainerMt2}>
-                <Table size="small">
-                  <TableHead>
-                    <TableRow sx={{ bgcolor: "grey.100" }}>
-                      <TableCell>
-                        <strong>Nom</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Email</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Téléphone</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Statut</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Paiement</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong>Actions</strong>
-                      </TableCell>{" "}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {reservations.map((resa) => (
-                      <TableRow key={resa._id}>
-                        <TableCell>
-                          {resa.typeReservation === "invite"
-                            ? resa.nomEleve
-                            : `${resa.utilisateur?.prenom || ""} ${resa.utilisateur?.nom || ""}`}
-                        </TableCell>
-                        <TableCell>
-                          {resa.typeReservation === "invite"
-                            ? resa.emailInvite
-                            : resa.utilisateur?.email}
-                        </TableCell>
-                        <TableCell>
-                          {resa.typeReservation === "invite"
-                            ? resa.telephoneInvite || "-"
-                            : resa.utilisateur?.telephone || "-"}
-                        </TableCell>
-                        <TableCell>
-                          <Chip
-                            label={resa.statut.replace("_", " ")}
-                            color={getStatutReservationColor(resa.statut)}
-                            size="small"
-                          />
-                        </TableCell>
-                        <TableCell>
-                          {resa.paiement?.type?.replace("_", " ") || "-"}
-                        </TableCell>
-
-                        <TableCell align="center">
-                          {resa.statut === "en_attente" && (
-                            <>
-                              <IconButton
-                                size="small"
-                                color="success"
-                                onClick={() =>
-                                  handleValiderReservation(resa._id)
-                                }
-                                title="Valider"
-                              >
-                                <CheckCircle fontSize="small" />
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                color="error"
-                                onClick={() =>
-                                  handleRefuserReservation(resa._id)
-                                }
-                                title="Refuser"
-                              >
-                                <Block fontSize="small" />
-                              </IconButton>
-                            </>
-                          )}
-                          {resa.statut !== "en_attente" && (
-                            <Typography
-                              variant="caption"
-                              color="text.secondary"
-                            >
-                              -
-                            </Typography>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-
-              <Box sx={summaryBox}>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 0.5 }}
-                >
-                  Total : <strong>{reservations.length}</strong> réservation(s)
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 0.5 }}
-                >
-                  Confirmées :{" "}
-                  <strong>
-                    {
-                      reservations.filter((r) => r.statut === "confirmee")
-                        .length
-                    }
-                  </strong>
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  En attente :{" "}
-                  <strong>
-                    {
-                      reservations.filter((r) => r.statut === "en_attente")
-                        .length
-                    }
-                  </strong>
-                </Typography>
-              </Box>
-            </>
-          )}
-        </DialogContent>
-
-        <DialogActions>
-          <Button onClick={handleCloseReservationsModal} variant="contained">
-            Fermer
-          </Button>
-        </DialogActions>
-      </Dialog>
+        coursSelectionne={coursSelectionne}
+        reservations={reservations}
+        loading={loadingReservations}
+        onValider={handleValiderReservation}
+        onRefuser={handleRefuserReservation}
+        getStatutColor={getStatutReservationColor}
+      />
     </Box>
   );
 }
