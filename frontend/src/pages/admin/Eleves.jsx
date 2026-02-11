@@ -46,16 +46,12 @@ import {
   rejectUtilisateur,
   modifierSeancesForfait,
 } from "@services/adminService";
-import api from "@/services/api";
 import {
   headerTitle,
   sectionTitle,
   fieldMb,
-  cardBorder,
   tableHeaderRow,
-  centerBox,
   fieldMt2,
-  loadingBox,
 } from "@/styles/pageStyles";
 
 export default function Eleves() {
@@ -90,6 +86,7 @@ export default function Eleves() {
 
     fetchUsers();
 
+    return () => {
       mounted = false;
     };
   }, []);
@@ -604,10 +601,10 @@ export default function Eleves() {
               {selectedUser.forfaitsActifs?.filter((f) => f.estActif).length >
               0 ? (
                 <List>
-                  {selectedUser.forfaitsActifs
-                    .filter((f) => f.estActif)
-                    .map((forfait, index) => (
-                      <Card key={index} sx={{ mb: 2 }}>
+                  {selectedUser.forfaitsActifs.map((forfait, originalIndex) => {
+                    if (!forfait.estActif) return null;
+                    return (
+                      <Card key={originalIndex} sx={{ mb: 2 }}>
                         <CardContent>
                           <Stack
                             direction="row"
@@ -651,7 +648,7 @@ export default function Eleves() {
                                 size="small"
                                 color="error"
                                 onClick={() =>
-                                  handleModifierSeances(index, "remove")
+                                  handleModifierSeances(originalIndex, "remove")
                                 }
                                 disabled={forfait.seancesRestantes === 0}
                               >
@@ -669,7 +666,7 @@ export default function Eleves() {
                                 size="small"
                                 color="success"
                                 onClick={() =>
-                                  handleModifierSeances(index, "add")
+                                  handleModifierSeances(originalIndex, "add")
                                 }
                               >
                                 <AddIcon />
@@ -678,7 +675,9 @@ export default function Eleves() {
                                 variant="outlined"
                                 color="error"
                                 size="small"
-                                onClick={() => handleDesactiverForfait(index)}
+                                onClick={() =>
+                                  handleDesactiverForfait(originalIndex)
+                                }
                               >
                                 Désactiver
                               </Button>
@@ -699,7 +698,7 @@ export default function Eleves() {
                               variant="contained"
                               size="small"
                               onClick={() =>
-                                handleModifierSeances(index, "set")
+                                handleModifierSeances(originalIndex, "set")
                               }
                             >
                               Appliquer
@@ -707,7 +706,8 @@ export default function Eleves() {
                           </Box>
                         </CardContent>
                       </Card>
-                    ))}
+                    );
+                  })}
                 </List>
               ) : (
                 <Typography
