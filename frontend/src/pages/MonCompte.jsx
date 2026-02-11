@@ -52,6 +52,7 @@ import {
   boxIndent,
   bodyMb3,
   whiteText,
+  monCompteMainPanelBg,
 } from "../styles/pageStyles";
 
 import backgroundImg from "@assets/images/img_hero2.png";
@@ -291,7 +292,7 @@ const MonCompte = () => {
     <Box sx={monCompteLayout}>
       <Box sx={{ ...monCompteSidebar, backgroundImage: `url(${backgroundImg})` }} />
 
-      <Box sx={{ ...monCompteMainPanel, background: 'radial-gradient(circle, #C3135F 0%, #FF1966 0%, #870E58 0%, #4C0850 69%, #574A78 100%)' }}>
+      <Box sx={monCompteMainPanelBg}>
         <Container maxWidth="xl">
           <Typography variant="h2" sx={monCompteTitle}>
             Mon Compte
