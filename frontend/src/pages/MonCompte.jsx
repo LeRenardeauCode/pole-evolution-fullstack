@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -25,7 +25,6 @@ import backgroundImg from "@assets/images/img_hero2.png";
 
 const MonCompte = () => {
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -134,10 +133,6 @@ const MonCompte = () => {
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswordData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handlePhotoClick = () => {
-    fileInputRef.current?.click();
   };
 
   const handlePhotoChange = async (e) => {
