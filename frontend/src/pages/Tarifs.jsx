@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import { useForfaits } from "@/hooks/useForfaits";
 import { useAuth } from "@/hooks/useAuth";
@@ -18,7 +17,6 @@ const Tarifs = () => {
   const allForfaits = Object.values(forfaits).flat();
 
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   const [selectedForfait, setSelectedForfait] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
