@@ -267,8 +267,10 @@ const Header = () => {
               >
                 <ListItemText
                   primary={item.label}
-                  primaryTypographyProps={{
-                    fontWeight: isActive(item.path) ? 700 : 400,
+                  slotProps={{
+                    primary: {
+                      sx: { fontWeight: isActive(item.path) ? 700 : 400 }
+                    }
                   }}
                 />
               </ListItemButton>

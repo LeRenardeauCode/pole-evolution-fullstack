@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AuthContext from './authContext';
 import authService from '@services/authService';
 
@@ -13,6 +14,19 @@ export const AuthProvider = ({ children }) => {
     }
     setLoading(false);
   }, []);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleExternalLogout = () => {
+      authService.logout();
+      setUser(null);
+      navigate('/connexion');
+    };
+
+    window.addEventListener('auth:logout', handleExternalLogout);
+    return () => window.removeEventListener('auth:logout', handleExternalLogout);
+  }, [navigate]);
 
   const login = async (email, password) => {
     const data = await authService.login(email, password);

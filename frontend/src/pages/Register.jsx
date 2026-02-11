@@ -390,16 +390,18 @@ const Register = () => {
                     px: 1,
                   },
                 }}
-                inputProps={{
-                  max: (() => {
-                    const today = new Date();
-                    return today.toISOString().split("T")[0];
-                  })(),
-                  min: (() => {
-                    const minDate = new Date();
-                    minDate.setFullYear(minDate.getFullYear() - 100);
-                    return minDate.toISOString().split("T")[0];
-                  })(),
+                slotProps={{
+                  input: {
+                    max: (() => {
+                      const today = new Date();
+                      return today.toISOString().split("T")[0];
+                    })(),
+                    min: (() => {
+                      const minDate = new Date();
+                      minDate.setFullYear(minDate.getFullYear() - 100);
+                      return minDate.toISOString().split("T")[0];
+                    })(),
+                  }
                 }}
                 helperText="Âge minimum : 12 ans. Pour les mineurs, une autorisation parentale est requise."
                 sx={{

@@ -76,7 +76,6 @@ export default function TarifsContenu() {
           setForfaits(forfaitsRes.data || []);
           setTexteAPropos(texteRes.data?.valeur || "");
 
-          // ✅ FILTRE : Seulement les demandes NON LUES
           const demandes = (notifsRes.data || []).filter(
             (n) => n.type === "demande_forfait" && !n.estLue
           );
@@ -220,7 +219,6 @@ export default function TarifsContenu() {
 
       await notificationService.marquerCommeLue(selectedDemande._id);
 
-      // ✅ SUPPRESSION LOCALE
       setDemandesForfaits((prev) =>
         prev.filter((d) => d._id !== selectedDemande._id),
       );
@@ -244,7 +242,6 @@ export default function TarifsContenu() {
 
       toast.info("Demande refusée");
 
-      // ✅ SUPPRESSION LOCALE
       setDemandesForfaits((prev) =>
         prev.filter((d) => d._id !== notificationId),
       );

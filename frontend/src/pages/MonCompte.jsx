@@ -696,7 +696,7 @@ const MonCompte = () => {
                 value={
                   nextReservation?.cours?.nom || "Aucune réservation à venir"
                 }
-                InputProps={{ readOnly: true }}
+                slotProps={{ input: { readOnly: true } }}
                 variant="outlined"
                 sx={{
                   mb: 3,
@@ -730,7 +730,7 @@ const MonCompte = () => {
                       )
                     : "Aucune réservation à venir"
                 }
-                InputProps={{ readOnly: true }}
+                slotProps={{ input: { readOnly: true } }}
                 variant="outlined"
                 sx={{
                   mb: 3,
@@ -754,7 +754,7 @@ const MonCompte = () => {
                     ? `${nextReservation.cours.type} - Niveau ${nextReservation.cours.niveau || ""}`
                     : "Aucune réservation à venir"
                 }
-                InputProps={{ readOnly: true }}
+                slotProps={{ input: { readOnly: true } }}
                 variant="outlined"
                 sx={{
                   mb: 3,
@@ -780,7 +780,7 @@ const MonCompte = () => {
                       ? "En attente"
                       : "Aucune réservation à venir"
                 }
-                InputProps={{ readOnly: true }}
+                slotProps={{ input: { readOnly: true } }}
                 variant="outlined"
                 sx={{
                   mb: 4,

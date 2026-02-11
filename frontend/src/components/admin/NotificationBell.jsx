@@ -203,9 +203,13 @@ export default function NotificationBell() {
                         </Typography>
                       </>
                     }
-                    primaryTypographyProps={{
-                      fontWeight: !notif.estLue ? 600 : 400,
-                      fontSize: "0.875rem",
+                    slotProps={{
+                      primary: {
+                        sx: {
+                          fontWeight: !notif.estLue ? 600 : 400,
+                          fontSize: "0.875rem",
+                        }
+                      }
                     }}
                   />
                 </Box>

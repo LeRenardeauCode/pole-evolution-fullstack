@@ -1,4 +1,5 @@
 import axios from "axios";
+import authService from "@/services/authService";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -25,9 +26,7 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
     console.error(
       "❌ Erreur response:",
@@ -36,10 +35,14 @@ api.interceptors.response.use(
     );
 
     if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "/connexion";
+      authService.logout();
+      try {
+        window.dispatchEvent(new CustomEvent('auth:logout'));
+      } catch (e) {
+        window.location.href = "/connexion";
+      }
     }
+
     return Promise.reject(error);
   },
 );
