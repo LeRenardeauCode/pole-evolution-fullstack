@@ -274,7 +274,6 @@ export default function CoursPlanning() {
       </Typography>
 
       <Grid container spacing={3}>
-        {/* Formulaire de création */}
         <Grid item xs={12}>
           <CoursForm
             formData={formData}
@@ -284,7 +283,6 @@ export default function CoursPlanning() {
           />
         </Grid>
 
-        {/* Section modification/annulation */}
         <Grid item xs={12}>
           <Card elevation={0} sx={cardBorder}>
             <CardContent>
@@ -304,7 +302,6 @@ export default function CoursPlanning() {
           </Card>
         </Grid>
 
-        {/* Tableau des cours */}
         <Grid item xs={12}>
           <Card elevation={0} sx={cardBorder}>
             <CardContent>
@@ -325,7 +322,6 @@ export default function CoursPlanning() {
         </Grid>
       </Grid>
 
-      {/* Dialog de modification/annulation */}
       <CoursEditDialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}
@@ -340,7 +336,6 @@ export default function CoursPlanning() {
         onRaisonChange={(e) => setRaisonAnnulation(e.target.value)}
       />
 
-      {/* Modal des réservations */}
       <ReservationsModal
         open={reservationsModal}
         onClose={handleCloseReservationsModal}

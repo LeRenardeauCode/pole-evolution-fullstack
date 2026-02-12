@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, TextField, Typography } from "@mui/material";
+import { Card, CardContent, TextField, Typography } from "@mui/material";
 import { Edit as EditIcon } from "@mui/icons-material";
 import { fieldMb, sectionTitle } from "@/styles/pageStyles";
 

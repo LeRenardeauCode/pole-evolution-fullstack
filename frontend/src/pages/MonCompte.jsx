@@ -273,7 +273,6 @@ const MonCompte = () => {
               gap: 4,
             }}
           >
-            {/* Profil et mot de passe */}
             <Box
               sx={{
                 flex: 1,
@@ -300,7 +299,6 @@ const MonCompte = () => {
               />
             </Box>
 
-            {/* Mes cours et réservations */}
             <MonCompteCourses
               forfaitsActifs={forfaitsActifs}
               abonnementActif={abonnementActif}
@@ -315,7 +313,6 @@ const MonCompte = () => {
         </Container>
       </Box>
 
-      {/* Dialog règlement */}
       <MonCompteReglement
         open={openReglement}
         onClose={() => setOpenReglement(false)}

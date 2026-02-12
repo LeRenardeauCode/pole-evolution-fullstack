@@ -273,12 +273,10 @@ export default function Eleves() {
           />
         </Grid>
 
-        {/* Infos sur suspension/suppression */}
         <Grid item xs={12} md={6}>
           <ElevesInfoCard />
         </Grid>
 
-        {/* Tableau principal */}
         <Grid item xs={12}>
           <ElevesTable
             users={filteredUsers}
@@ -294,7 +292,6 @@ export default function Eleves() {
         </Grid>
       </Grid>
 
-      {/* Dialog modification/rejet */}
       <ElevesEditDialog
         open={openDialog}
         mode={dialogMode}
@@ -311,7 +308,6 @@ export default function Eleves() {
         onRaisonChange={setRaisonRejet}
       />
 
-      {/* Dialog forfaits */}
       <ElevesForfaitsDialog
         open={openForfaitDialog}
         onClose={() => setOpenForfaitDialog(false)}
