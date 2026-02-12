@@ -1,7 +1,7 @@
 import { Box, Container, Typography, Grid, Button } from "@mui/material";
 import { coursTypes, coursInfos } from "../components/coursData";
-import CourseTypeCard from "@components/UI/CourseTypeCard";
-import CourseInfoBlock from "@components/UI/CourseInfoBlock";
+import { CourseTypeCard } from "@components/common";
+import { CourseInfoBlock } from "@components/Courses";
 import { useNavigate } from "react-router-dom";
 
 import heroCoursImage from "@/assets/images/img_hero3.jpg";

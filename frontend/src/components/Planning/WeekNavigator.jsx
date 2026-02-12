@@ -1,7 +1,7 @@
 import { Box, IconButton, Typography } from '@mui/material';
 import { ChevronLeft, ChevronRight, Today } from '@mui/icons-material';
 import { addWeeks, subWeeks } from 'date-fns';
-import { formatDate, getWeekRange } from '@/utils/dateHelpers';
+import { formatDate, getWeekRange } from '@utils/dateHelpers';
 
 const WeekNavigator = ({ currentDate, onDateChange }) => {
   const weekRange = getWeekRange(currentDate);

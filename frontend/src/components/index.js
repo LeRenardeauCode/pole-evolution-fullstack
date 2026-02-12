@@ -7,21 +7,16 @@
 export { Header, Footer } from './layout';
 
 // Common
-export { ProtectedRoute } from './common';
+export { ProtectedRoute, CourseTypeCard, FilterBar, ReservationModal } from './common';
 
-// UI Components
-export {
-  ActivityCard,
-  CalendarView,
-  CourseCard,
-  CourseDetailsModal,
-  CourseInfoBlock,
-  CourseTypeCard,
-  FilterBar,
-  LevelCard,
-  ReservationModal,
-  WeekNavigator,
-} from './UI';
+// Accueil Components
+export { ActivityCard, LevelCard } from './Accueil';
+
+// Courses Components
+export { CourseCard, CourseDetailsModal, CourseInfoBlock } from './Courses';
+
+// Planning Components
+export { CalendarView, WeekNavigator } from './Planning';
 
 // MonCompte Components
 export {

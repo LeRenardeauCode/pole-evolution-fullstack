@@ -88,12 +88,56 @@ Pole-Evolution/
 │   │   │
 │   │   ├── components/
 │   │   │   ├── coursData.js
-│   │   │   ├── admin/
-│   │   │   ├── animations/
-│   │   │   │   └── FadeIn.jsx
-│   │   │   ├── common/
-│   │   │   ├── layout/
-│   │   │   └── UI/
+│   │   │   ├── index.js          # Exports centralisés
+│   │   │   │
+│   │   │   ├── Accueil/          # Composants page Accueil
+│   │   │   │   ├── ActivityCard.jsx
+│   │   │   │   ├── LevelCard.jsx
+│   │   │   │   └── index.js
+│   │   │   │
+│   │   │   ├── Courses/          # Composants pages Cours/Planning
+│   │   │   │   ├── CourseCard.jsx
+│   │   │   │   ├── CourseDetailsModal.jsx
+│   │   │   │   ├── CourseInfoBlock.jsx
+│   │   │   │   └── index.js
+│   │   │   │
+│   │   │   ├── Planning/         # Navigation et calendrier
+│   │   │   │   ├── CalendarView.jsx
+│   │   │   │   ├── WeekNavigator.jsx
+│   │   │   │   └── index.js
+│   │   │   │
+│   │   │   ├── common/           # Composants partagés
+│   │   │   │   ├── ProtectedRoute.jsx
+│   │   │   │   ├── ReservationModal.jsx
+│   │   │   │   ├── FilterBar.jsx
+│   │   │   │   ├── CourseTypeCard.jsx
+│   │   │   │   └── index.js
+│   │   │   │
+│   │   │   ├── layout/           # Header, Footer, Navigation
+│   │   │   │   ├── Header.jsx
+│   │   │   │   ├── Footer.jsx
+│   │   │   │   └── ...
+│   │   │   │
+│   │   │   ├── admin/            # Composants admin
+│   │   │   │   ├── AdminSidebar/
+│   │   │   │   ├── CoursPlanning/
+│   │   │   │   └── ...
+│   │   │   │
+│   │   │   ├── animations/       # Animations réutilisables
+│   │   │   │   ├── FadeIn.jsx
+│   │   │   │   └── ...
+│   │   │   │
+│   │   │   ├── MonCompte/        # Composants utilisateur
+│   │   │   │   ├── MonCompteCourses.jsx
+│   │   │   │   ├── MonCompteProfile.jsx
+│   │   │   │   ├── MonComptePassword.jsx
+│   │   │   │   └── ...
+│   │   │   │
+│   │   │   └── Tarifs/           # Composants Tarifs
+│   │   │       ├── TarifCard.jsx
+│   │   │       ├── TarifsList.jsx
+│   │   │       ├── TarifsHeader.jsx
+│   │   │       └── ...
 │   │   │
 │   │   ├── context/
 │   │   │   ├── authContext.jsx
@@ -106,7 +150,8 @@ Pole-Evolution/
 │   │   │   ├── useCours.js
 │   │   │   ├── useEVJFForfaits.js
 │   │   │   ├── useForfaits.js
-│   │   │   └── useGallery.js
+│   │   │   ├── useGallery.js
+│   │   │   └── ...
 │   │   │
 │   │   ├── pages/
 │   │   │   ├── APropos.jsx
@@ -119,34 +164,52 @@ Pole-Evolution/
 │   │   │   ├── Register.jsx
 │   │   │   ├── ShowAnimations.jsx
 │   │   │   ├── Tarifs.jsx
+│   │   │   │
 │   │   │   ├── Accueil/
+│   │   │   │   ├── Accueil.jsx
+│   │   │   │   └── ActivitiesSection.jsx
+│   │   │   │
 │   │   │   └── admin/
+│   │   │       ├── AdminLayout.jsx
+│   │   │       ├── CoursPlanning.jsx
+│   │   │       ├── Eleves.jsx
+│   │   │       ├── TarifsContenu.jsx
+│   │   │       ├── Notifications.jsx
+│   │   │       ├── Parametres.jsx
+│   │   │       └── ...
 │   │   │
 │   │   ├── services/
-│   │   │   ├── api.js
+│   │   │   ├── api.js             # Configuration Axios
 │   │   │   ├── authService.js
 │   │   │   ├── avisService.js
 │   │   │   ├── contactService.js
 │   │   │   ├── coursService.js
 │   │   │   ├── forfaitService.js
 │   │   │   ├── mediaService.js
+│   │   │   ├── notificationService.js
 │   │   │   ├── parametreService.js
-│   │   │   └── reservationService.js
+│   │   │   ├── reservationService.js
+│   │   │   ├── utilisateurService.js
+│   │   │   └── ...
 │   │   │
 │   │   ├── utils/
-│   │   │   ├── dateHelpers.js
-│   │   │   └── theme.js
+│   │   │   ├── errorHandler.js    # Gestion erreurs + messages localisés
+│   │   │   ├── dateHelpers.js     # Helpers date-fns
+│   │   │   ├── theme.js           # Thème MUI
+│   │   │   └── ...
 │   │   │
-│   │   ├── App.css
 │   │   ├── App.jsx
+│   │   ├── App.css
 │   │   ├── index.css
-│   │   └── main.jsx
+│   │   ├── main.jsx
+│   │   └── .env.example           # Template variables d'environnement
 │   │
 │   ├── public/
+│   ├── .env.example
 │   ├── eslint.config.js
 │   ├── index.html
 │   ├── package.json
-│   ├── README.md
-│   └── vite.config.js
+│   ├── vite.config.js
+│   └── README.md
 │
 └── .git/                                

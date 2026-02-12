@@ -1,6 +1,6 @@
 import { Box, Container, Typography, Grid, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import ActivityCard from "@components/UI/ActivityCard";
+import { ActivityCard } from "@components/Accueil";
 
 import imgCoursClasse from "@assets/images/img_collectif.jpg";
 import imgCoursParticulier from "@assets/images/img_cours.jpg";

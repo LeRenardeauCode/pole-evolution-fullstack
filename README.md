@@ -1,157 +1,325 @@
-# Pole Evolution - Backend API
+# Pole Evolution - Plateforme de Gestion d'École de Pole Dance
 
-API REST complète pour la gestion d'une école de pole dance (cours, réservations, forfaits, paiements).
+Application web fullstack pour gérer une école de pole dance : cours, réservations, forfaits, paiements, administrateurs.
 
+![React](https://img.shields.io/badge/React-19.2-blue)
 ![Node.js](https://img.shields.io/badge/Node.js-18+-green)
-![Express](https://img.shields.io/badge/Express-4.18-blue)
 ![MongoDB](https://img.shields.io/badge/MongoDB-6.0-green)
+![MUI](https://img.shields.io/badge/MUI-7.3-purple)
 
 ## 📋 Table des matières
 
-- [Fonctionnalités](#-fonctionnalités)
-- [Technologies](#-technologies)
+- [Vue d'ensemble](#-vue-densemble)
+- [Stack technique](#-stack-technique)
 - [Installation](#-installation)
 - [Configuration](#-configuration)
-- [Utilisation](#-utilisation)
-- [Structure](#-structure)
-- [API Endpoints](#-api-endpoints)
-- [Tests](#-tests)
+- [Architecture](#-architecture)
+- [Développement](#-développement)
+- [Fonctionnalités](#-fonctionnalités)
 
-## ✨ Fonctionnalités
+---
 
-- Authentification JWT (access + refresh tokens)
-- Gestion des utilisateurs (admin/client)
-- CRUD cours collectifs
-- Système de réservations
-- Forfaits et abonnements
-- Avis et notations
-- Upload et gestion de médias
-- Formulaire de contact avec rate limiting
-- Système de notifications
-- Paramètres configurables
-- Statistiques et analytics
+## 🎯 Vue d'ensemble
 
-## 🛠 Technologies
+**Pole Evolution** est une plateforme complète permettant :
+- **Utilisateurs** : Consulter cours, faire des reséations, gérer leurs forfaits
+- **Administrateurs** : Gérer les cours, validations de réservations, gestion clients
+- **Système** : Authentification, paiements, notifications, gestion médias
 
-- **Runtime:** Node.js 18+
-- **Framework:** Express.js
-- **Base de données:** MongoDB + Mongoose
-- **Auth:** JWT (jsonwebtoken)
-- **Upload:** Multer
-- **Validation:** Express-validator
-- **Sécurité:** Helmet, CORS, express-rate-limit
+## 🛠 Stack technique
 
-## Installation
+### Frontend
+- **Framework** : React 19.2.0
+- **UI Library** : Material-UI (MUI) 7.3.7
+- **Routing** : React Router 7.13.0
+- **Build** : Vite 7.3.1
+- **HTTP Client** : Axios
+- **Auth** : JWT (localStorage)
+- **State** : React Context + Custom Hooks
+- **Styling** : MUI sx + Custom Theme
 
-Voir le guide détaillé : [INSTALLATION.md](./INSTALLATION.md)
+### Backend
+- **Runtime** : Node.js 18+
+- **Framework** : Express.js
+- **Database** : MongoDB 6.0+
+- **Auth** : JWT (jsonwebtoken)
+- **Validation** : Express-validator
+- **Upload** : Multer + Cloudinary
+- **Sécurité** : Helmet, CORS, Rate Limiting
 
-**Installation rapide :**
+---
 
-# Cloner
-```git clone <repo-url>```
-```cd pole-evolution-backend```
+## 🚀 Installation
 
-# Installer
-```npm install```
+### Prérequis
+- Node.js 18+
+- npm ou yarn
+- MongoDB 6.0+ (en local ou Atlas)
+- Compte Cloudinary (optionnel, pour les uploads)
 
-# Configurer
-```cp .env.example .env```
-# Éditer .env
+### Step 1: Cloner le repo
+```bash
+git clone <repo-url>
+cd "Pole-Evolution"
+```
 
-# Lancer
-```npm run dev```
+### Step 2: Installation Backend
+```bash
+cd backend
+npm install
+cp .env.example .env
+# Éditer .env avec vos credentials
+npm run dev
+```
 
-## Configuration 
+### Step 3: Installation Frontend
+```bash
+cd ../frontend
+npm install
+cp .env.example .env
+# Éditer .env (VITE_API_URL)
+npm run dev
+```
 
-# Créer un fichier .env à la racine (voir .env.example)
+Frontend accessible sur `http://localhost:5173`
+Backend sur `http://localhost:5000`
 
-Variables essentielles : 
+---
 
-- MONGO_URI : URL MongoDB
+## ⚙️ Configuration
 
-- JWT_SECRET : Clé secrète JWT
-
-- PORT : Port du serveur (défaut: 5000)
-
-## Structure
-
-backend/
-├── config/          # Configuration DB
-├── controllers/     # Logique métier
-├── models/          # Schémas Mongoose
-├── routes/          # Routes Express
-├── middleware/      # Middlewares (auth, errors, upload)
-├── utils/           # Fonctions utilitaires
-├── uploads/         # Fichiers uploadés
-└── server.js        # Point d'entrée
-
-## API Endpoints
+### Backend (.env)
+```env
+# Database
+MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/pole-evolution
 
 # Auth
+JWT_SECRET=votre_clé_secrète_très_longue_et_complexe
+JWT_EXPIRE=7d
 
-```POST /api/auth/register``` - Inscription
+# Server
+PORT=5000
+NODE_ENV=development
 
-```POST /api/auth/login``` - Connexion
+# Email (optionnel)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=votre_email@gmail.com
+SMTP_PASS=votre_mot_de_passe_app
 
-```POST /api/auth/refresh``` - Refresh token
+# Cloudinary (optionnel - uploads médias)
+CLOUDINARY_NAME=votre_cloudinary_name
+CLOUDINARY_KEY=votre_cloudinary_key
+CLOUDINARY_SECRET=votre_cloudinary_secret
 
-```POST /api/auth/logout``` - Déconnexion
+# Stripe (optionnel - paiements)
+STRIPE_SECRET_KEY=sk_test_...
+```
 
-# Cours
+### Frontend (.env)
+```env
+# API Backend
+VITE_API_URL=http://localhost:5000/api
+```
 
-```GET /api/cours``` - Liste des cours (public)
+---
 
-```GET /api/cours/:id``` - Détails cours
+## 🏗 Architecture
 
-```POST /api/cours``` - Créer cours (admin)
+```
+Pole-Evolution/
+├── backend/
+│   ├── config/              # Configuration DB
+│   ├── controllers/         # Logique métier
+│   ├── models/              # Schémas Mongoose
+│   ├── routes/              # Routes API
+│   ├── middleware/          # Auth, errors, upload
+│   ├── utils/               # Helpers
+│   ├── uploads/             # Fichiers uploadés
+│   ├── seeds/               # Données de test
+│   └── server.js            # Point d'entrée
+│
+├── frontend/
+│   ├── src/
+│   │   ├── pages/           # Pages (utilisateur + admin)
+│   │   ├── components/
+│   │   │   ├── Accueil/     # Composants page Accueil
+│   │   │   ├── Courses/     # Composants pages Cours/Planning
+│   │   │   ├── Planning/    # Composants Planning (Calendar, Navigation)
+│   │   │   ├── common/      # Composants réutilisables (ReservationModal, FilterBar, etc.)
+│   │   │   ├── layout/      # Header, Footer
+│   │   │   ├── admin/       # Composants admin
+│   │   │   ├── animations/  # Animations (FadeIn)
+│   │   │   ├── MonCompte/   # Composants utilisateur
+│   │   │   ├── Tarifs/      # Composants Tarifs
+│   │   │   └── coursData.js # Données statiques cours
+│   │   ├── hooks/           # Custom hooks (useAuth, useCours, etc.)
+│   │   ├── services/        # API calls (authService, coursService, etc.)
+│   │   ├── context/         # Auth context
+│   │   ├── utils/           # Helpers (theme, errorHandler)
+│   │   └── assets/          # Images, fonts
+│   │
+│   ├── vite.config.js       # Config Vite + alias imports
+│   └── package.json
+│
+└── docs/
+    ├── REFACTORING_SESSION.md   # Session log refactoring
+    └── SECURITY.md              # Notes sécurité
+```
 
-```PUT /api/cours/:id``` - Modifier cours (admin)
+### Composants réutilisables
 
-```DELETE /api/cours/:id``` - Supprimer cours (admin)
+**Courses** (src/components/Courses/):
+- `CourseCard` - Affiche un cours
+- `CourseDetailsModal` - Détails complets du cours
+- `CourseInfoBlock` - Bloc info alterné image/texte
 
-# Réservations
+**Planning** (src/components/Planning/):
+- `WeekNavigator` - Navigation semaines
+- `CalendarView` - Vue calendrier des cours
 
-```GET /api/reservations``` - Mes réservations (user)
+**Accueil** (src/components/Accueil/):
+- `ActivityCard` - Carte activité
+- `LevelCard` - Carte niveau
 
-```POST /api/reservations``` - Réserver un cours
+**Common** (src/components/common/):
+- `ReservationModal` - Modale de réservation
+- `FilterBar` - Filtres (type, niveau)
+- `CourseTypeCard` - Carte type de cours
+- `ProtectedRoute` - Route protégée auth
 
-```PUT /api/reservations/:id/annuler``` - Annuler réservation
+**Pages** (src/pages/):
+- Public: Accueil, Cours, Planning, Tarifs, Galerie, Contact, A Propos, Login, Register
+- Utilisateur: MonCompte
+- Admin: CoursPlanning, Eleves, TarifsContenu, Notifications, Parametres
 
-# Media
+---
 
-```GET /api/media/galerie``` - Galerie publique
+## 👨‍💻 Développement
 
-```POST /api/media``` - Upload média (admin)
+### Scripts disponibles
 
-Voir collection Postman pour la liste complète
+**Frontend**:
+```bash
+npm run dev     # Démarrer serveur dev (Vite)
+npm run build   # Build production
+npm run preview # Prévisualiser build
+```
 
-## Tests
+**Backend**:
+```bash
+npm run dev     # Démarrer avec nodemon
+npm run build   # Build pour production
+npm run seed    # Peupler la DB avec données test
+```
 
-Collection Postman disponible dans Pole-Evolution.postman_collection.json
+### Alias d'imports
 
-- Importer dans Postman :
-    1. File > Import
-    2. Sélectionner le fichier JSON
-    3. Configurer l'environnement (baseUrl, tokens)
+Imports simplifiés via aliases Vite :
+```javascript
+import { useAuth } from '@hooks/useAuth';              // src/hooks
+import { authService } from '@services/authService';  // src/services
+import { CourseCard } from '@components/Courses';     // src/components/Courses
+import { CourseDetailsModal } from '@components/Courses';  // src/components/Courses
+import { ReservationModal } from '@components/common'; // src/components/common
+import { theme } from '@utils/theme';                 // src/utils
+import errorHandler from '@utils/errorHandler';       // src/utils
+```
 
-## Sécurité
+### Authentication Flow
 
-- Authentification JWT
+1. **Inscription** : `POST /api/auth/register` → JWT stocké en localStorage
+2. **Connexion** : `POST /api/auth/login` → JWT + redirect
+3. **Requêtes** : Token envoyé en `Authorization: Bearer <token>`
+4. **Session expirée** : 401 → Logout et redirect login
 
-- Rate limiting (3 req/jour sur /contact)
+**Fichiers clés** :
+- Frontend: `src/context/authContext.jsx` , `src/hooks/useAuth.js`
+- Backend: `backend/middleware/auth.middleware.js`
 
-- Validation des ObjectId MongoDB
+### Gestion erreurs
 
-- Sanitization des inputs
+Frontend utilise `utils/errorHandler.js` pour standardiser les messages d'erreur API.
 
+```javascript
+import errorHandler from '@utils/errorHandler';
+
+try {
+  // API call
+} catch (error) {
+  const message = errorHandler.getErrorMessage(error);
+  toast.error(message);
+}
+```
+
+### Performance
+
+- **Lazy-loading** : Routes heavies (Cours, Planning, Tarifs, etc.) chargées via `React.lazy()`
+- **Memoization** : Composants fréquemment re-rendus wrappés avec `React.memo()`
+- **Images** : `loading="lazy"` + Cloudinary optimization
+- **Bundle** : ~716KB gzipped (main) + chunks séparés
+
+---
+
+## ✨ Fonctionnalités clés
+
+### Utilisateurs
+✅ Inscription / Connexion
+✅ Consulter profil
+✅ Voir cours disponibles + réserver
+✅ Gérer forfaits actifs
+✅ Voir réservations passées
+✅ Laisser avis
+
+### Administrateurs
+✅ Dashboard admin
+✅ Gérer cours (CRUD)
+✅ Valider réservations
+✅ Modérer avis
+✅ Gérer tarifs/forfaits
+✅ Gestion utilisateurs
+✅ Notifications
+
+### Système
+✅ JWT authentification
+✅ Upload médias (Cloudinary)
+✅ Formulaire contact
+✅ Notifications
+✅ Rate limiting
+✅ Accessible (WCAG 2.1 AA)
+
+---
+
+## 📝 Notes d'implémentation
+
+- **Design** : Custom theme MUI avec gradients rose/navy
+- **Responsive** : Mobile-first, breakpoints xs/sm/md/lg/xl
+- **Accessibility** : WCAG 2.1 AA (aria-labels, keyboard nav, contrast)
+- **Dev Mode** : Seed data available via `npm run seed`
+- **DB** : MongoDB Atlas ou local
+
+---
+
+## 🔒 Sécurité
+
+- JWT avec secret fort
 - CORS configuré
+- Helmet.js pour headers sécurité
+- Rate limiting sur endpoints sensibles
+- Validation/sanitization inputs (express-validator)
+- Multer pour uploads sécurisés
 
-- Helmet activé
+---
 
-## Licence
+## 📚 Ressources
 
-MIT
+- [Express Documentation](https://expressjs.com/)
+- [React Documentation](https://react.dev/)
+- [MongoDB Documentation](https://docs.mongodb.com/)
+- [Material-UI Documentation](https://mui.com/)
+- [Vite Documentation](https://vitejs.dev/)
 
-## Auteur
+---
 
-LeRenardeauCode - GitHub
+**Version**: 0.1.0 (MVP)  
+**Dernier update**: Février 2026

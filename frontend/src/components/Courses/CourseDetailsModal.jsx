@@ -26,7 +26,7 @@ import {
 } from "@mui/icons-material";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import ReservationModal from "./ReservationModal";
+import { ReservationModal } from "@components/common";
 
 const CourseDetailsModal = ({ open, onClose, cours, onReservationSuccess }) => {
   const [reservationModalOpen, setReservationModalOpen] = useState(false);
