@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Container, Typography, Alert, CircularProgress } from "@mui/material";
 import authService from "@services/authService";
@@ -109,8 +109,10 @@ const MonCompte = () => {
     };
   }, []);
 
-  const forfaitsActifs =
-    userData?.forfaitsActifs?.filter((f) => f.estActif && f.seancesRestantes > 0) || [];
+  const forfaitsActifs = useMemo(() => {
+    return userData?.forfaitsActifs?.filter((f) => f.estActif && f.seancesRestantes > 0) || [];
+  }, [userData?.forfaitsActifs]);
+
   const abonnementActif =
     userData?.abonnementActif?.forfaitId &&
     userData?.abonnementActif?.statutPaiement === "actif";

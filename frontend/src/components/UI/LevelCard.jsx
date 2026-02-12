@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 
-const LevelCard = ({ level }) => {
+const LevelCard = memo(({ level }) => {
   return (
     <Card
       sx={{
@@ -40,6 +41,6 @@ const LevelCard = ({ level }) => {
       </CardContent>
     </Card>
   );
-};
+});
 
 export default LevelCard;

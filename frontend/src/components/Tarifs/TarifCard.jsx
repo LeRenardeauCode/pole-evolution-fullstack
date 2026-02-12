@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { Box, Button, Grid, Typography } from "@mui/material";
 
-export default function TarifCard({
+const TarifCard = memo(function TarifCard({
   forfait,
   acceLibre,
   user,
@@ -170,4 +171,6 @@ export default function TarifCard({
       </Box>
     </Grid>
   );
-}
+});
+
+export default TarifCard;

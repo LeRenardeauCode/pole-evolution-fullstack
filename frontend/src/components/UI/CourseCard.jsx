@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Card, CardContent, Box, Typography, Chip, LinearProgress } from '@mui/material';
 import { 
   AccessTime, 
@@ -9,7 +10,7 @@ import {
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
-const CourseCard = ({ cours, onClick, compact = false }) => {
+const CourseCard = memo(({ cours, onClick, compact = false }) => {
   const placesDisponibles = cours.capaciteMax - cours.placesReservees;
   const tauxRemplissage = (cours.placesReservees / cours.capaciteMax) * 100;
 
@@ -136,6 +137,6 @@ const CourseCard = ({ cours, onClick, compact = false }) => {
       </CardContent>
     </Card>
   );
-};
+});
 
 export default CourseCard;

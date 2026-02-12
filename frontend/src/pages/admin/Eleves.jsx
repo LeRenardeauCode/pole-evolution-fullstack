@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import {
@@ -237,11 +237,13 @@ export default function Eleves() {
     }
   };
 
-  const filteredUsers = utilisateurs.filter((user) =>
-    `${user.prenom} ${user.nom} ${user.email}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase()),
-  );
+  const filteredUsers = useMemo(() => {
+    return utilisateurs.filter((user) =>
+      `${user.prenom} ${user.nom} ${user.email}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()),
+    );
+  }, [utilisateurs, searchTerm]);
 
   const getStatutColor = (statut) => {
     switch (statut) {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Box,
   Grid,
@@ -216,9 +216,11 @@ export default function NotificationsPage() {
     }
   };
 
-  const demandesForfaits = notifications.filter(
-    n => n.type === 'demande_forfait' && !n.estLue
-  );
+  const demandesForfaits = useMemo(() => {
+    return notifications.filter(
+      n => n.type === 'demande_forfait' && !n.estLue
+    );
+  }, [notifications]);
 
   return (
     <Box>

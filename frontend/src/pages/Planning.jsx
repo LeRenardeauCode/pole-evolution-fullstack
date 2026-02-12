@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Box,
   Container,
@@ -21,9 +21,11 @@ const Planning = () => {
 
   const { cours, loading, error, refetch } = useCours(currentDate, filters);
 
-  const coursAffichables = cours.filter((c) => {
-    return ["collectif", "decouverte"].includes(c.type);
-  });
+  const coursAffichables = useMemo(() => {
+    return cours.filter((c) => {
+      return ["collectif", "decouverte"].includes(c.type);
+    });
+  }, [cours]);
 
   return (
     <Box>

@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 
-const ActivityCard = ({ activity }) => {
+const ActivityCard = memo(({ activity }) => {
   return (
     <Card
       sx={{
@@ -62,6 +63,6 @@ const ActivityCard = ({ activity }) => {
       </CardContent>
     </Card>
   );
-};
+});
 
 export default ActivityCard;

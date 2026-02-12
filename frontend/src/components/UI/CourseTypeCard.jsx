@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { Card, Box, Typography } from '@mui/material';
 
-const CourseTypeCard = ({ cours }) => {
+const CourseTypeCard = memo(({ cours }) => {
   return (
     <Card
       sx={{
@@ -85,6 +86,6 @@ const CourseTypeCard = ({ cours }) => {
       </Box>
     </Card>
   );
-};
+});
 
 export default CourseTypeCard;
