@@ -1,30 +1,25 @@
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL;
+import api from './api';
 
 const parametreService = {
   getParametre: async (cle) => {
-    const response = await axios.get(`${API_URL}/parametres/${cle}`);
+    const response = await api.get(`/parametres/${cle}`);
     return response.data;
   },
 
   getAllParametres: async () => {
-    const response = await axios.get(`${API_URL}/parametres`);
+    const response = await api.get(`/parametres`);
     return response.data;
   },
 
   getParametresByCategorie: async (categorie) => {
-    const response = await axios.get(`${API_URL}/parametres/categorie/${categorie}`);
+    const response = await api.get(`/parametres/categorie/${categorie}`);
     return response.data;
   },
 
-  updateParametre: async (cle, valeur, token) => {
-    const response = await axios.put(
-      `${API_URL}/parametres/${cle}`,
-      { valeur },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
+  updateParametre: async (cle, valeur) => {
+    const response = await api.put(
+      `/parametres/${cle}`,
+      { valeur }
     );
     return response.data;
   },
