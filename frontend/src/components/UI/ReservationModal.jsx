@@ -149,7 +149,7 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
         <Typography variant="h6" component="span" fontWeight="bold">
           Réserver ce cours
         </Typography>
-        <IconButton onClick={onClose} edge="end">
+        <IconButton onClick={onClose} edge="end" aria-label="Fermer">
           <Close />
         </IconButton>
       </DialogTitle>

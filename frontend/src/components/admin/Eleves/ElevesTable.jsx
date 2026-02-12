@@ -158,6 +158,7 @@ export default function ElevesTable({
                               color="success"
                               onClick={() => onApprove(user._id)}
                               title="Approuver"
+                              aria-label="Approuver l'élève"
                             >
                               <CheckIcon fontSize="small" />
                             </IconButton>
@@ -166,6 +167,7 @@ export default function ElevesTable({
                               color="error"
                               onClick={() => onReject(user)}
                               title="Rejeter"
+                              aria-label="Rejeter l'élève"
                             >
                               <CloseIcon fontSize="small" />
                             </IconButton>
@@ -175,6 +177,7 @@ export default function ElevesTable({
                           size="small"
                           onClick={() => onEdit(user)}
                           title="Modifier"
+                          aria-label="Modifier l'élève"
                         >
                           <EditIcon fontSize="small" />
                         </IconButton>
@@ -185,6 +188,7 @@ export default function ElevesTable({
                           title={
                             user.estActif ? "Suspendre" : "Réactiver"
                           }
+                          aria-label={user.estActif ? "Suspendre le compte" : "Réactiver le compte"}
                         >
                           {user.estActif ? (
                             <PauseIcon fontSize="small" />
@@ -198,6 +202,7 @@ export default function ElevesTable({
                           onClick={() => onDelete(user._id)}
                           disabled={user.role === "admin"}
                           title="Supprimer"
+                          aria-label="Supprimer l'élève"
                         >
                           <DeleteIcon fontSize="small" />
                         </IconButton>

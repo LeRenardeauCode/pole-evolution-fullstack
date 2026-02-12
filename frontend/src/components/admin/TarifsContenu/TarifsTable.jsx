@@ -53,6 +53,7 @@ export default function TarifsTable({ forfaits, onEdit, onDelete }) {
                       <IconButton
                         size="small"
                         onClick={() => onEdit(forfait)}
+                        aria-label="Modifier forfait"
                       >
                         <EditIcon fontSize="small" />
                       </IconButton>
@@ -60,6 +61,7 @@ export default function TarifsTable({ forfaits, onEdit, onDelete }) {
                         size="small"
                         color="error"
                         onClick={() => onDelete(forfait._id)}
+                        aria-label="Supprimer forfait"
                       >
                         <DeleteIcon fontSize="small" />
                       </IconButton>

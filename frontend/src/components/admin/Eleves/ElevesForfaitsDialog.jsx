@@ -91,6 +91,7 @@ export default function ElevesForfaitsDialog({
                               onModifierSeances(originalIndex, "remove")
                             }
                             disabled={forfait.seancesRestantes === 0}
+                            aria-label="Retirer une séance"
                           >
                             <RemoveIcon />
                           </IconButton>
@@ -108,6 +109,7 @@ export default function ElevesForfaitsDialog({
                             onClick={() =>
                               onModifierSeances(originalIndex, "add")
                             }
+                            aria-label="Ajouter une séance"
                           >
                             <AddIcon />
                           </IconButton>

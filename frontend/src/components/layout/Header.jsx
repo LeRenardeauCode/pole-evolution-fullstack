@@ -175,7 +175,7 @@ const Header = () => {
 
               {isAuthenticated ? (
                 <>
-                  <IconButton onClick={handleMenuOpen} sx={{ ml: 2 }}>
+                  <IconButton onClick={handleMenuOpen} sx={{ ml: 2 }} aria-label="Menu utilisateur">
                     <Avatar
                       src={profilePhoto || undefined}
                       key={profilePhoto} // ✅ Force refresh quand photoUrl change
@@ -227,6 +227,7 @@ const Header = () => {
               color="inherit"
               edge="end"
               onClick={handleDrawerToggle}
+              aria-label="Ouvrir menu mobile"
               sx={{
                 display: { lg: 'none' },
                 filter: scrolled ? 'none' : 'drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.8))',
@@ -251,7 +252,7 @@ const Header = () => {
         }}
       >
         <Box sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <IconButton onClick={handleDrawerToggle} sx={{ color: 'white' }}>
+          <IconButton onClick={handleDrawerToggle} sx={{ color: 'white' }} aria-label="Fermer menu">
             <FaTimes size={24} />
           </IconButton>
         </Box>

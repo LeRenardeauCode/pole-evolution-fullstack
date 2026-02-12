@@ -127,7 +127,7 @@ const CourseDetailsModal = ({ open, onClose, cours, onReservationSuccess }) => {
               {cours.nom}
             </Typography>
           </Box>
-          <IconButton onClick={onClose} edge="end">
+          <IconButton onClick={onClose} edge="end" aria-label="Fermer">
             <Close />
           </IconButton>
         </DialogTitle>

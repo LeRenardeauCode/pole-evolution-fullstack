@@ -234,6 +234,7 @@ const Footer = () => {
                 href={footerData.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Facebook"
                 sx={{
                   color: "white",
                   "&:hover": {
@@ -251,6 +252,7 @@ const Footer = () => {
                 href={footerData.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Instagram"
                 sx={{
                   color: "white",
                   "&:hover": {
@@ -268,6 +270,7 @@ const Footer = () => {
                 href={footerData.tiktokUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="TikTok"
                 sx={{
                   color: "white",
                   "&:hover": {

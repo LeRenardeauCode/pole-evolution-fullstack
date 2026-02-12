@@ -91,6 +91,7 @@ export default function CoursTable({
                     color="primary"
                     onClick={() => onViewReservations(coursItem)}
                     title="Voir les réservations"
+                    aria-label="Voir les réservations"
                   >
                     <Visibility fontSize="small" />
                   </IconButton>
@@ -98,6 +99,7 @@ export default function CoursTable({
                     size="small"
                     onClick={() => onEdit(coursItem)}
                     title="Modifier"
+                    aria-label="Modifier le cours"
                   >
                     <EditIcon fontSize="small" />
                   </IconButton>
@@ -106,6 +108,7 @@ export default function CoursTable({
                     onClick={() => onCancel(coursItem)}
                     disabled={coursItem.statut === "annule"}
                     title="Annuler"
+                    aria-label="Annuler le cours"
                   >
                     <CancelIcon fontSize="small" />
                   </IconButton>
@@ -114,6 +117,7 @@ export default function CoursTable({
                     onClick={() => onDelete(coursItem._id)}
                     color="error"
                     title="Supprimer"
+                    aria-label="Supprimer le cours"
                   >
                     <DeleteIcon fontSize="small" />
                   </IconButton>

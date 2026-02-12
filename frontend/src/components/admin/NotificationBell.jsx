@@ -101,7 +101,7 @@ export default function NotificationBell() {
 
   return (
     <>
-      <IconButton onClick={handleClick} sx={{ color: "white" }}>
+      <IconButton onClick={handleClick} sx={{ color: "white" }} aria-label="Notifications">
         <Badge badgeContent={countNonLu} color="error">
           <NotificationsIcon />
         </Badge>

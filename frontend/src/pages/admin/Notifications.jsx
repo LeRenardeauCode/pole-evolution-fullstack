@@ -367,6 +367,7 @@ export default function NotificationsPage() {
                               onClick={() => handleValiderAvis(avisItem._id)}
                               disabled={loading}
                               title="Valider"
+                              aria-label="Valider l'avis"
                             >
                               <CheckIcon fontSize="small" />
                             </IconButton>
@@ -376,6 +377,7 @@ export default function NotificationsPage() {
                               onClick={() => handleRejeterAvis(avisItem._id)}
                               disabled={loading}
                               title="Rejeter"
+                              aria-label="Rejeter l'avis"
                             >
                               <CloseIcon fontSize="small" />
                             </IconButton>

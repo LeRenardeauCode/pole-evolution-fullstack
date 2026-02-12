@@ -26,7 +26,7 @@ const WeekNavigator = ({ currentDate, onDateChange }) => {
       gap: 2,
       mb: 3 
     }}>
-      <IconButton onClick={handlePrevWeek} size="large">
+      <IconButton onClick={handlePrevWeek} size="large" aria-label="Semaine précédente">
         <ChevronLeft />
       </IconButton>
 
@@ -36,11 +36,11 @@ const WeekNavigator = ({ currentDate, onDateChange }) => {
         </Typography>
       </Box>
 
-      <IconButton onClick={handleNextWeek} size="large">
+      <IconButton onClick={handleNextWeek} size="large" aria-label="Semaine suivante">
         <ChevronRight />
       </IconButton>
 
-      <IconButton onClick={handleToday} color="primary" size="large">
+      <IconButton onClick={handleToday} color="primary" size="large" aria-label="Aujourd'hui">
         <Today />
       </IconButton>
     </Box>

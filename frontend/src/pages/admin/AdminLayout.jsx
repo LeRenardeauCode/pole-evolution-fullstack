@@ -42,6 +42,7 @@ export default function AdminLayout() {
               onClick={handleLogout}
               sx={{ color: 'white', ml: 1 }}
               title="Déconnexion"
+              aria-label="Déconnexion"
             >
               <LogoutIcon />
             </IconButton>

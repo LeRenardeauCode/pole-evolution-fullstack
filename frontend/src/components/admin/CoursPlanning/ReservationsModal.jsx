@@ -36,7 +36,7 @@ export default function ReservationsModal({
         <Typography variant="h6" component="span">
           Réservations - {coursSelectionne?.nom}
         </Typography>
-        <IconButton onClick={onClose} edge="end">
+        <IconButton onClick={onClose} edge="end" aria-label="Fermer la liste des réservations">
           <Close />
         </IconButton>
       </DialogTitle>
@@ -113,6 +113,7 @@ export default function ReservationsModal({
                               color="success"
                               onClick={() => onValider(resa._id)}
                               title="Valider"
+                              aria-label="Valider la réservation"
                             >
                               <CheckCircle fontSize="small" />
                             </IconButton>
@@ -121,6 +122,7 @@ export default function ReservationsModal({
                               color="error"
                               onClick={() => onRefuser(resa._id)}
                               title="Refuser"
+                              aria-label="Refuser la réservation"
                             >
                               <Block fontSize="small" />
                             </IconButton>

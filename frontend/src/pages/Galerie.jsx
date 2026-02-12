@@ -213,6 +213,7 @@ const Galerie = () => {
             <Box sx={{ position: 'relative', maxWidth: 1000, mx: 'auto', px: { xs: 8, md: 12 } }}>
               <IconButton
                 onClick={handlePrevSlide}
+                aria-label="Image précédente"
                 sx={{
                   position: 'absolute',
                   left: { xs: -10, md: 0 },
@@ -285,6 +286,7 @@ const Galerie = () => {
 
               <IconButton
                 onClick={handleNextSlide}
+                aria-label="Image suivante"
                 sx={{
                   position: 'absolute',
                   right: { xs: -10, md: 0 },
