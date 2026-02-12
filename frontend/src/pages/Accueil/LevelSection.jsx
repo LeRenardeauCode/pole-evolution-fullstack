@@ -96,6 +96,7 @@ const LevelsSection = () => {
                 >
                   <Box
                     component="img"
+                    loading="lazy"
                     src={level.image}
                     alt={level.title}
                     sx={{

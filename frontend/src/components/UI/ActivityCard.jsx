@@ -29,6 +29,7 @@ const ActivityCard = memo(({ activity }) => {
       >
         <Box
           component="img"
+          loading="lazy"
           src={activity.image}
           alt={activity.title}
           sx={{

@@ -219,6 +219,7 @@ const Footer = () => {
           >
             <Box
               component="img"
+              loading="lazy"
               src={banniereImgDefault}
               alt="Pole Evolution"
               sx={{

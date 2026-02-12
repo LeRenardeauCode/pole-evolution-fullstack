@@ -32,6 +32,7 @@ const CourseTypeCard = memo(({ cours }) => {
       >
         <Box
           component="img"
+          loading="lazy"
           src={cours.illustration}
           alt={cours.titre}
           sx={{ 

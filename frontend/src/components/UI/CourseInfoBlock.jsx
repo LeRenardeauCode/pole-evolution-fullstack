@@ -14,6 +14,7 @@ const CourseInfoBlock = ({ data, imagePosition = 'left' }) => {
         <Grid item xs={12} md={5}>
           <Box
             component="img"
+            loading="lazy"
             src={data.image}
             alt={data.titre}
             sx={{

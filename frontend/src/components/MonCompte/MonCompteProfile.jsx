@@ -66,6 +66,7 @@ export default function MonCompteProfile({
         >
           <Box
             component="img"
+            loading="lazy"
             src={logo}
             alt="Logo"
             sx={{

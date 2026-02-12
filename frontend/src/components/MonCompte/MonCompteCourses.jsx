@@ -48,6 +48,7 @@ export default function MonCompteCourses({
         >
           <Box
             component="img"
+            loading="lazy"
             src={logo}
             alt="Logo"
             sx={{

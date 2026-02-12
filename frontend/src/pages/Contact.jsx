@@ -135,6 +135,7 @@ const Contact = () => {
 
               <Box
                 component="img"
+                loading="lazy"
                 src={logo}
                 alt="Pole Evolution Logo"
                 sx={{

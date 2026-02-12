@@ -118,6 +118,7 @@ const APropos = () => {
             >
               <Box
                 component="img"
+                loading="lazy"
                 src="/images/professeure.jpg"
                 alt="Coraline - Professeure de Pole Dance"
                 sx={{

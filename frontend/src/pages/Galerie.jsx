@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Box, Container, Typography, IconButton, CircularProgress, Alert } from '@mui/material';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useGallery } from '@hooks/useGallery';
+import { optimizeCloudinaryUrl } from '@utils/imageOptimization';
 
 const Galerie = () => {
   const { medias, featuredMedias, loading, error } = useGallery();
@@ -76,7 +77,8 @@ const Galerie = () => {
               {featuredMedias[0] && (
                 <Box
                   component="img"
-                  src={featuredMedias[0].url}
+                  loading="lazy"
+                  src={optimizeCloudinaryUrl(featuredMedias[0].url, { width: 400, quality: 'auto:best' })}
                   alt={featuredMedias[0].titre || 'Photo 1'}
                   sx={{
                     position: 'absolute',
@@ -96,7 +98,8 @@ const Galerie = () => {
               {featuredMedias[1] && (
                 <Box
                   component="img"
-                  src={featuredMedias[1].url}
+                  loading="lazy"
+                  src={optimizeCloudinaryUrl(featuredMedias[1].url, { width: 500, quality: 'auto:best' })}
                   alt={featuredMedias[1].titre || 'Photo 2'}
                   sx={{
                     position: 'absolute',
@@ -116,7 +119,8 @@ const Galerie = () => {
               {featuredMedias[2] && (
                 <Box
                   component="img"
-                  src={featuredMedias[2].url}
+                  loading="lazy"
+                  src={optimizeCloudinaryUrl(featuredMedias[2].url, { width: 450, quality: 'auto:best' })}
                   alt={featuredMedias[2].titre || 'Photo 3'}
                   sx={{
                     position: 'absolute',
@@ -136,7 +140,8 @@ const Galerie = () => {
               {featuredMedias[3] && (
                 <Box
                   component="img"
-                  src={featuredMedias[3].url}
+                  loading="lazy"
+                  src={optimizeCloudinaryUrl(featuredMedias[3].url, { width: 500, quality: 'auto:best' })}
                   alt={featuredMedias[3].titre || 'Photo 4'}
                   sx={{
                     position: 'absolute',
@@ -260,7 +265,8 @@ const Galerie = () => {
                     >
                       <Box
                         component="img"
-                        src={media.url}
+                        loading="lazy"
+                        src={optimizeCloudinaryUrl(media.url, { width: 800, quality: 'auto:good' })}
                         alt={media.titre || `Slide ${index + 1}`}
                         sx={{
                           width: '100%',

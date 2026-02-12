@@ -14,6 +14,7 @@ const LevelCard = memo(({ level }) => {
       <CardContent sx={{ textAlign: 'center', p: 4 }}>
         <Box
           component="img"
+          loading="lazy"
           src={level.image}
           alt={level.title}
           sx={{
