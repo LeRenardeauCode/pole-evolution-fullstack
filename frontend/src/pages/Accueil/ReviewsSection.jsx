@@ -20,12 +20,7 @@ const ReviewsSection = () => {
     const fetchAvis = async () => {
       try {
         const avisResponse = await avisService.getAvisVisibles(3);
-
-        console.log("Réponse avis:", avisResponse);
-
         const avisData = avisResponse?.data || avisResponse || [];
-        console.log("Données avis:", avisData);
-
         setAvis(Array.isArray(avisData) ? avisData : []);
       } catch (error) {
         console.error("Erreur chargement avis:", error);

@@ -111,7 +111,7 @@ const Register = () => {
         }
 
         if (age < 18) {
-          console.log("Autorisation parentale requise");
+          // Autorisation parentale requise
         }
       }
     }
