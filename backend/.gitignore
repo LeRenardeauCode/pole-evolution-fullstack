@@ -1,32 +1,40 @@
 # Dépendances
 node_modules/
 package-lock.json
+yarn.lock
 
 # Variables environnement (SENSIBLE - ne JAMAIS commit)
 .env
+.env.local
+.env.*.local
 
 # Logs
+logs/
 *.log
 npm-debug.log*
-logs/
+yarn-debug.log*
+lerna-debug.log*
 
 # IDE
 .vscode/
 .idea/
 *.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Uploads temporaires
+# Uploads
 uploads/
 temp/
+dist/
+build/
 
 # Tests
 coverage/
-# Build outputs
-dist/
-frontend/dist/
-backend/dist/
-build/
+
+# MongoDB
+.mongodb/
