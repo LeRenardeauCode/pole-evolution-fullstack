@@ -6,9 +6,9 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
-import CalendarView from "@/components/UI/CalendarView";
-import WeekNavigator from "@/components/UI/WeekNavigator";
-import FilterBar from "@/components/UI/FilterBar";
+import CalendarView from "@components/UI/CalendarView";
+import WeekNavigator from "@components/UI/WeekNavigator";
+import FilterBar from "@components/UI/FilterBar";
 import { useCours } from "@/hooks/useCours";
 
 const Planning = () => {

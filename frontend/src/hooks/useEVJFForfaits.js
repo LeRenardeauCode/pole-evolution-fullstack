@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getForfaitsPublics } from '@/services/forfaitService';
+import { getForfaitsPublics } from '@services/forfaitService';
 
 export const useEVJFForfaits = () => {
   const [forfaitsEVJF, setForfaitsEVJF] = useState([]);

@@ -3,7 +3,7 @@ import { Box, Card, CardContent, Typography, Chip, Tooltip } from '@mui/material
 import { Lock } from '@mui/icons-material';
 import { format, startOfWeek, addDays, isSameDay, isValid } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import CourseDetailsModal from '@/components/UI/CourseDetailsModal';
+import CourseDetailsModal from '@components/UI/CourseDetailsModal';
 
 const CalendarView = ({ cours, onReservationSuccess, currentDate }) => {
   const [coursSelectionne, setCoursSelectionne] = useState(null);

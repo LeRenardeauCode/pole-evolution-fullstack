@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
-import parametreService from "@/services/parametreService";
+import parametreService from "@services/parametreService";
 
 import mapImgDefault from "@/assets/images/google_map.png";
 import banniereImgDefault from "@/assets/images/ENSEIGNE.jpg";

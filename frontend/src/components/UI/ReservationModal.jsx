@@ -24,8 +24,8 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   creerReservation,
   creerReservationInvite,
-} from "@/services/reservationService";
-import { getForfaitsUtilisateur } from "@/services/forfaitService";
+} from "@services/reservationService";
+import { getForfaitsUtilisateur } from "@services/forfaitService";
 
 const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
   const { user } = useAuth();

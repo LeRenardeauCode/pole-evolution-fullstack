@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { useForfaits } from "@/hooks/useForfaits";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "react-toastify";
-import notificationService from "@/services/notificationService";
+import notificationService from "@services/notificationService";
 import TarifsHeader from "../components/Tarifs/TarifsHeader";
 import TarifsInfoAlerts from "../components/Tarifs/TarifsInfoAlerts";
 import TarifsEngagementButtons from "../components/Tarifs/TarifsEngagementButtons";

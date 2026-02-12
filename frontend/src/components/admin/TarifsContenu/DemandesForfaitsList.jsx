@@ -13,7 +13,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { centerBox } from "../../../styles/pageStyles";
+import { centerBox } from "@/styles/pageStyles";
 
 export default function DemandesForfaitsList({
   demandesForfaits,

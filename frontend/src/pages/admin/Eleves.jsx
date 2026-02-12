@@ -10,11 +10,11 @@ import {
   modifierSeancesForfait,
 } from "@services/adminService";
 import { headerTitle } from "@/styles/pageStyles";
-import ElevesFilters from "@/components/admin/Eleves/ElevesFilters";
-import ElevesInfoCard from "@/components/admin/Eleves/ElevesInfoCard";
-import ElevesTable from "@/components/admin/Eleves/ElevesTable";
-import ElevesEditDialog from "@/components/admin/Eleves/ElevesEditDialog";
-import ElevesForfaitsDialog from "@/components/admin/Eleves/ElevesForfaitsDialog";
+import ElevesFilters from "@components/admin/Eleves/ElevesFilters";
+import ElevesInfoCard from "@components/admin/Eleves/ElevesInfoCard";
+import ElevesTable from "@components/admin/Eleves/ElevesTable";
+import ElevesEditDialog from "@components/admin/Eleves/ElevesEditDialog";
+import ElevesForfaitsDialog from "@components/admin/Eleves/ElevesForfaitsDialog";
 
 export default function Eleves() {
   const [utilisateurs, setUtilisateurs] = useState([]);

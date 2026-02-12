@@ -8,7 +8,7 @@ import {
   deleteCours,
   annulerCours,
 } from "@services/adminService";
-import api from "@/services/api";
+import api from "@services/api";
 import { headerTitle, cardBorder, sectionTitle, centerBox, fieldMb } from "@/styles/pageStyles";
 import CoursForm from "@/components/admin/CoursPlanning/CoursForm";
 import CoursTable from "@/components/admin/CoursPlanning/CoursTable";

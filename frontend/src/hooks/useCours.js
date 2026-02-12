@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getCoursPlanningSemaine } from '@/services/coursService';
+import { getCoursPlanningSemaine } from '@services/coursService';
 
 export const useCours = (currentDate, filters) => {
   const [cours, setCours] = useState([]);

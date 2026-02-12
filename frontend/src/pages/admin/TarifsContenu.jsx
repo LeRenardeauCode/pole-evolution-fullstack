@@ -12,11 +12,11 @@ import {
   activerAbonnementUtilisateur,
 } from "@services/adminService";
 import notificationService from "@services/notificationService";
-import TarifsForm from "../../components/admin/TarifsContenu/TarifsForm";
-import TarifsTable from "../../components/admin/TarifsContenu/TarifsTable";
-import TexteAProposEditor from "../../components/admin/TarifsContenu/TexteAProposEditor";
-import DemandesForfaitsList from "../../components/admin/TarifsContenu/DemandesForfaitsList";
-import PaiementValidationDialog from "../../components/admin/TarifsContenu/PaiementValidationDialog";
+import TarifsForm from "@components/admin/TarifsContenu/TarifsForm";
+import TarifsTable from "@components/admin/TarifsContenu/TarifsTable";
+import TexteAProposEditor from "@components/admin/TarifsContenu/TexteAProposEditor";
+import DemandesForfaitsList from "@components/admin/TarifsContenu/DemandesForfaitsList";
+import PaiementValidationDialog from "@components/admin/TarifsContenu/PaiementValidationDialog";
 import {
   flexCenterGap,
   headerTitle,

@@ -11,10 +11,10 @@ import {
   monCompteTitle,
   bodyMb3,
 } from "@/styles/pageStyles";
-import MonCompteProfile from "@/components/MonCompte/MonCompteProfile";
-import MonComptePassword from "@/components/MonCompte/MonComptePassword";
-import MonCompteCourses from "@/components/MonCompte/MonCompteCourses";
-import MonCompteReglement from "@/components/MonCompte/MonCompteReglement";
+import MonCompteProfile from "@components/MonCompte/MonCompteProfile";
+import MonComptePassword from "@components/MonCompte/MonComptePassword";
+import MonCompteCourses from "@components/MonCompte/MonCompteCourses";
+import MonCompteReglement from "@components/MonCompte/MonCompteReglement";
 import backgroundImg from "@assets/images/img_hero2.png";
 
 const MonCompte = () => {

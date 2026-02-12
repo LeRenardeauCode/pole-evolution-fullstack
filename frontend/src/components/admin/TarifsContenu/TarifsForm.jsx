@@ -13,7 +13,7 @@ import {
   flexGap1,
   mt2mb2,
   sectionTitle,
-} from "../../../styles/pageStyles";
+} from "@/styles/pageStyles";
 
 export default function TarifsForm({
   editingForfait,

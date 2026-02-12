@@ -15,7 +15,7 @@ import {
   dialogActionsPadding,
   dialogContentPt3,
   navyDialogTitle,
-} from "../../../styles/pageStyles";
+} from "@/styles/pageStyles";
 
 export default function PaiementValidationDialog({
   open,

@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { tableHeaderRow } from "../../../styles/pageStyles";
+import { tableHeaderRow } from "@/styles/pageStyles";
 
 export default function TarifsTable({ forfaits, onEdit, onDelete }) {
   return (

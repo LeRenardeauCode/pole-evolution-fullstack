@@ -10,7 +10,7 @@ import {
   Stack,
 } from "@mui/material";
 import { FaStar } from "react-icons/fa";
-import avisService from "@/services/avisService";
+import avisService from "@services/avisService";
 
 const ReviewsSection = () => {
   const [avis, setAvis] = useState([]);
