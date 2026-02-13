@@ -58,7 +58,7 @@ const ResetPassword = () => {
   };
 
   return (
-    <Box sx={{ py: 14, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+    <Box sx={{ py: 14, background: 'radial-gradient(circle, #C3135F 0%, #FF1966 0%, #870E58 0%, #4C0850 69%, #574A78 100%)', minHeight: '100vh' }}>
       <Container maxWidth="sm">
         <Box sx={{ backgroundColor: 'white', p: 4, borderRadius: 2, boxShadow: 2 }}>
           <Typography
@@ -101,8 +101,9 @@ const ResetPassword = () => {
                 variant="contained"
                 size="large"
                 sx={{
-                  backgroundColor: 'primary.main',
-                  '&:hover': { backgroundColor: 'primary.dark' },
+                  backgroundColor: 'navy.main',
+                  '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)', transform: 'translateY(-2px)' },
+                  transition: 'all 0.3s ease',
                 }}
               >
                 Envoyer le code
@@ -133,8 +134,9 @@ const ResetPassword = () => {
                 variant="contained"
                 size="large"
                 sx={{
-                  backgroundColor: 'primary.main',
-                  '&:hover': { backgroundColor: 'primary.dark' },
+                  backgroundColor: 'navy.main',
+                  '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)', transform: 'translateY(-2px)' },
+                  transition: 'all 0.3s ease',
                 }}
               >
                 Vérifier le code
@@ -180,8 +182,9 @@ const ResetPassword = () => {
                 size="large"
                 disabled={loading}
                 sx={{
-                  backgroundColor: 'primary.main',
-                  '&:hover': { backgroundColor: 'primary.dark' },
+                  backgroundColor: 'navy.main',
+                  '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)', transform: 'translateY(-2px)' },
+                  transition: 'all 0.3s ease',
                 }}
               >
                 {loading ? <CircularProgress size={24} /> : 'Réinitialiser le mot de passe'}

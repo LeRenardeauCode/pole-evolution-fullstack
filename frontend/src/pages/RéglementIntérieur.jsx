@@ -10,9 +10,8 @@ const RéglementIntérieur = () => {
   };
 
   return (
-    <Box sx={{ pt: 10, pb: 10, minHeight: "100vh", bgcolor: "background.default" }}>
+    <Box sx={{ pt: 12, pb: 10, minHeight: "100vh", bgcolor: "navy.main" }}>
       <Container maxWidth="md">
-        {/* Title Section */}
         <Box sx={{ mb: 6, textAlign: "center" }}>
           <Typography
             variant="h1"
@@ -20,7 +19,7 @@ const RéglementIntérieur = () => {
               fontWeight: 700,
               fontSize: { xs: "2rem", md: "3rem" },
               mb: 2,
-              color: "text.primary",
+              color: "white",
             }}
           >
             Règlement Intérieur
@@ -29,7 +28,7 @@ const RéglementIntérieur = () => {
             variant="body1"
             sx={{
               fontSize: "1.1rem",
-              color: "text.secondary",
+              color: "white",
               maxWidth: "600px",
               mx: "auto",
             }}
@@ -39,9 +38,7 @@ const RéglementIntérieur = () => {
           </Typography>
         </Box>
 
-        {/* PDFs Section */}
         <Stack spacing={4} sx={{ mb: 6 }}>
-          {/* PDF 1 */}
           <Paper
             elevation={2}
             sx={{
@@ -60,7 +57,7 @@ const RéglementIntérieur = () => {
                 mb: 2,
               }}
             >
-              📋 Règlement Intérieur - Partie 1
+              Règlement Intérieur - Partie 1
             </Typography>
             <Typography
               variant="body2"
@@ -100,7 +97,6 @@ const RéglementIntérieur = () => {
             </Button>
           </Paper>
 
-          {/* PDF 2 */}
           <Paper
             elevation={2}
             sx={{
@@ -119,7 +115,7 @@ const RéglementIntérieur = () => {
                 mb: 2,
               }}
             >
-              📋 Règlement Intérieur - Partie 2
+              Règlement Intérieur - Partie 2
             </Typography>
             <Typography
               variant="body2"
@@ -160,7 +156,6 @@ const RéglementIntérieur = () => {
           </Paper>
         </Stack>
 
-        {/* Info Box */}
         <Paper
           sx={{
             p: 4,
@@ -178,7 +173,7 @@ const RéglementIntérieur = () => {
               color: "text.primary",
             }}
           >
-            ℹ️ Important
+            Important
           </Typography>
           <Typography
             variant="body2"

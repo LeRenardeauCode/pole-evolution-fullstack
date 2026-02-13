@@ -36,7 +36,7 @@ const ShowAnimations = () => {
 
   const handleDownloadPlaquette = () => {
     const link = document.createElement("a");
-    link.href = "/documents/plaquette-evjf.pdf";
+    link.href = "/documents/Enterrement de vie de jeune fille.pdf";
     link.download = "Plaquette-EVJF-Pole-Evolution.pdf";
     link.click();
   };
