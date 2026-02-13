@@ -65,7 +65,7 @@ const Login = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          p: { xs: 3, md: 6 },
+          p: { xs: 3, md: 12 },
         }}
       >
         <Box

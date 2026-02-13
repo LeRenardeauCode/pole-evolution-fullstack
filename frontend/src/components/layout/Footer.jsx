@@ -371,6 +371,24 @@ const Footer = () => {
 
               <MuiLink
                 component={Link}
+                to="/reglement-interieur"
+                sx={{
+                  color: "white",
+                  opacity: 0.7,
+                  textDecoration: "none",
+                  fontSize: "14px",
+                  "&:hover": {
+                    color: "primary.main",
+                    opacity: 1,
+                  },
+                  transition: "all 0.3s",
+                }}
+              >
+                Règlement intérieur
+              </MuiLink>
+
+              <MuiLink
+                component={Link}
                 to="/contact"
                 sx={{
                   color: "white",
@@ -385,25 +403,6 @@ const Footer = () => {
                 }}
               >
                 Contact
-              </MuiLink>
-
-              <MuiLink
-                component="a"
-                href="/documents/reglement-interieur-1.pdf"
-                download
-                sx={{
-                  color: "white",
-                  opacity: 0.7,
-                  textDecoration: "none",
-                  fontSize: "14px",
-                  "&:hover": {
-                    color: "primary.main",
-                    opacity: 1,
-                  },
-                  transition: "all 0.3s",
-                }}
-              >
-                Règlement intérieur
               </MuiLink>
             </Stack>
           </Grid>
