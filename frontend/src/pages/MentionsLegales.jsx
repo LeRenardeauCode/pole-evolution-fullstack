@@ -2,7 +2,7 @@ import { Box, Container, Typography } from '@mui/material';
 
 const MentionsLegales = () => {
   return (
-    <Box sx={{ py: 6, backgroundColor: '#f5f5f5', pt: 10 }}>
+    <Box sx={{ py: 6, backgroundColor: '#f5f5f5', pt: 12 }}>
       <Container maxWidth="md">
         <Typography
           variant="h1"
@@ -41,7 +41,7 @@ const MentionsLegales = () => {
             <strong>Prix et tarifs :</strong> Les tarifs des cours et forfaits sont affichés sur le site et peuvent être modifiés à tout moment. Les tarifs comprennent les frais de service.
           </Typography>
           <Typography variant="body1" sx={{ lineHeight: 1.8, mb: 2 }}>
-            <strong>Modalités de paiement :</strong> Les réservations de cours doivent être payées en ligne via notre plateforme sécurisée.
+            <strong>Modalités de paiement :</strong> Les réservations de cours doivent être payées sur place. Pour le cas des invités, donc des utilisateurs non authentifiés sur le site web, seuls les cours à l'unité et de découverte (hors prestations divers & EVJF) sont possibles.
           </Typography>
           <Typography variant="body1" sx={{ lineHeight: 1.8, mb: 2 }}>
             <strong>Annulation et modification :</strong> Les annulations doivent être effectuées au moins 24 heures avant le cours. Un délai inférieur entraînera la non-remboursement de la séance.
@@ -112,13 +112,12 @@ const MentionsLegales = () => {
           <Typography variant="body1" sx={{ lineHeight: 1.8, mb: 2 }}>
             Pour toute question, réclamation ou exercice de droits, veuillez nous contacter :<br />
             <strong>Email :</strong> contact@pole-evolution.fr<br />
-            <strong>Téléphone :</strong> [Votre numéro]<br />
-            <strong>Adresse :</strong> [Votre adresse complète]
+            <strong>Téléphone :</strong> 07.67.26.94.71<br />
+            <strong>Adresse :</strong> 1412 Rue Joffre, 62860 Rumaucourt
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'gray', mt: 4, pt: 4, borderTop: '1px solid #ddd' }}>
             Dernière mise à jour : Février 2026<br />
-            <strong>Note :</strong> Veuillez compléter les informations entre crochets [...] avec vos données professionnelles réelles avant mise en ligne.
           </Typography>
         </Box>
       </Container>

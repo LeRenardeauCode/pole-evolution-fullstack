@@ -58,7 +58,7 @@ const ResetPassword = () => {
   };
 
   return (
-    <Box sx={{ py: 8, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+    <Box sx={{ py: 14, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
       <Container maxWidth="sm">
         <Box sx={{ backgroundColor: 'white', p: 4, borderRadius: 2, boxShadow: 2 }}>
           <Typography

@@ -2,7 +2,7 @@ import { Box, Container, Typography } from '@mui/material';
 
 const PolitiqueConfidentialite = () => {
   return (
-    <Box sx={{ py: 6, backgroundColor: '#f5f5f5', pt: 10 }}>
+    <Box sx={{ py: 6, backgroundColor: '#f5f5f5', pt: 12 }}>
       <Container maxWidth="md">
         <Typography
           variant="h1"
@@ -119,8 +119,8 @@ const PolitiqueConfidentialite = () => {
             Si vous avez des questions concernant cette politique de confidentialité, veuillez nous contacter à :<br />
             Pole Evolution<br />
             Email : contact@pole-evolution.fr<br />
-            Tél : [Votre numéro de téléphone]<br />
-            Adresse : [Votre adresse]
+            Tél : 07.67.26.94.71<br />
+            Adresse : 1412 Rue Joffre, 62860 Rumaucourt
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'gray', mt: 4 }}>

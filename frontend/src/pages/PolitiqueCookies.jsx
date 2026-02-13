@@ -18,7 +18,7 @@ const PolitiqueCookies = () => {
 
   return (
     <>
-      <Box sx={{ py: 6, backgroundColor: '#f5f5f5', pt: 10 }}>
+      <Box sx={{ py: 6, backgroundColor: '#f5f5f5', pt: 12 }}>
         <Container maxWidth="md">
           <Typography
             variant="h1"
@@ -133,7 +133,7 @@ const PolitiqueCookies = () => {
             <Typography variant="body1" sx={{ lineHeight: 1.8, mb: 2 }}>
               Pour des questions sur notre utilisation des cookies :<br />
               Email : contact@pole-evolution.fr<br />
-              Tél : [Votre numéro]
+              Tél : 07.67.26.94.71
             </Typography>
 
             <Typography variant="body2" sx={{ color: 'gray', mt: 4 }}>
@@ -143,7 +143,6 @@ const PolitiqueCookies = () => {
         </Container>
       </Box>
 
-      {/* Banneau Cookies */}
       {showBanner && (
         <Box
           sx={{
