@@ -161,7 +161,7 @@ const Login = () => {
                 required
                 variant="outlined"
                 sx={{
-                  mb: 4,
+                  mb: 2,
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 0,
                     '& fieldset': {
@@ -174,6 +174,22 @@ const Login = () => {
                   },
                 }}
               />
+
+              <Box sx={{ textAlign: 'right', mb: 4 }}>
+                <Link
+                  to="/reset-password"
+                  style={{
+                    color: '#FF1966',
+                    textDecoration: 'none',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                  }}
+                  onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
+                  onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
+                >
+                  Mot de passe oublié ?
+                </Link>
+              </Box>
 
               <Button
                 type="submit"

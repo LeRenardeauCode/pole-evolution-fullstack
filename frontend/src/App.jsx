@@ -14,6 +14,10 @@ import Accueil from "@pages/Accueil/Accueil";
 import APropos from '@pages/APropos';
 import Contact from '@pages/Contact';
 import Login from '@pages/Login';
+import ResetPassword from '@pages/ResetPassword';
+import PolitiqueConfidentialite from '@pages/PolitiqueConfidentialite';
+import MentionsLegales from '@pages/MentionsLegales';
+import PolitiqueCookies from '@pages/PolitiqueCookies';
 
 // Pages lourdes (lazy-loading)
 const Cours = lazy(() => import('@pages/Cours'));
@@ -56,7 +60,11 @@ function App() {
                   <Route path="/a-propos" element={<APropos />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/connexion" element={<Login />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/register" element={<Suspense fallback={<div />}><Register /></Suspense>} />
+                  <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
+                  <Route path="/mentions-legales" element={<MentionsLegales />} />
+                  <Route path="/politique-cookies" element={<PolitiqueCookies />} />
 
                   {/* Routes protégées utilisateur */}
                   <Route
