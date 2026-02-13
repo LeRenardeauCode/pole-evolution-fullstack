@@ -1,17 +1,29 @@
 import { Box, Container, Typography, Button, TextField, Alert, CircularProgress } from '@mui/material';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import api from '../services/api';
 
 const ResetPassword = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
-  const [code, setCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const token = searchParams.get('token');
+
+  useEffect(() => {
+    if (token) {
+      const urlEmail = searchParams.get('email');
+      if (urlEmail) {
+        setEmail(urlEmail);
+        setStep(2);
+      }
+    }
+  }, [token, searchParams]);
 
   const handleRequestReset = async (e) => {
     e.preventDefault();
@@ -19,20 +31,18 @@ const ResetPassword = () => {
       setError('Veuillez saisir votre adresse email');
       return;
     }
-    // TODO: Implémenter l'appel backend pour envoyer code de réinitialisation
-    alert('Fonctionnalité à implémenter : Vérifier email et envoyer code de réinitialisation');
-    setMessage('Un email de réinitialisation a été envoyé à ' + email);
-    setStep(2);
-  };
-
-  const handleVerifyCode = async (e) => {
-    e.preventDefault();
-    if (!code) {
-      setError('Veuillez saisir le code reçu');
-      return;
+    
+    setLoading(true);
+    setError('');
+    try {
+      await api.post('/auth/forgot-password', { email });
+      setMessage('Un email de réinitialisation a été envoyé à ' + email);
+      setStep(1);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Erreur lors de l\'envoi du email');
+    } finally {
+      setLoading(false);
     }
-    // TODO: Implémenter la vérification du code
-    setStep(3);
   };
 
   const handleResetPassword = async (e) => {
@@ -45,13 +55,20 @@ const ResetPassword = () => {
       setError('Le mot de passe doit contenir au moins 8 caractères');
       return;
     }
-    // TODO: Implémenter la réinitialisation du mot de passe
+    
     setLoading(true);
+    setError('');
     try {
-      alert('Fonctionnalité à implémenter : Réinitialiser le mot de passe');
-      navigate('/connexion');
-    } catch {
-      setError('Erreur lors de la réinitialisation du mot de passe');
+      await api.post('/auth/reset-password', {
+        token: token || '',
+        email,
+        newPassword,
+        confirmPassword
+      });
+      setMessage('Mot de passe réinitialisé avec succès ! Redirection...');
+      setTimeout(() => navigate('/connexion'), 2000);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Erreur lors de la réinitialisation du mot de passe');
     } finally {
       setLoading(false);
     }
@@ -71,16 +88,16 @@ const ResetPassword = () => {
               textAlign: 'center',
             }}
           >
-            Réinitialiser votre mot de passe
+            {token ? 'Nouveau mot de passe' : 'Réinitialiser votre mot de passe'}
           </Typography>
 
           {message && <Alert severity="success" sx={{ mb: 3 }}>{message}</Alert>}
           {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
 
-          {step === 1 && (
+          {!token && step === 1 && (
             <Box component="form" onSubmit={handleRequestReset}>
               <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
-                Entrez votre adresse email pour recevoir un code de réinitialisation.
+                Entrez votre adresse email pour recevoir un lien de réinitialisation.
               </Typography>
               <TextField
                 fullWidth
@@ -90,86 +107,7 @@ const ResetPassword = () => {
                 onChange={(e) => {
                   setEmail(e.target.value);
                   setError('');
-                }}
-                required
-                variant="outlined"
-                sx={{ mb: 3 }}
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                size="large"
-                sx={{
-                  backgroundColor: 'navy.main',
-                  '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)', transform: 'translateY(-2px)' },
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                Envoyer le code
-              </Button>
-            </Box>
-          )}
-
-          {step === 2 && (
-            <Box component="form" onSubmit={handleVerifyCode}>
-              <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
-                Un code de réinitialisation a été envoyé à {email}. Entrez-le ci-dessous.
-              </Typography>
-              <TextField
-                fullWidth
-                label="Code de vérification"
-                value={code}
-                onChange={(e) => {
-                  setCode(e.target.value);
-                  setError('');
-                }}
-                required
-                variant="outlined"
-                sx={{ mb: 3 }}
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                size="large"
-                sx={{
-                  backgroundColor: 'navy.main',
-                  '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)', transform: 'translateY(-2px)' },
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                Vérifier le code
-              </Button>
-            </Box>
-          )}
-
-          {step === 3 && (
-            <Box component="form" onSubmit={handleResetPassword}>
-              <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
-                Entrez votre nouveau mot de passe.
-              </Typography>
-              <TextField
-                fullWidth
-                label="Nouveau mot de passe"
-                type="password"
-                value={newPassword}
-                onChange={(e) => {
-                  setNewPassword(e.target.value);
-                  setError('');
-                }}
-                required
-                variant="outlined"
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                fullWidth
-                label="Confirmer le mot de passe"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => {
-                  setConfirmPassword(e.target.value);
-                  setError('');
+                  setMessage('');
                 }}
                 required
                 variant="outlined"
@@ -187,7 +125,57 @@ const ResetPassword = () => {
                   transition: 'all 0.3s ease',
                 }}
               >
-                {loading ? <CircularProgress size={24} /> : 'Réinitialiser le mot de passe'}
+                {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Envoyer le lien'}
+              </Button>
+            </Box>
+          )}
+
+          {(token || step === 2) && (
+            <Box component="form" onSubmit={handleResetPassword}>
+              <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
+                Entrez votre nouveau mot de passe.
+              </Typography>
+              <TextField
+                fullWidth
+                label="Nouveau mot de passe"
+                type="password"
+                value={newPassword}
+                onChange={(e) => {
+                  setNewPassword(e.target.value);
+                  setError('');
+                  setMessage('');
+                }}
+                required
+                variant="outlined"
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                fullWidth
+                label="Confirmer le mot de passe"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setError('');
+                  setMessage('');
+                }}
+                required
+                variant="outlined"
+                sx={{ mb: 3 }}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                size="large"
+                disabled={loading}
+                sx={{
+                  backgroundColor: 'navy.main',
+                  '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)', transform: 'translateY(-2px)' },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Réinitialiser le mot de passe'}
               </Button>
             </Box>
           )}
@@ -214,3 +202,4 @@ const ResetPassword = () => {
 };
 
 export default ResetPassword;
+

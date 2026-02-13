@@ -3,6 +3,8 @@ import { Utilisateur } from "../models/index.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
+import crypto from "crypto";
+import { sendResetPasswordEmail } from "../utils/emailService.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -339,4 +341,140 @@ export const logout = async (req, res) => {
     success: true,
     message: "Déconnexion réussie. Veuillez supprimer le token côté client.",
   });
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Veuillez fournir une adresse email.",
+      });
+    }
+
+    const user = await Utilisateur.findOne({
+      email: email.toLowerCase(),
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "Aucun utilisateur trouvé avec cet email. Veuillez vérifier votre adresse.",
+      });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    user.tokenResetPassword = hashedToken;
+    user.tokenResetPasswordExpire = new Date(Date.now() + 30 * 60 * 1000);
+    await user.save({ validateBeforeSave: false });
+
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&email=${email}`;
+
+    try {
+      await sendResetPasswordEmail({
+        email: user.email,
+        prenom: user.prenom,
+        resetUrl,
+      });
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Un email de réinitialisation a été envoyé à votre adresse. Veuillez vérifier votre boîte mail.",
+      });
+    } catch (emailError) {
+      user.tokenResetPassword = undefined;
+      user.tokenResetPasswordExpire = undefined;
+      await user.save({ validateBeforeSave: false });
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Erreur lors de l'envoi de l'email. Veuillez réessayer plus tard.",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token, email, newPassword, confirmPassword } = req.body;
+
+    if (!token || !email || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Veuillez fournir tous les champs requis.",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Les mots de passe ne correspondent pas.",
+      });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: "Le mot de passe doit contenir au moins 8 caractères.",
+      });
+    }
+
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    const user = await Utilisateur.findOne({
+      email: email.toLowerCase(),
+      tokenResetPassword: hashedToken,
+      tokenResetPasswordExpire: { $gt: new Date() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Le lien de réinitialisation est invalide ou a expiré. Veuillez demander un nouveau lien.",
+      });
+    }
+
+    user.motDePasse = newPassword;
+    user.tokenResetPassword = undefined;
+    user.tokenResetPasswordExpire = undefined;
+    await user.save();
+
+    const newToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE || "30d",
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Mot de passe réinitialisé avec succès.",
+      token: newToken,
+      user: {
+        id: user._id,
+        prenom: user.prenom,
+        nom: user.nom,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
