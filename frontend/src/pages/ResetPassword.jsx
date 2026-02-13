@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const ResetPassword = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1); // 1: email, 2: code, 3: nouveau mdp
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -50,7 +50,7 @@ const ResetPassword = () => {
     try {
       alert('Fonctionnalité à implémenter : Réinitialiser le mot de passe');
       navigate('/connexion');
-    } catch (err) {
+    } catch {
       setError('Erreur lors de la réinitialisation du mot de passe');
     } finally {
       setLoading(false);

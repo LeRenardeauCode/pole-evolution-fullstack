@@ -2,7 +2,7 @@ import { Box, Container, Typography } from '@mui/material';
 
 const PolitiqueConfidentialite = () => {
   return (
-    <Box sx={{ py: 6, backgroundColor: '#f5f5f5' }}>
+    <Box sx={{ py: 6, backgroundColor: '#f5f5f5', pt: 10 }}>
       <Container maxWidth="md">
         <Typography
           variant="h1"

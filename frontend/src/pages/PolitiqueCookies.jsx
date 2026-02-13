@@ -1,16 +1,10 @@
 import { Box, Container, Typography, Button, Alert } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const PolitiqueCookies = () => {
-  const [showBanner, setShowBanner] = useState(false);
-
-  useEffect(() => {
-    // Vérifier si l'utilisateur a déjà accepté les cookies
-    const cookiesAccepted = localStorage.getItem('cookiesAccepted');
-    if (!cookiesAccepted) {
-      setShowBanner(true);
-    }
-  }, []);
+  const [showBanner, setShowBanner] = useState(() => 
+    !localStorage.getItem('cookiesAccepted')
+  );
 
   const handleAccept = () => {
     localStorage.setItem('cookiesAccepted', 'true');
@@ -24,7 +18,7 @@ const PolitiqueCookies = () => {
 
   return (
     <>
-      <Box sx={{ py: 6, backgroundColor: '#f5f5f5' }}>
+      <Box sx={{ py: 6, backgroundColor: '#f5f5f5', pt: 10 }}>
         <Container maxWidth="md">
           <Typography
             variant="h1"
