@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 import crypto from "crypto";
-import { sendResetPasswordEmail } from "../utils/emailService.js";
+import { sendResetPasswordEmail, sendWelcomeEmail } from "../utils/emailService.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -56,6 +56,27 @@ export const register = async (req, res) => {
       estActif: true,
       emailVerifie: false,
     });
+
+    // Créer le token de vérification email
+    const emailVerificationToken = crypto.randomBytes(32).toString("hex");
+    user.tokenVerificationEmail = emailVerificationToken;
+    user.tokenVerificationEmailExpire = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 jours
+    await user.save({ validateBeforeSave: false });
+
+    // Construire l'URL de validation
+    const validationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${emailVerificationToken}&email=${encodeURIComponent(email)}`;
+
+    // Envoyer l'email de bienvenue (non bloquant)
+    try {
+      await sendWelcomeEmail({
+        email: user.email,
+        prenom: user.prenom,
+        validationUrl,
+      });
+    } catch (emailError) {
+      console.error("Erreur envoi email de bienvenue:", emailError.message);
+      // Continue sans bloquer l'inscription
+    }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE || "30d",

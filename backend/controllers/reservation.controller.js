@@ -5,6 +5,10 @@ import {
   Forfait,
   Notification,
 } from "../models/index.js";
+import {
+  sendReservationNotificationToAdmin,
+  sendReservationConfirmationToUser,
+} from "../utils/emailService.js";
 
 export const getMesReservations = async (req, res) => {
   try {
@@ -231,6 +235,39 @@ export const createReservation = async (req, res) => {
       reservationId: reservation._id,
     });
 
+    // Envoyer emails (non bloquants)
+    try {
+      // Email notification admin
+      await sendReservationNotificationToAdmin({
+        nomEleve: utilisateur.nom,
+        prenomEleve: utilisateur.prenom,
+        emailEleve: utilisateur.email,
+        telephoneEleve: utilisateur.telephone,
+        niveauPole: utilisateur.niveauPole,
+        nomCours: cours.nom,
+        typeCours: cours.type,
+        dateDebut: cours.dateDebut,
+        montant: reservationData.paiement.montant,
+        reservationId: reservation._id,
+      });
+    } catch (emailError) {
+      console.error("Erreur notification admin réservation membre:", emailError.message);
+    }
+
+    try {
+      // Email confirmation membre
+      await sendReservationConfirmationToUser({
+        nomEleve: utilisateur.nom,
+        prenomEleve: utilisateur.prenom,
+        emailEleve: utilisateur.email,
+        nomCours: cours.nom,
+        dateDebut: cours.dateDebut,
+        lienValidation: null, // Les membres n'ont pas besoin de valider
+      });
+    } catch (emailError) {
+      console.error("Erreur confirmation réservation membre:", emailError.message);
+    }
+
     const reservationComplete = await Reservation.findById(reservation._id)
       .populate("cours", "nom type niveau dateDebut dateFin")
       .populate("forfait", "nom prix");
@@ -333,8 +370,41 @@ export const createReservationInvite = async (req, res) => {
     }
     await cours.save();
 
-    // TODO: Envoyer email de validation (à implémenter avec Nodemailer)
-    // const lienValidation = `${process.env.FRONTEND_URL}/validation/${tokenValidation}`;
+    // Lien de validation pour invités
+    const lienValidation = `${process.env.FRONTEND_URL}/validation-reservation?token=${tokenValidation}&email=${encodeURIComponent(emailInvite)}`;
+
+    // Envoyer emails (non bloquants)
+    try {
+      // Email notification admin
+      await sendReservationNotificationToAdmin({
+        nomEleve: nomEleve,
+        prenomEleve: "",
+        emailEleve: emailInvite,
+        telephoneEleve: telephoneInvite,
+        niveauPole: niveauPoleInvite || "jamais",
+        nomCours: cours.nom,
+        typeCours: cours.type,
+        dateDebut: cours.dateDebut,
+        montant: cours.type === "decouverte" ? 15 : 25,
+        reservationId: reservation._id,
+      });
+    } catch (emailError) {
+      console.error("Erreur notification admin réservation:", emailError.message);
+    }
+
+    try {
+      // Email confirmation invité
+      await sendReservationConfirmationToUser({
+        nomEleve: nomEleve,
+        prenomEleve: "",
+        emailEleve: emailInvite,
+        nomCours: cours.nom,
+        dateDebut: cours.dateDebut,
+        lienValidation,
+      });
+    } catch (emailError) {
+      console.error("Erreur confirmation réservation invité:", emailError.message);
+    }
 
     const reservationComplete = await Reservation.findById(
       reservation._id,

@@ -1,9 +1,9 @@
 import nodemailer from "nodemailer";
 
-// Configuration du transporter - supporte Gmail et SMTP custom (Ethereal, etc.)
+// Configuration du transporter - supporte Gmail et SMTP custom
 const transportConfig = process.env.EMAIL_HOST && process.env.EMAIL_PORT
   ? {
-      // Configuration SMTP custom (Ethereal, Mailtrap, etc.)
+      // Configuration SMTP custom
       host: process.env.EMAIL_HOST,
       port: parseInt(process.env.EMAIL_PORT),
       auth: {
@@ -337,6 +337,231 @@ export const sendContactConfirmationToUser = async ({ email, prenom, nom }) => {
     console.error("Erreur confirmation utilisateur:", error);
     // Non bloquant - ne pas throw l'erreur
     return { success: false, message: "Erreur lors de l'envoi de la confirmation" };
+  }
+};
+
+/**
+ * Envoyer une notification admin lors d'une réservation
+ * @param {Object} options - Options pour l'email
+ * @param {string} options.nomEleve - Nom de l'élève
+ * @param {string} options.prenomEleve - Prénom de l'élève (optionnel)
+ * @param {string} options.emailEleve - Email de l'élève
+ * @param {string} options.telephoneEleve - Téléphone de l'élève (optionnel)
+ * @param {string} options.niveauPole - Niveau pole dance
+ * @param {string} options.nomCours - Nom du cours
+ * @param {string} options.typeCours - Type du cours (decouverte, cours, etc.)
+ * @param {Date} options.dateDebut - Date/heure début du cours
+ * @param {number} options.montant - Montant de la réservation
+ * @param {string} options.reservationId - ID de la réservation
+ */
+export const sendReservationNotificationToAdmin = async ({
+  nomEleve,
+  prenomEleve,
+  emailEleve,
+  telephoneEleve,
+  niveauPole,
+  nomCours,
+  typeCours,
+  dateDebut,
+  montant,
+  reservationId,
+}) => {
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
+
+  const mailOptions = {
+    from: `"Pôle Evolution - Réservations" <${process.env.EMAIL_USER}>`,
+    to: adminEmail,
+    replyTo: emailEleve,
+    subject: `[NOUVELLE RÉSERVATION] ${prenomEleve || ""} ${nomEleve} - ${nomCours}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: #100249; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
+          <h1 style="margin: 0;">📋 Nouvelle Réservation</h1>
+        </div>
+
+        <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px;">
+          <div style="border-left: 4px solid #FF1966; padding-left: 15px; margin-bottom: 20px;">
+            <h2 style="color: #FF1966; margin: 0 0 10px 0;">Informations élève</h2>
+            <p style="margin: 5px 0;"><strong>Nom :</strong> ${nomEleve}</p>
+            <p style="margin: 5px 0;"><strong>Prénom :</strong> ${prenomEleve || "Non renseigné"}</p>
+            <p style="margin: 5px 0;"><strong>Email :</strong> <a href="mailto:${emailEleve}" style="color: #FF1966;">${emailEleve}</a></p>
+            <p style="margin: 5px 0;"><strong>Téléphone :</strong> ${telephoneEleve || "Non renseigné"}</p>
+            <p style="margin: 5px 0;"><strong>Niveau Pole :</strong> ${niveauPole}</p>
+          </div>
+
+          <div style="border-left: 4px solid #FF1966; padding-left: 15px; margin-bottom: 20px;">
+            <h2 style="color: #FF1966; margin: 0 0 10px 0;">Détails du cours</h2>
+            <p style="margin: 5px 0;"><strong>Cours :</strong> ${nomCours}</p>
+            <p style="margin: 5px 0;"><strong>Type :</strong> ${typeCours}</p>
+            <p style="margin: 5px 0;"><strong>Date/Heure :</strong> ${new Date(dateDebut).toLocaleString("fr-FR")}</p>
+            <p style="margin: 5px 0;"><strong>Montant :</strong> ${montant}€</p>
+          </div>
+
+          <div style="background: #fff3cd; border-left: 4px solid #FF1966; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <p style="margin: 0; color: #856404; font-size: 14px;">
+              ⚠️ <strong>Action requise :</strong> Vérifiez et confirmez cette réservation dans l'admin.
+            </p>
+          </div>
+
+          <div style="text-align: center; margin: 20px 0;">
+            <a href="${process.env.FRONTEND_URL}/admin/reservations/${reservationId}" style="background: linear-gradient(135deg, #FF1966 0%, #D41173 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+              Voir la réservation
+            </a>
+          </div>
+        </div>
+
+        <div style="background: #100249; color: white; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px;">
+          <p style="margin: 0;">
+            © ${new Date().getFullYear()} Pôle Evolution - Tous droits réservés
+          </p>
+        </div>
+      </div>
+    `,
+    text: `
+      Nouvelle Réservation
+
+      Élève : ${prenomEleve || ""} ${nomEleve}
+      Email : ${emailEleve}
+      Téléphone : ${telephoneEleve || "Non renseigné"}
+      Niveau Pole : ${niveauPole}
+
+      Cours : ${nomCours} (${typeCours})
+      Date : ${new Date(dateDebut).toLocaleString("fr-FR")}
+      Montant : ${montant}€
+
+      Veuillez valider cette réservation dans l'admin.
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    return { success: true, message: "Notification admin envoyée" };
+  } catch (error) {
+    console.error("Erreur notification réservation admin:", error);
+    throw new Error(`Erreur notification admin: ${error.message}`);
+  }
+};
+
+/**
+ * Envoyer une confirmation de réservation à l'élève
+ * @param {Object} options - Options pour l'email
+ * @param {string} options.nomEleve - Nom de l'élève
+ * @param {string} options.prenomEleve - Prénom de l'élève
+ * @param {string} options.emailEleve - Email de l'élève
+ * @param {string} options.nomCours - Nom du cours
+ * @param {Date} options.dateDebut - Date/heure début du cours
+ * @param {string} options.lienValidation - Lien de validation (pour invités)
+ */
+export const sendReservationConfirmationToUser = async ({
+  nomEleve,
+  prenomEleve,
+  emailEleve,
+  nomCours,
+  dateDebut,
+  lienValidation = null,
+}) => {
+  const mailOptions = {
+    from: `"Pôle Evolution" <${process.env.EMAIL_USER}>`,
+    to: emailEleve,
+    subject: `Confirmation de réservation - ${nomCours}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #FF1966 0%, #D41173 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+          <h1 style="margin: 0;">✅ Réservation Confirmée</h1>
+          <p style="margin: 10px 0 0 0; opacity: 0.9;">Pôle Evolution</p>
+        </div>
+
+        <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px;">
+          <p style="font-size: 16px; color: #333;">Bonjour ${prenomEleve || nomEleve},</p>
+          
+          <p style="color: #666; line-height: 1.6;">
+            Nous confirmons votre réservation pour le cours <strong>${nomCours}</strong>.
+          </p>
+
+          <div style="background: white; border-left: 4px solid #FF1966; padding: 20px; margin: 20px 0; border-radius: 5px;">
+            <h3 style="margin: 0 0 10px 0; color: #FF1966;">📅 Détails du cours</h3>
+            <p style="margin: 5px 0;"><strong>Cours :</strong> ${nomCours}</p>
+            <p style="margin: 5px 0;"><strong>Date et heure :</strong> ${new Date(dateDebut).toLocaleString("fr-FR")}</p>
+          </div>
+
+          ${
+            lienValidation
+              ? `
+          <p style="color: #666; line-height: 1.6;">
+            Veuillez confirmer votre réservation en cliquant sur le bouton ci-dessous :
+          </p>
+
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${lienValidation}" style="background: linear-gradient(135deg, #FF1966 0%, #D41173 100%); color: white; padding: 14px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; font-size: 16px;">
+              Confirmer ma réservation
+            </a>
+          </div>
+
+          <p style="color: #666; font-size: 14px;">
+            Ou copier-coller ce lien dans votre navigateur :<br/>
+            <span style="word-break: break-all; color: #FF1966;">${lienValidation}</span>
+          </p>
+          `
+              : ""
+          }
+
+          <div style="background: #d1ecf1; border-left: 4px solid #0c5460; padding: 15px; margin: 20px 0; border-radius: 5px;">
+            <p style="margin: 0; color: #0c5460; font-size: 14px;">
+              ℹ️ <strong>À retenir :</strong><br/>
+              • Arrivez 10-15 minutes avant le début du cours<br/>
+              • Munissez-vous de votre pièce d'identité<br/>
+              • Portez des vêtements confortables et des chaussures de sport
+            </p>
+          </div>
+
+          <p style="color: #666; line-height: 1.6;">
+            En cas de question, n'hésitez pas à nous contacter.<br/>
+            À bientôt sur les barres !<br/>
+            <strong>L'équipe Pôle Evolution</strong>
+          </p>
+        </div>
+
+        <div style="background: #100249; color: white; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px;">
+          <p style="margin: 0;">
+            © ${new Date().getFullYear()} Pôle Evolution - Tous droits réservés<br/>
+            <a href="${process.env.FRONTEND_URL}" style="color: #FF1966; text-decoration: none;">Visiter notre site</a>
+          </p>
+        </div>
+      </div>
+    `,
+    text: `
+      Réservation Confirmée
+
+      Bonjour ${prenomEleve || nomEleve},
+
+      Nous confirmons votre réservation pour le cours ${nomCours}.
+
+      Date et heure : ${new Date(dateDebut).toLocaleString("fr-FR")}
+
+      ${
+        lienValidation
+          ? `Veuillez confirmer votre réservation : ${lienValidation}`
+          : ""
+      }
+
+      À retenir :
+      • Arrivez 10-15 minutes avant le début du cours
+      • Munissez-vous de votre pièce d'identité
+      • Portez des vêtements confortables
+
+      À bientôt sur les barres !
+      L'équipe Pôle Evolution
+
+      © ${new Date().getFullYear()} Pôle Evolution
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    return { success: true, message: "Confirmation réservation envoyée" };
+  } catch (error) {
+    console.error("Erreur confirmation réservation:", error);
+    throw new Error(`Erreur confirmation réservation: ${error.message}`);
   }
 };
 
