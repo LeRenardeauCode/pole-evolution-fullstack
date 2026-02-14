@@ -341,10 +341,10 @@ export default function CoursPlanning() {
         onClose={handleCloseReservationsModal}
         coursSelectionne={coursSelectionne}
         reservations={reservations}
-        loading={loadingReservations}
+        loadingReservations={loadingReservations}
         onValider={handleValiderReservation}
         onRefuser={handleRefuserReservation}
-        getStatutColor={getStatutReservationColor}
+        getStatutReservationColor={getStatutReservationColor}
       />
     </Box>
   );

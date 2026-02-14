@@ -2,6 +2,7 @@ import { useRef } from "react";
 import {
   Box,
   TextField,
+  MenuItem,
   Button,
   Typography,
   Avatar,
@@ -174,12 +175,12 @@ export default function MonCompteProfile({
         value={formData.niveauPole}
         onChange={(e) => onFormChange(e)}
         variant="filled"
-        sx={{ mb: 4 }}
+        sx={{ mb: 4, bgcolor: 'white' }}
       >
-        <option value="jamais">Jamais pratiqué</option>
-        <option value="debutant">Débutant</option>
-        <option value="intermediaire">Intermédiaire</option>
-        <option value="avance">Avancé</option>
+        <MenuItem value="jamais">Jamais pratiqué</MenuItem>
+        <MenuItem value="debutant">Débutant</MenuItem>
+        <MenuItem value="intermediaire">Intermédiaire</MenuItem>
+        <MenuItem value="avance">Avancé</MenuItem>
       </TextField>
 
       <Button
