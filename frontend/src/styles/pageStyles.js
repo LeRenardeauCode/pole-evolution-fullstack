@@ -22,7 +22,7 @@ export const bodyMb1 = { mb: 1 };
 export const bodyMb3 = { mb: 3 };
 export const dialogActionsPadding = { p: 2 };
 
-export const layoutFullHeight = { display: 'flex', minHeight: '100vh' };
+export const layoutFullHeight = { display: 'flex', minHeight: '110vh' };
 export const leftPanel = {
   flex: { xs: '0 0 100%', md: '0 0 30%' },
   background:

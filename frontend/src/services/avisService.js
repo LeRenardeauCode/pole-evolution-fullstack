@@ -21,6 +21,11 @@ const avisService = {
     return response.data;
   },
 
+  createAvisGeneral: async (avisData) => {
+    const response = await api.post('/avis/general', avisData);
+    return response.data;
+  },
+
   getMesAvis: async () => {
     const response = await api.get('/avis/mes-avis');
     return response.data;

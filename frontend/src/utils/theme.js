@@ -231,6 +231,24 @@ const theme = createTheme({
   ],
 
   components: {
+    MuiModal: {
+      defaultProps: {
+        disableScrollLock: true,
+      },
+    },
+
+    MuiPopover: {
+      defaultProps: {
+        disableScrollLock: true,
+      },
+    },
+
+    MuiMenu: {
+      defaultProps: {
+        disableScrollLock: true,
+      },
+    },
+
     MuiCssBaseline: {
       styleOverrides: {
         body: {

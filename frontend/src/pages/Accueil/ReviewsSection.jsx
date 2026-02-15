@@ -14,6 +14,8 @@ import {
   Rating,
   Alert,
   CircularProgress,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { FaStar } from "react-icons/fa";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
@@ -25,6 +27,10 @@ const ReviewsSection = () => {
   const [avis, setAvis] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const theme = useTheme();
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const isSmUp = useMediaQuery(theme.breakpoints.up("sm"));
+  const slidesPerView = isMdUp ? 3 : isSmUp ? 2 : 1;
 
   // État pour la section "Laisser un avis"
   const [showForm, setShowForm] = useState(false);
@@ -41,6 +47,7 @@ const ReviewsSection = () => {
         const avisResponse = await avisService.getAvisVisibles(100);
         const avisData = avisResponse?.data || avisResponse || [];
         setAvis(Array.isArray(avisData) ? avisData : []);
+        setCurrentSlide(0);
       } catch (error) {
         console.error("Erreur chargement avis:", error);
         setAvis([]);
@@ -51,6 +58,13 @@ const ReviewsSection = () => {
 
     fetchAvis();
   }, []);
+
+  useEffect(() => {
+    const maxSlide = Math.max(0, avis.length - slidesPerView);
+    if (currentSlide > maxSlide) {
+      setCurrentSlide(maxSlide);
+    }
+  }, [avis.length, slidesPerView, currentSlide]);
 
   const renderStars = (note) => {
     return Array.from({ length: 5 }, (_, index) => (
@@ -64,11 +78,13 @@ const ReviewsSection = () => {
 
   // Slider
   const handlePrevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? avis.length - 1 : prev - 1));
+    const maxSlide = Math.max(0, avis.length - slidesPerView);
+    setCurrentSlide((prev) => (prev === 0 ? maxSlide : prev - 1));
   };
 
   const handleNextSlide = () => {
-    setCurrentSlide((prev) => (prev === avis.length - 1 ? 0 : prev + 1));
+    const maxSlide = Math.max(0, avis.length - slidesPerView);
+    setCurrentSlide((prev) => (prev >= maxSlide ? 0 : prev + 1));
   };
 
   // Form avis
@@ -86,9 +102,11 @@ const ReviewsSection = () => {
 
     setFormLoading(true);
     try {
-      // TODO: À adapter selon vos routes backend
-      // Pour l'instant, on laisse un placeholder
-      alert("Fonctionnalité à implémenter côté backend pour créer un avis sans cours spécifique");
+      await avisService.createAvisGeneral({
+        note: formData.note,
+        commentaire: formData.commentaire,
+      });
+      alert("Merci ! Votre avis sera visible après validation.");
       setFormData({ note: 5, commentaire: "" });
       setShowForm(false);
     } catch (error) {
@@ -263,12 +281,13 @@ const ReviewsSection = () => {
                   onClick={handlePrevSlide}
                   sx={{
                     position: "absolute",
-                    left: { xs: 0, md: -40 },
+                    left: 8,
                     top: "50%",
                     transform: "translateY(-50%)",
-                    zIndex: 2,
+                    zIndex: 5,
                     color: "white",
-                    backgroundColor: "rgba(0, 0, 0, 0.3)",
+                    backgroundColor: "rgba(0, 0, 0, 0.35)",
+                    border: "1px solid rgba(255, 255, 255, 0.4)",
                     "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.6)" },
                   }}
                 >
@@ -279,36 +298,32 @@ const ReviewsSection = () => {
                 <Box
                   sx={{
                     width: "100%",
-                    px: { xs: 2, md: 8 },
+                    px: { xs: 6, md: 10 },
                     display: "flex",
                     transition: "transform 0.35s ease",
-                    transform: `translateX(-${currentSlide * 100}%)`,
+                    transform: `translateX(-${currentSlide * (100 / slidesPerView)}%)`,
                   }}
                 >
                   {avis.map((avisItem) => (
                     <Box
                       key={avisItem._id}
                       sx={{
-                        minWidth: "100%",
+                        flex: `0 0 ${100 / slidesPerView}%`,
+                        px: { xs: 1, md: 2 },
                         display: "flex",
                         justifyContent: "center",
                       }}
                     >
                       <Card
                         sx={{
-                          width: { xs: "100%", sm: 360 },
-                          maxWidth: 420,
+                          width: "100%",
+                          maxWidth: 360,
                           aspectRatio: "1 / 1",
                           display: "flex",
                           flexDirection: "column",
                           borderRadius: 3,
                           background: "white",
                           boxShadow: 4,
-                          transition: "transform 0.3s, box-shadow 0.3s",
-                          "&:hover": {
-                            transform: "translateY(-8px)",
-                            boxShadow: 8,
-                          },
                         }}
                       >
                         <CardContent
@@ -328,7 +343,7 @@ const ReviewsSection = () => {
                               sx={{ mb: 2 }}
                             >
                               <Avatar
-                                src={avisItem.utilisateur?.photoEleve}
+                                src={avisItem.utilisateur?.photoUrl}
                                 alt={avisItem.utilisateur?.pseudo}
                                 sx={{
                                   width: 48,
@@ -355,21 +370,24 @@ const ReviewsSection = () => {
                               </Box>
                             </Stack>
 
-                            <Typography
-                              variant="body2"
+                            <Box
                               sx={{
-                                color: "text.secondary",
-                                fontStyle: "italic",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                display: "-webkit-box",
-                                WebkitLineClamp: 6,
-                                WebkitBoxOrient: "vertical",
-                                lineHeight: 1.6,
+                                flex: 1,
+                                overflowY: "auto",
+                                pr: 1,
                               }}
                             >
-                              "{avisItem.commentaire}"
-                            </Typography>
+                              <Typography
+                                variant="body2"
+                                sx={{
+                                  color: "text.secondary",
+                                  fontStyle: "italic",
+                                  lineHeight: 1.6,
+                                }}
+                              >
+                                "{avisItem.commentaire}"
+                              </Typography>
+                            </Box>
                           </Box>
                         </CardContent>
                       </Card>
@@ -382,12 +400,13 @@ const ReviewsSection = () => {
                   onClick={handleNextSlide}
                   sx={{
                     position: "absolute",
-                    right: { xs: 0, md: -40 },
+                    right: 8,
                     top: "50%",
                     transform: "translateY(-50%)",
-                    zIndex: 2,
+                    zIndex: 5,
                     color: "white",
-                    backgroundColor: "rgba(0, 0, 0, 0.3)",
+                    backgroundColor: "rgba(0, 0, 0, 0.35)",
+                    border: "1px solid rgba(255, 255, 255, 0.4)",
                     "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.6)" },
                   }}
                 >
@@ -404,7 +423,7 @@ const ReviewsSection = () => {
                   mt: 4,
                 }}
               >
-                {avis.map((_, index) => (
+                {Array.from({ length: Math.max(1, avis.length - slidesPerView + 1) }).map((_, index) => (
                   <Box
                     key={index}
                     onClick={() => setCurrentSlide(index)}

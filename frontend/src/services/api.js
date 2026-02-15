@@ -34,7 +34,10 @@ api.interceptors.response.use(
       error.config?.url,
     );
 
-    if (error.response?.status === 401) {
+    const requestUrl = error.config?.url || "";
+    const isPasswordUpdate = requestUrl.includes("/auth/update-password");
+
+    if (error.response?.status === 401 && !isPasswordUpdate) {
       authService.logout();
       try {
         window.dispatchEvent(new CustomEvent('auth:logout'));

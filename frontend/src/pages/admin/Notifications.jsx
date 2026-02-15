@@ -5,6 +5,10 @@ import {
   Card,
   CardContent,
   Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Table,
   TableBody,
   TableCell,
@@ -18,11 +22,14 @@ import {
   FormControlLabel,
   Button,
   Alert,
-  Divider
+  Divider,
+  TextField
 } from '@mui/material';
 import { 
   Check as CheckIcon, 
   Close as CloseIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon,
   NotificationsActive as NotificationsActiveIcon
 } from '@mui/icons-material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -31,6 +38,8 @@ import {
   getAllAvis,
   validerAvis,
   rejeterAvis,
+  updateAvis,
+  deleteAvis,
   getParametreByKey,
   updateParametre,
   getStatsMensuelles
@@ -44,6 +53,9 @@ export default function NotificationsPage() {
   const [loading, setLoading] = useState(false);
   const [notificationsActives, setNotificationsActives] = useState(true);
   const [statsData, setStatsData] = useState([]);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editCommentaire, setEditCommentaire] = useState('');
+  const [editAvisId, setEditAvisId] = useState(null);
 
   useEffect(() => {
     let mounted = true;
@@ -51,7 +63,7 @@ export default function NotificationsPage() {
     const fetchData = async () => {
       try {
         const [avisRes, paramRes, notifsRes] = await Promise.all([
-          getAllAvis({ statut: 'enattente' }),
+          getAllAvis({ statut: 'en_attente' }),
           getParametreByKey('notificationsactives'),
           notificationService.getNotifications()
         ]);
@@ -101,7 +113,7 @@ export default function NotificationsPage() {
 
   const loadAvis = async () => {
     try {
-      const response = await getAllAvis({ statut: 'enattente' });
+      const response = await getAllAvis({ statut: 'en_attente' });
       setAvis(response.data || []);
     } catch (err) {
       console.error('Erreur:', err);
@@ -149,54 +161,58 @@ export default function NotificationsPage() {
     }
   };
 
-  const handleActiverForfait = async (notificationId, metadata) => {
-    const { utilisateurId, forfaitId, forfaitNom, forfaitPrix, utilisateurNom } = metadata;
+  const handleOpenEditDialog = (avisItem) => {
+    setEditAvisId(avisItem._id);
+    setEditCommentaire(avisItem.commentaire || '');
+    setEditDialogOpen(true);
+  };
 
-    if (!utilisateurId || !forfaitId) {
-      toast.error('Données manquantes dans la notification');
+  const handleCloseEditDialog = () => {
+    setEditDialogOpen(false);
+    setEditCommentaire('');
+    setEditAvisId(null);
+  };
+
+  const handleSaveEditDialog = async () => {
+    if (!editAvisId) return;
+
+    if (!editCommentaire.trim() || editCommentaire.trim().length < 10) {
+      toast.error('Le commentaire doit contenir au moins 10 caracteres');
       return;
     }
 
-    const confirmation = window.confirm(
-      `Activer le forfait "${forfaitNom}" (${forfaitPrix}€) pour ${utilisateurNom} ?\n\nAssurez-vous que le paiement a été effectué sur place.`
-    );
-
-    if (!confirmation) return;
-
     setLoading(true);
     try {
-      await api.post(`/utilisateurs/${utilisateurId}/forfait/activer`, {
-        forfaitId,
-      });
-
-      toast.success('Forfait activé avec succès !');
-
-      await notificationService.marquerCommeLue(notificationId);
-      await loadNotifications();
-    } catch (err) {
-      console.error('Erreur activation forfait:', err);
-      toast.error(err.response?.data?.message || 'Erreur lors de l\'activation');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRefuserDemande = async (notificationId) => {
-    const confirmation = window.confirm('Refuser cette demande de forfait ?');
-    if (!confirmation) return;
-
-    setLoading(true);
-    try {
-      await notificationService.marquerCommeLue(notificationId);
-      toast.info('Demande refusée');
-      await loadNotifications();
+      await updateAvis(editAvisId, { commentaire: editCommentaire.trim() });
+      toast.success('Avis modifie avec succes');
+      await loadAvis();
+      handleCloseEditDialog();
     } catch (err) {
       console.error('Erreur:', err);
-      toast.error('Erreur');
+      toast.error('Erreur lors de la modification');
     } finally {
       setLoading(false);
     }
   };
+
+  const handleSupprimerAvis = async (id) => {
+    const confirmation = window.confirm('Supprimer cet avis ?');
+    if (!confirmation) return;
+
+    setLoading(true);
+    try {
+      await deleteAvis(id);
+      toast.success('Avis supprime avec succes');
+      await loadAvis();
+    } catch (err) {
+      console.error('Erreur:', err);
+      toast.error('Erreur lors de la suppression');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
 
   const handleToggleNotifications = async (checked) => {
     setLoading(true);
@@ -216,12 +232,6 @@ export default function NotificationsPage() {
     }
   };
 
-  const demandesForfaits = useMemo(() => {
-    return notifications.filter(
-      n => n.type === 'demande_forfait' && !n.estLue
-    );
-  }, [notifications]);
-
   return (
     <Box>
       <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
@@ -229,93 +239,6 @@ export default function NotificationsPage() {
       </Typography>
 
       <Grid container spacing={3}>
-        {demandesForfaits.length > 0 && (
-          <Grid item xs={12}>
-            <Card sx={{ bgcolor: 'warning.light' }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <NotificationsActiveIcon sx={{ mr: 1, color: 'warning.dark' }} />
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    Demandes de forfaits en attente
-                  </Typography>
-                  <Chip 
-                    label={demandesForfaits.length} 
-                    color="error" 
-                    size="small" 
-                    sx={{ ml: 1 }}
-                  />
-                </Box>
-
-                <TableContainer component={Paper} variant="outlined">
-                  <Table size="small">
-                    <TableHead>
-                      <TableRow sx={{ bgcolor: 'grey.100' }}>
-                        <TableCell><strong>Utilisateur</strong></TableCell>
-                        <TableCell><strong>Forfait</strong></TableCell>
-                        <TableCell><strong>Prix</strong></TableCell>
-                        <TableCell><strong>Contact</strong></TableCell>
-                        <TableCell align="right"><strong>Actions</strong></TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {demandesForfaits.map((notif) => (
-                        <TableRow key={notif._id}>
-                          <TableCell>
-                            <Typography variant="body2" fontWeight={600}>
-                              {notif.metadata?.utilisateurNom}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Typography variant="body2">
-                              {notif.metadata?.forfaitNom}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <Chip 
-                              label={`${notif.metadata?.forfaitPrix}€`} 
-                              color="primary" 
-                              size="small" 
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <Typography variant="body2" fontSize="0.85rem">
-                              {notif.metadata?.utilisateurEmail}
-                            </Typography>
-                            <Typography variant="body2" fontSize="0.85rem" color="text.secondary">
-                              {notif.metadata?.utilisateurTelephone || 'Non renseigné'}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="right">
-                            <Button
-                              variant="contained"
-                              color="success"
-                              size="small"
-                              onClick={() => handleActiverForfait(notif._id, notif.metadata)}
-                              disabled={loading}
-                              sx={{ mr: 1 }}
-                            >
-                              Activer
-                            </Button>
-                            <Button
-                              variant="outlined"
-                              color="error"
-                              size="small"
-                              onClick={() => handleRefuserDemande(notif._id)}
-                              disabled={loading}
-                            >
-                              Refuser
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </CardContent>
-            </Card>
-          </Grid>
-        )}
-
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
@@ -346,7 +269,7 @@ export default function NotificationsPage() {
                       avis.map((avisItem) => (
                         <TableRow key={avisItem._id}>
                           <TableCell>
-                            {avisItem.utilisateur?.prenom} {avisItem.utilisateur?.nom}
+                            {avisItem.utilisateur?.pseudo || `${avisItem.utilisateur?.prenom || ''} ${avisItem.utilisateur?.nom || ''}`.trim()}
                           </TableCell>
                           <TableCell>
                             <Chip 
@@ -356,11 +279,31 @@ export default function NotificationsPage() {
                             />
                           </TableCell>
                           <TableCell>
-                            <Typography variant="body2" noWrap sx={{ maxWidth: 200 }}>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                maxWidth: 260,
+                                display: '-webkit-box',
+                                WebkitLineClamp: 3,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden',
+                              }}
+                              title={avisItem.commentaire}
+                            >
                               {avisItem.commentaire}
                             </Typography>
                           </TableCell>
                           <TableCell align="right">
+                            <IconButton
+                              size="small"
+                              color="info"
+                              onClick={() => handleOpenEditDialog(avisItem)}
+                              disabled={loading}
+                              title="Modifier"
+                              aria-label="Modifier l'avis"
+                            >
+                              <EditIcon fontSize="small" />
+                            </IconButton>
                             <IconButton
                               size="small"
                               color="success"
@@ -380,6 +323,16 @@ export default function NotificationsPage() {
                               aria-label="Rejeter l'avis"
                             >
                               <CloseIcon fontSize="small" />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              onClick={() => handleSupprimerAvis(avisItem._id)}
+                              disabled={loading}
+                              title="Supprimer"
+                              aria-label="Supprimer l'avis"
+                            >
+                              <DeleteIcon fontSize="small" />
                             </IconButton>
                           </TableCell>
                         </TableRow>
@@ -447,6 +400,40 @@ export default function NotificationsPage() {
           </Card>
         </Grid>
       </Grid>
+
+      <Dialog
+        open={editDialogOpen}
+        onClose={handleCloseEditDialog}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle sx={{ fontWeight: 700 }}>Modifier l'avis</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            fullWidth
+            multiline
+            minRows={4}
+            label="Commentaire"
+            value={editCommentaire}
+            onChange={(e) => setEditCommentaire(e.target.value)}
+            helperText="Minimum 10 caracteres"
+            sx={{ mt: 1 }}
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={handleCloseEditDialog} disabled={loading}>
+            Annuler
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleSaveEditDialog}
+            disabled={loading}
+          >
+            Enregistrer
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

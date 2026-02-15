@@ -4,6 +4,7 @@ import {
   getAvisCours,
   getMesAvis,
   createAvis,
+  createAvisGeneral,
   updateAvis,
   deleteAvis,
   validerAvis,
@@ -19,6 +20,7 @@ router.get('/publics', getAvisPublics);
 router.get('/cours/:coursId', getAvisCours);
 
 router.get('/mes-avis', protect, getMesAvis);
+router.post('/general', protect, createAvisGeneral);
 router.post('/', protect, createAvis);
 router.put('/:id', protect, updateAvis);
 router.delete('/:id', protect, deleteAvis);
