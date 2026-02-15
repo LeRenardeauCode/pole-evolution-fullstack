@@ -9,11 +9,31 @@ import { sendResetPasswordEmail, sendWelcomeEmail } from "../utils/emailService.
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const buildAuthUserPayload = (user) => {
+  const payload = {
+    id: user._id,
+    email: user.email,
+    role: user.role,
+    pseudo: user.pseudo,
+    statutValidationAdmin: user.statutValidationAdmin,
+    niveauPole: user.niveauPole,
+    photoUrl: user.photoUrl,
+  };
+
+  if (user.role === "admin") {
+    payload.prenom = user.prenom;
+    payload.nom = user.nom;
+  }
+
+  return payload;
+};
+
 export const register = async (req, res) => {
   try {
     const {
       prenom,
       nom,
+      pseudo,
       email,
       motDePasse,
       telephone,
@@ -22,11 +42,11 @@ export const register = async (req, res) => {
       accepteContact,
     } = req.body;
 
-    if (!prenom || !nom || !email || !motDePasse) {
+    if (!prenom || !nom || !pseudo || !email || !motDePasse) {
       return res.status(400).json({
         success: false,
         message:
-          "Veuillez fournir tous les champs obligatoires (prénom, nom, email, mot de passe).",
+          "Veuillez fournir tous les champs obligatoires (prénom, nom, pseudo, email, mot de passe).",
       });
     }
 
@@ -40,9 +60,20 @@ export const register = async (req, res) => {
       });
     }
 
+    const existingPseudo = await Utilisateur.findOne({
+      pseudo: new RegExp(`^${pseudo.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i"),
+    });
+    if (existingPseudo) {
+      return res.status(400).json({
+        success: false,
+        message: "Ce pseudo est déjà utilisé.",
+      });
+    }
+
     const user = await Utilisateur.create({
       prenom,
       nom,
+      pseudo,
       email: email.toLowerCase(),
       motDePasse,
       telephone,
@@ -57,16 +88,13 @@ export const register = async (req, res) => {
       emailVerifie: false,
     });
 
-    // Créer le token de vérification email
     const emailVerificationToken = crypto.randomBytes(32).toString("hex");
     user.tokenVerificationEmail = emailVerificationToken;
-    user.tokenVerificationEmailExpire = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 jours
+    user.tokenVerificationEmailExpire = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     await user.save({ validateBeforeSave: false });
 
-    // Construire l'URL de validation
     const validationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${emailVerificationToken}&email=${encodeURIComponent(email)}`;
 
-    // Envoyer l'email de bienvenue (non bloquant)
     try {
       await sendWelcomeEmail({
         email: user.email,
@@ -75,7 +103,6 @@ export const register = async (req, res) => {
       });
     } catch (emailError) {
       console.error("Erreur envoi email de bienvenue:", emailError.message);
-      // Continue sans bloquer l'inscription
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -88,15 +115,24 @@ export const register = async (req, res) => {
         "Inscription réussie. Votre compte est en attente de validation par un administrateur.",
       token,
       user: {
-        id: user._id,
-        prenom: user.prenom,
-        nom: user.nom,
-        email: user.email,
-        role: user.role,
-        statutValidationAdmin: user.statutValidationAdmin,
+        ...buildAuthUserPayload(user),
       },
     });
   } catch (error) {
+    if (error?.code === 11000 && error?.keyPattern?.pseudo) {
+      return res.status(400).json({
+        success: false,
+        message: "Ce pseudo est déjà utilisé.",
+      });
+    }
+
+    if (error?.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: error.message,
@@ -155,13 +191,7 @@ export const login = async (req, res) => {
       message: "Connexion réussie.",
       token,
       user: {
-        id: user._id,
-        prenom: user.prenom,
-        nom: user.nom,
-        email: user.email,
-        role: user.role,
-        statutValidationAdmin: user.statutValidationAdmin,
-        niveauPole: user.niveauPole,
+        ...buildAuthUserPayload(user),
       },
     });
   } catch (error) {
@@ -189,20 +219,13 @@ export const getMe = async (req, res) => {
     res.status(200).json({
       success: true,
       user: {
-        id: user.id,
-        prenom: user.prenom,
-        nom: user.nom,
-        email: user.email,
+        ...buildAuthUserPayload(user),
         telephone: user.telephone,
         dateNaissance: user.dateNaissance,
-        niveauPole: user.niveauPole,
         accepteContact: user.accepteContact,
-        role: user.role,
-        statutValidationAdmin: user.statutValidationAdmin,
-        photoUrl: user.photoUrl,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
-        
+
         forfaitsActifs: user.forfaitsActifs || [],
         abonnementActif: user.abonnementActif || null,
         nombreCoursReserves: user.nombreCoursReserves || 0,
@@ -220,8 +243,7 @@ export const getMe = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const fieldsToUpdate = {
-      prenom: req.body.prenom,
-      nom: req.body.nom,
+      pseudo: req.body.pseudo,
       telephone: req.body.telephone,
       dateNaissance: req.body.dateNaissance,
       niveauPole: req.body.niveauPole,
@@ -247,9 +269,30 @@ export const updateProfile = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Profil mis à jour avec succès.",
-      user,
+      user: {
+        ...buildAuthUserPayload(user),
+        telephone: user.telephone,
+        dateNaissance: user.dateNaissance,
+        accepteContact: user.accepteContact,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
     });
   } catch (error) {
+    if (error?.code === 11000 && error?.keyPattern?.pseudo) {
+      return res.status(400).json({
+        success: false,
+        message: "Ce pseudo est déjà utilisé.",
+      });
+    }
+
+    if (error?.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: error.message,
@@ -298,13 +341,7 @@ export const uploadPhoto = async (req, res) => {
       success: true,
       message: "Photo de profil mise à jour avec succès",
       user: {
-        id: user._id,
-        prenom: user.prenom,
-        nom: user.nom,
-        email: user.email,
-        role: user.role,
-        photoUrl: user.photoUrl,
-        niveauPole: user.niveauPole,
+        ...buildAuthUserPayload(user),
       },
     });
   } catch (error) {

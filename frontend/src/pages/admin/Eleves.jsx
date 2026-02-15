@@ -239,7 +239,7 @@ export default function Eleves() {
 
   const filteredUsers = useMemo(() => {
     return utilisateurs.filter((user) =>
-      `${user.prenom} ${user.nom} ${user.email}`
+      `${user.pseudo || ""} ${user.prenom} ${user.nom} ${user.email}`
         .toLowerCase()
         .includes(searchTerm.toLowerCase()),
     );

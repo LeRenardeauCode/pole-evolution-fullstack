@@ -14,7 +14,7 @@ export default function ElevesFilters({ searchTerm, onSearchChange }) {
           label="Rechercher un élève"
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Nom, prénom ou email..."
+          placeholder="Pseudo, nom, prénom ou email..."
           sx={fieldMb}
         />
         <Typography variant="body2" color="text.secondary">

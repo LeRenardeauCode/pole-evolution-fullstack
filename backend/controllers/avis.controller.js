@@ -12,7 +12,7 @@ export const getAvisPublics = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const avis = await Avis.find(query)
-      .populate("utilisateur", "prenom nom")
+      .populate("utilisateur", "pseudo")
       .populate("cours", "nom type niveau dateDebut")
       .sort({ datePublication: -1 })
       .limit(parseInt(limit))
@@ -43,7 +43,7 @@ export const getAvisCours = async (req, res) => {
       statut: "approuve",
       estPublic: true,
     })
-      .populate("utilisateur", "prenom nom")
+      .populate("utilisateur", "pseudo")
       .sort({ datePublication: -1 });
 
     const noteMoyenne =
@@ -148,13 +148,13 @@ export const createAvis = async (req, res) => {
     await Notification.creer({
       type: "nouvel_avis_admin",
       titre: "Nouvel avis à valider",
-      message: `${req.user.prenom} ${req.user.nom} a laissé un avis (${note}/5) pour "${cours.nom}"`,
+      message: `${req.user.pseudo || "Un membre"} a laissé un avis (${note}/5) pour "${cours.nom}"`,
       priorite: "basse",
       utilisateurId: null,
     });
 
     const avisComplet = await Avis.findById(avis._id)
-      .populate("utilisateur", "prenom nom")
+      .populate("utilisateur", "pseudo")
       .populate("cours", "nom type");
 
     res.status(201).json({
@@ -205,7 +205,7 @@ export const updateAvis = async (req, res) => {
       new: true,
       runValidators: true,
     })
-      .populate("utilisateur", "prenom nom")
+      .populate("utilisateur", "pseudo")
       .populate("cours", "nom type");
 
     res.status(200).json({

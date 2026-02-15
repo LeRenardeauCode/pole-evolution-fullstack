@@ -253,10 +253,9 @@ const ReviewsSection = () => {
               <Box
                 sx={{
                   position: "relative",
-                  height: { xs: "auto", md: "300px" },
+                  overflow: "hidden",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
                 }}
               >
                 {/* Previous Button */}
@@ -277,107 +276,106 @@ const ReviewsSection = () => {
                 </IconButton>
 
                 {/* Avis Cards */}
-                <Grid container spacing={4} justifyContent="center" sx={{ px: { xs: 2, md: 8 } }}>
-                  {avis.map((avisItem, index) => {
-                    const offset = index - currentSlide;
-                    const isActive = index === currentSlide;
-                    const isVisible = Math.abs(offset) <= 1;
-
-                    return (
-                      <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        md={4}
-                        key={avisItem._id}
+                <Box
+                  sx={{
+                    width: "100%",
+                    px: { xs: 2, md: 8 },
+                    display: "flex",
+                    transition: "transform 0.35s ease",
+                    transform: `translateX(-${currentSlide * 100}%)`,
+                  }}
+                >
+                  {avis.map((avisItem) => (
+                    <Box
+                      key={avisItem._id}
+                      sx={{
+                        minWidth: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Card
                         sx={{
-                          opacity: isVisible ? (isActive ? 1 : 0.5) : 0,
-                          transform: isActive ? "scale(1)" : "scale(0.95)",
-                          transition: "all 0.3s ease",
-                          display: isVisible ? "block" : "none",
+                          width: { xs: "100%", sm: 360 },
+                          maxWidth: 420,
+                          aspectRatio: "1 / 1",
+                          display: "flex",
+                          flexDirection: "column",
+                          borderRadius: 3,
+                          background: "white",
+                          boxShadow: 4,
+                          transition: "transform 0.3s, box-shadow 0.3s",
+                          "&:hover": {
+                            transform: "translateY(-8px)",
+                            boxShadow: 8,
+                          },
                         }}
                       >
-                        <Card
+                        <CardContent
                           sx={{
-                            height: { xs: "320px", sm: "350px", md: "280px" },
+                            p: 3,
                             display: "flex",
                             flexDirection: "column",
-                            borderRadius: 3,
-                            background: "white",
-                            boxShadow: 4,
-                            transition: "transform 0.3s, box-shadow 0.3s",
-                            "&:hover": {
-                              transform: "translateY(-8px)",
-                              boxShadow: 8,
-                            },
+                            height: "100%",
+                            justifyContent: "space-between",
                           }}
                         >
-                          <CardContent
-                            sx={{
-                              p: 3,
-                              display: "flex",
-                              flexDirection: "column",
-                              height: "100%",
-                              justifyContent: "space-between",
-                            }}
-                          >
-                            <Box>
-                              <Stack
-                                direction="row"
-                                spacing={2}
-                                alignItems="center"
-                                sx={{ mb: 2 }}
-                              >
-                                <Avatar
-                                  src={avisItem.utilisateur?.photoEleve}
-                                  alt={avisItem.utilisateur?.prenom}
-                                  sx={{
-                                    width: 48,
-                                    height: 48,
-                                    background: (theme) =>
-                                      theme.palette.gradient.avatar,
-                                  }}
-                                >
-                                  {avisItem.utilisateur?.prenom
-                                    ?.charAt(0)
-                                    .toUpperCase()}
-                                </Avatar>
-
-                                <Box sx={{ flex: 1 }}>
-                                  <Typography
-                                    variant="subtitle1"
-                                    sx={{ fontWeight: 600, mb: 0.5 }}
-                                  >
-                                    {avisItem.utilisateur?.prenom || "Élève"}
-                                  </Typography>
-                                  <Stack direction="row" spacing={0.3}>
-                                    {renderStars(avisItem.note)}
-                                  </Stack>
-                                </Box>
-                              </Stack>
-
-                              <Typography
-                                variant="body2"
+                          <Box>
+                            <Stack
+                              direction="row"
+                              spacing={2}
+                              alignItems="center"
+                              sx={{ mb: 2 }}
+                            >
+                              <Avatar
+                                src={avisItem.utilisateur?.photoEleve}
+                                alt={avisItem.utilisateur?.pseudo}
                                 sx={{
-                                  color: "text.secondary",
-                                  fontStyle: "italic",
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                  display: "-webkit-box",
-                                  WebkitLineClamp: 6,
-                                  WebkitBoxOrient: "vertical",
-                                  lineHeight: 1.6,
+                                  width: 48,
+                                  height: 48,
+                                  background: (theme) =>
+                                    theme.palette.gradient.avatar,
                                 }}
                               >
-                                "{avisItem.commentaire}"
-                              </Typography>
-                            </Box>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    );
-                  })}
-                </Grid>
+                                {avisItem.utilisateur?.pseudo
+                                  ?.charAt(0)
+                                  .toUpperCase()}
+                              </Avatar>
+
+                              <Box sx={{ flex: 1 }}>
+                                <Typography
+                                  variant="subtitle1"
+                                  sx={{ fontWeight: 600, mb: 0.5 }}
+                                >
+                                  {avisItem.utilisateur?.pseudo || "Élève"}
+                                </Typography>
+                                <Stack direction="row" spacing={0.3}>
+                                  {renderStars(avisItem.note)}
+                                </Stack>
+                              </Box>
+                            </Stack>
+
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: "text.secondary",
+                                fontStyle: "italic",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                display: "-webkit-box",
+                                WebkitLineClamp: 6,
+                                WebkitBoxOrient: "vertical",
+                                lineHeight: 1.6,
+                              }}
+                            >
+                              "{avisItem.commentaire}"
+                            </Typography>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    </Box>
+                  ))}
+                </Box>
 
                 {/* Next Button */}
                 <IconButton

@@ -3,6 +3,34 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import validator from "validator";
 
+const PSEUDO_BLACKLIST = [
+  "admin",
+  "administrateur",
+  "moderateur",
+  "moderator",
+  "support",
+  "contact",
+  "root",
+  "staff",
+  "poleevolution",
+  "officiel",
+];
+
+const normalizePseudo = (value) =>
+  value
+    .toLowerCase()
+    .replace(/[\s._-]+/g, "")
+    .trim();
+
+const pseudoAllowedPattern = /^[a-zA-Z0-9._-]+$/;
+
+const isPseudoAllowed = (value) => {
+  if (!value) return false;
+  if (!pseudoAllowedPattern.test(value)) return false;
+  const normalized = normalizePseudo(value);
+  return !PSEUDO_BLACKLIST.some((word) => normalized.includes(word));
+};
+
 const utilisateurSchema = new mongoose.Schema(
   {
     prenom: {
@@ -23,12 +51,21 @@ const utilisateurSchema = new mongoose.Schema(
 
     pseudo: {
       type: String,
-      required: false,
+      required: [true, "Le pseudo est obligatoire"],
       unique: true,
-      sparse: true,
       trim: true,
       minlength: [3, "Le pseudo doit contenir au moins 3 caractères"],
       maxlength: [20, "Le pseudo ne peut pas dépasser 20 caractères"],
+      validate: {
+        validator: function (value) {
+          if (this.role === "admin") {
+            return pseudoAllowedPattern.test(value);
+          }
+          return isPseudoAllowed(value);
+        },
+        message:
+          "Le pseudo contient des caractères non autorisés ou un terme interdit",
+      },
     },
 
     email: {

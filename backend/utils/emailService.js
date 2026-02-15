@@ -1,34 +1,35 @@
 import nodemailer from "nodemailer";
 
-// Configuration du transporter - supporte Gmail et SMTP custom
-const transportConfig = process.env.EMAIL_HOST && process.env.EMAIL_PORT
-  ? {
-      // Configuration SMTP custom
-      host: process.env.EMAIL_HOST,
-      port: parseInt(process.env.EMAIL_PORT),
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    }
-  : {
-      // Configuration service (Gmail, etc.)
-      service: process.env.EMAIL_SERVICE || "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    };
+let transporter = null;
 
-const transporter = nodemailer.createTransport(transportConfig);
+function getTransporter() {
+  if (!transporter) {
+    const transportConfig = process.env.EMAIL_HOST && process.env.EMAIL_PORT
+      ? {
+          host: process.env.EMAIL_HOST,
+          port: parseInt(process.env.EMAIL_PORT),
+          secure: parseInt(process.env.EMAIL_PORT) === 465,
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD,
+          },
+          tls: {
+            rejectUnauthorized: process.env.NODE_ENV === 'production'
+          }
+        }
+      : {
+          service: process.env.EMAIL_SERVICE || "gmail",
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD,
+          },
+        };
 
-/**
- * Envoyer un email de bienvenue avec lien de validation
- * @param {Object} options - Options pour l'email
- * @param {string} options.email - Adresse email du destinataire
- * @param {string} options.prenom - Prénom de l'utilisateur
- * @param {string} options.validationUrl - URL de validation email avec token
- */
+    transporter = nodemailer.createTransport(transportConfig);
+  }
+  return transporter;
+}
+
 export const sendWelcomeEmail = async ({ email, prenom, validationUrl }) => {
   const mailOptions = {
     from: `"Pôle Evolution" <${process.env.EMAIL_USER}>`,
@@ -53,8 +54,8 @@ export const sendWelcomeEmail = async ({ email, prenom, validationUrl }) => {
           </p>
 
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${validationUrl}" style="background: linear-gradient(135deg, #FF1966 0%, #D41173 100%); color: white; padding: 14px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; font-size: 16px;">
-              Valider mon email
+            <a href="${validationUrl}" style="background-color: #FF1966; color: white !important; padding: 14px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; font-size: 16px; mso-padding-alt: 0; text-align: center;">
+              <span style="color: white; text-decoration: none;">Valider mon email</span>
             </a>
           </div>
 
@@ -96,7 +97,7 @@ export const sendWelcomeEmail = async ({ email, prenom, validationUrl }) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await getTransporter().sendMail(mailOptions);
     return { success: true, message: "Email de bienvenue envoyé avec succès" };
   } catch (error) {
     console.error("Erreur lors de l'envoi de l'email de bienvenue:", error);
@@ -104,13 +105,6 @@ export const sendWelcomeEmail = async ({ email, prenom, validationUrl }) => {
   }
 };
 
-/**
- * Envoyer un email de réinitialisation de mot de passe
- * @param {Object} options - Options pour l'email
- * @param {string} options.email - Adresse email du destinataire
- * @param {string} options.prenom - Prénom de l'utilisateur
- * @param {string} options.resetUrl - URL de réinitialisation avec token
- */
 export const sendResetPasswordEmail = async ({ email, prenom, resetUrl }) => {
   const mailOptions = {
     from: `"Pôle Evolution" <${process.env.EMAIL_USER}>`,
@@ -136,8 +130,8 @@ export const sendResetPasswordEmail = async ({ email, prenom, resetUrl }) => {
           </p>
 
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${resetUrl}" style="background: linear-gradient(135deg, #FF1966 0%, #D41173 100%); color: white; padding: 14px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; font-size: 16px;">
-              Réinitialiser mon mot de passe
+            <a href="${resetUrl}" style="background-color: #FF1966; color: white !important; padding: 14px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; font-size: 16px;">
+              <span style="color: white; text-decoration: none;">Réinitialiser mon mot de passe</span>
             </a>
           </div>
 
@@ -183,7 +177,7 @@ export const sendResetPasswordEmail = async ({ email, prenom, resetUrl }) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await getTransporter().sendMail(mailOptions);
     return { success: true, message: "Email envoyé avec succès" };
   } catch (error) {
     console.error("Erreur lors de l'envoi de l'email:", error);
@@ -191,18 +185,8 @@ export const sendResetPasswordEmail = async ({ email, prenom, resetUrl }) => {
   }
 };
 
-/**
- * Envoyer une notification à l'admin lors d'un message de contact
- * @param {Object} options - Options pour l'email
- * @param {string} options.nom - Nom de l'expéditeur
- * @param {string} options.prenom - Prénom de l'expéditeur
- * @param {string} options.email - Email de l'expéditeur
- * @param {string} options.telephone - Téléphone de l'expéditeur
- * @param {string} options.sujet - Sujet du message
- * @param {string} options.message - Contenu du message
- */
 export const sendContactNotificationToAdmin = async ({ nom, prenom, email, telephone, sujet, message }) => {
-  const adminEmail = process.env.EMAIL_USER; // Admin reçoit sur l'email configuré
+  const adminEmail = process.env.EMAIL_USER;
   
   const mailOptions = {
     from: `"Notifications Pôle Evolution" <${process.env.EMAIL_USER}>`,
@@ -231,8 +215,8 @@ export const sendContactNotificationToAdmin = async ({ nom, prenom, email, telep
           </div>
 
           <div style="margin-top: 20px; text-align: center;">
-            <a href="mailto:${email}?subject=Re: ${encodeURIComponent(sujet)}" style="background: linear-gradient(135deg, #FF1966 0%, #D41173 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
-              Répondre à ${prenom || nom}
+            <a href="mailto:${email}?subject=Re: ${encodeURIComponent(sujet)}" style="background-color: #FF1966; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+              <span style="color: white; text-decoration: none;">Répondre à ${prenom || nom}</span>
             </a>
           </div>
         </div>
@@ -254,7 +238,7 @@ export const sendContactNotificationToAdmin = async ({ nom, prenom, email, telep
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await getTransporter().sendMail(mailOptions);
     return { success: true, message: "Notification admin envoyée" };
   } catch (error) {
     console.error("Erreur notification admin:", error);
@@ -262,13 +246,6 @@ export const sendContactNotificationToAdmin = async ({ nom, prenom, email, telep
   }
 };
 
-/**
- * Envoyer une confirmation à l'utilisateur après son message de contact
- * @param {Object} options - Options pour l'email
- * @param {string} options.email - Email de l'utilisateur
- * @param {string} options.prenom - Prénom de l'utilisateur
- * @param {string} options.nom - Nom de l'utilisateur
- */
 export const sendContactConfirmationToUser = async ({ email, prenom, nom }) => {
   const mailOptions = {
     from: `"Pôle Evolution" <${process.env.EMAIL_USER}>`,
@@ -331,7 +308,7 @@ export const sendContactConfirmationToUser = async ({ email, prenom, nom }) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await getTransporter().sendMail(mailOptions);
     return { success: true, message: "Email de confirmation envoyé" };
   } catch (error) {
     console.error("Erreur confirmation utilisateur:", error);
@@ -340,20 +317,6 @@ export const sendContactConfirmationToUser = async ({ email, prenom, nom }) => {
   }
 };
 
-/**
- * Envoyer une notification admin lors d'une réservation
- * @param {Object} options - Options pour l'email
- * @param {string} options.nomEleve - Nom de l'élève
- * @param {string} options.prenomEleve - Prénom de l'élève (optionnel)
- * @param {string} options.emailEleve - Email de l'élève
- * @param {string} options.telephoneEleve - Téléphone de l'élève (optionnel)
- * @param {string} options.niveauPole - Niveau pole dance
- * @param {string} options.nomCours - Nom du cours
- * @param {string} options.typeCours - Type du cours (decouverte, cours, etc.)
- * @param {Date} options.dateDebut - Date/heure début du cours
- * @param {number} options.montant - Montant de la réservation
- * @param {string} options.reservationId - ID de la réservation
- */
 export const sendReservationNotificationToAdmin = async ({
   nomEleve,
   prenomEleve,
@@ -404,8 +367,8 @@ export const sendReservationNotificationToAdmin = async ({
           </div>
 
           <div style="text-align: center; margin: 20px 0;">
-            <a href="${process.env.FRONTEND_URL}/admin/reservations/${reservationId}" style="background: linear-gradient(135deg, #FF1966 0%, #D41173 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
-              Voir la réservation
+            <a href="${process.env.FRONTEND_URL}/admin/reservations/${reservationId}" style="background-color: #FF1966; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+              <span style="color: white; text-decoration: none;">Voir la réservation</span>
             </a>
           </div>
         </div>
@@ -434,7 +397,7 @@ export const sendReservationNotificationToAdmin = async ({
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await getTransporter().sendMail(mailOptions);
     return { success: true, message: "Notification admin envoyée" };
   } catch (error) {
     console.error("Erreur notification réservation admin:", error);
@@ -442,16 +405,6 @@ export const sendReservationNotificationToAdmin = async ({
   }
 };
 
-/**
- * Envoyer une confirmation de réservation à l'élève
- * @param {Object} options - Options pour l'email
- * @param {string} options.nomEleve - Nom de l'élève
- * @param {string} options.prenomEleve - Prénom de l'élève
- * @param {string} options.emailEleve - Email de l'élève
- * @param {string} options.nomCours - Nom du cours
- * @param {Date} options.dateDebut - Date/heure début du cours
- * @param {string} options.lienValidation - Lien de validation (pour invités)
- */
 export const sendReservationConfirmationToUser = async ({
   nomEleve,
   prenomEleve,
@@ -492,8 +445,8 @@ export const sendReservationConfirmationToUser = async ({
           </p>
 
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${lienValidation}" style="background: linear-gradient(135deg, #FF1966 0%, #D41173 100%); color: white; padding: 14px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; font-size: 16px;">
-              Confirmer ma réservation
+            <a href="${lienValidation}" style="background-color: #FF1966; color: white !important; padding: 14px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; font-size: 16px;">
+              <span style="color: white; text-decoration: none;">Confirmer ma réservation</span>
             </a>
           </div>
 
@@ -557,7 +510,7 @@ export const sendReservationConfirmationToUser = async ({
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await getTransporter().sendMail(mailOptions);
     return { success: true, message: "Confirmation réservation envoyée" };
   } catch (error) {
     console.error("Erreur confirmation réservation:", error);

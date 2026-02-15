@@ -51,6 +51,9 @@ export default function ElevesTable({
                   <strong>Nom</strong>
                 </TableCell>
                 <TableCell>
+                  <strong>Pseudo</strong>
+                </TableCell>
+                <TableCell>
                   <strong>Email</strong>
                 </TableCell>
                 <TableCell>
@@ -76,7 +79,7 @@ export default function ElevesTable({
             <TableBody>
               {users.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={9} align="center">
+                  <TableCell colSpan={10} align="center">
                     Aucun utilisateur trouvé
                   </TableCell>
                 </TableRow>
@@ -91,6 +94,7 @@ export default function ElevesTable({
                     <TableRow key={user._id}>
                       <TableCell>{user.prenom}</TableCell>
                       <TableCell>{user.nom}</TableCell>
+                      <TableCell>{user.pseudo || "-"}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>
                         <Chip

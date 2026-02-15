@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Container, Typography, Alert, CircularProgress } from "@mui/material";
+import { useAuth } from "@hooks/useAuth";
 import authService from "@services/authService";
 import reservationService from "@services/reservationService";
 import {
@@ -19,6 +20,7 @@ import backgroundImg from "@assets/images/img_hero2.png";
 
 const MonCompte = () => {
   const navigate = useNavigate();
+  const { updateUser } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,8 +35,7 @@ const MonCompte = () => {
   const [userData, setUserData] = useState(null);
 
   const [formData, setFormData] = useState({
-    prenom: "",
-    nom: "",
+    pseudo: "",
     email: "",
     telephone: "",
     niveauPole: "",
@@ -59,8 +60,7 @@ const MonCompte = () => {
         setUserData(profileResponse.user);
 
         setFormData({
-          prenom: profileResponse.user.prenom || "",
-          nom: profileResponse.user.nom || "",
+          pseudo: profileResponse.user.pseudo || "",
           email: profileResponse.user.email || "",
           telephone: profileResponse.user.telephone || "",
           niveauPole: profileResponse.user.niveauPole || "",
@@ -157,6 +157,7 @@ const MonCompte = () => {
       const currentUser = JSON.parse(localStorage.getItem("user"));
       currentUser.photoUrl = response.user.photoUrl;
       localStorage.setItem("user", JSON.stringify(currentUser));
+      updateUser(currentUser);
 
       setSuccess("Photo de profil mise à jour avec succès !");
       setError(null);
@@ -172,8 +173,7 @@ const MonCompte = () => {
   const handleUpdateProfile = async () => {
     try {
       await authService.updateProfile({
-        prenom: formData.prenom,
-        nom: formData.nom,
+        pseudo: formData.pseudo,
         telephone: formData.telephone,
         niveauPole: formData.niveauPole,
       });

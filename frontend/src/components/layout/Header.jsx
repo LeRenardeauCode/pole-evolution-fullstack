@@ -33,29 +33,10 @@ const Header = () => {
   useEffect(() => {
     if (user?.photoUrl) {
       setProfilePhoto(user.photoUrl);
+    } else {
+      setProfilePhoto(null);
     }
-
-    const handleStorageChange = () => {
-      const updatedUser = JSON.parse(localStorage.getItem('user'));
-      if (updatedUser?.photoUrl) {
-        setProfilePhoto(updatedUser?.photoUrl);
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    const interval = setInterval(() => {
-      const currentUser = JSON.parse(localStorage.getItem('user'));
-      if (currentUser?.photoUrl && currentUser.photoUrl !== profilePhoto) {
-        setProfilePhoto(currentUser.photoUrl);
-      }
-    }, 1000);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      clearInterval(interval);
-    };
-  }, [user]); // ✅ Seulement 'user' dans les dépendances
+  }, [user?.photoUrl]); // ✅ Surveille uniquement user.photoUrl
 
   useEffect(() => {
     const handleScroll = () => {
@@ -186,13 +167,13 @@ const Header = () => {
                         boxShadow: scrolled ? 'none' : '0px 2px 8px rgba(0, 0, 0, 0.5)',
                       }}
                     >
-                      {!profilePhoto && user?.prenom?.charAt(0).toUpperCase()}
+                      {!profilePhoto && user?.pseudo?.charAt(0).toUpperCase()}
                     </Avatar>
                   </IconButton>
 
                   <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
                     <MenuItem disabled sx={{ fontWeight: 600 }}>
-                      {user?.prenom} {user?.nom}
+                      {user?.pseudo || "Compte"}
                     </MenuItem>
                     <MenuItem onClick={() => { handleMenuClose(); navigate('/mon-compte'); }}>
                       Mon compte

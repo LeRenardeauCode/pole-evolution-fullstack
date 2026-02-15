@@ -30,10 +30,7 @@ export default function MonCompteProfile({
   };
 
   const handlePhotoInputChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      onPhotoChange(file);
-    }
+    onPhotoChange(e);
   };
 
   return (
@@ -122,25 +119,15 @@ export default function MonCompteProfile({
             bgcolor: profilePhoto ? "transparent" : "primary.main",
           }}
         >
-          {!profilePhoto && (formData.prenom?.[0]?.toUpperCase() || "U")}
+          {!profilePhoto && (formData.pseudo?.[0]?.toUpperCase() || "U")}
         </Avatar>
       </Box>
 
       <TextField
         fullWidth
-        label="Prénom"
-        name="prenom"
-        value={formData.prenom}
-        onChange={(e) => onFormChange(e)}
-        variant="filled"
-        sx={textFieldWhiteBg}
-      />
-
-      <TextField
-        fullWidth
-        label="Nom"
-        name="nom"
-        value={formData.nom}
+        label="Pseudo"
+        name="pseudo"
+        value={formData.pseudo}
         onChange={(e) => onFormChange(e)}
         variant="filled"
         sx={textFieldWhiteBg}

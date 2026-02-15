@@ -48,6 +48,7 @@ const Register = () => {
   const [formData, setFormData] = useState({
     prenom: "",
     nom: "",
+    pseudo: "",
     email: "",
     motDePasse: "",
     confirmMotDePasse: "",
@@ -81,11 +82,18 @@ const Register = () => {
       if (
         !formData.prenom ||
         !formData.nom ||
+        !formData.pseudo ||
         !formData.email ||
         !formData.motDePasse ||
         !formData.confirmMotDePasse
       ) {
         setError("Veuillez remplir tous les champs obligatoires");
+        return;
+      }
+      if (!/^[a-zA-Z0-9._-]{3,20}$/.test(formData.pseudo)) {
+        setError(
+          "Le pseudo doit contenir 3 à 20 caractères (lettres, chiffres, . _ -)",
+        );
         return;
       }
       if (formData.motDePasse !== formData.confirmMotDePasse) {
@@ -144,6 +152,7 @@ const Register = () => {
       await authService.register({
         prenom: formData.prenom,
         nom: formData.nom,
+        pseudo: formData.pseudo,
         email: formData.email,
         motDePasse: formData.motDePasse,
         telephone: formData.telephone,
@@ -240,6 +249,17 @@ const Register = () => {
                 onChange={handleChange}
                 variant="outlined"
                 sx={textFieldWhite}
+              />
+
+              <TextField
+                fullWidth
+                label="Pseudo *"
+                name="pseudo"
+                value={formData.pseudo}
+                onChange={handleChange}
+                variant="outlined"
+                helperText="3 à 20 caractères (lettres, chiffres, . _ -)"
+                sx={textFieldWhiteHelper}
               />
 
               <TextField
@@ -425,7 +445,7 @@ const Register = () => {
 
               <Typography
                 component="a"
-                href="/conditions"
+                href="/mentions-legales"
                 target="_blank"
                 rel="noopener noreferrer"
                 sx={linkPrimary}
@@ -449,7 +469,7 @@ const Register = () => {
 
               <Typography
                 component="a"
-                href="/reglement"
+                href="/reglement-interieur"
                 target="_blank"
                 rel="noopener noreferrer"
                 sx={{ ...linkPrimary, mb: 4 }}
