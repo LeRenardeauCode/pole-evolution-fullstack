@@ -30,12 +30,12 @@ const ShowAnimations = lazy(() => import('@pages/ShowAnimations'));
 const Galerie = lazy(() => import('@pages/Galerie'));
 
 // Admin pages (lazy-loading)
-const AdminLayout = lazy(() => import('@pages/Admin/AdminLayout'));
-const CoursPlanning = lazy(() => import('@pages/Admin/CoursPlanning'));
-const Eleves = lazy(() => import('@pages/Admin/Eleves'));
-const TarifsContenu = lazy(() => import('@pages/Admin/TarifsContenu'));
-const NotificationsPage = lazy(() => import('@pages/Admin/Notifications'));
-const Parametres = lazy(() => import('@pages/Admin/Parametres'));
+const AdminLayout = lazy(() => import('@pages/admin/AdminLayout'));
+const CoursPlanning = lazy(() => import('@pages/admin/CoursPlanning'));
+const Eleves = lazy(() => import('@pages/admin/Eleves'));
+const TarifsContenu = lazy(() => import('@pages/admin/TarifsContenu'));
+const NotificationsPage = lazy(() => import('@pages/admin/Notifications'));
+const Parametres = lazy(() => import('@pages/admin/Parametres'));
 
 import theme from '@utils/theme';
 
