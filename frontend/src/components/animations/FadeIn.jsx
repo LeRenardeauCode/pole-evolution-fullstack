@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import { useInView, motion } from 'framer-motion';
 import { useRef } from 'react';
 

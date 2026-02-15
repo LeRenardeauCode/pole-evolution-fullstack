@@ -62,11 +62,7 @@ export default function NotificationBell() {
     return () => {
       mounted = false;
     };
-  }, []);
-
-  useEffect(() => {
-    loadNotifications();
-  }, []);
+  }, [loadNotifications]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

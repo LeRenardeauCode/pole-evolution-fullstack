@@ -80,6 +80,7 @@ const Footer = () => {
     };
 
     fetchFooterParams();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {

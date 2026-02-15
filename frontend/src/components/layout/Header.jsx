@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react';
 import {
   AppBar,
@@ -36,7 +37,7 @@ const Header = () => {
     } else {
       setProfilePhoto(null);
     }
-  }, [user?.photoUrl]); // ✅ Surveille uniquement user.photoUrl
+  }, [user?.photoUrl]);
 
   useEffect(() => {
     const handleScroll = () => {

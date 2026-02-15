@@ -41,7 +41,7 @@ api.interceptors.response.use(
       authService.logout();
       try {
         window.dispatchEvent(new CustomEvent('auth:logout'));
-      } catch (e) {
+      } catch {
         window.location.href = "/connexion";
       }
     }

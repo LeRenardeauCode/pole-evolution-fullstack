@@ -23,6 +23,7 @@ export const useCours = (currentDate, filters) => {
 
   useEffect(() => {
     fetchCours();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDate, type, niveau, placesDisponibles]);
 
   return { cours, loading, error, refetch: fetchCours };

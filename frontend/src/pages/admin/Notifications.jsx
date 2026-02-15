@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -44,12 +44,10 @@ import {
   updateParametre,
   getStatsMensuelles
 } from '@services/adminService';
-import notificationService from '@services/notificationService'; 
-import api from '@services/api';
+import notificationService from '@services/notificationService';
 
 export default function NotificationsPage() {
   const [avis, setAvis] = useState([]);
-  const [notifications, setNotifications] = useState([]); 
   const [loading, setLoading] = useState(false);
   const [notificationsActives, setNotificationsActives] = useState(true);
   const [statsData, setStatsData] = useState([]);
@@ -62,7 +60,7 @@ export default function NotificationsPage() {
 
     const fetchData = async () => {
       try {
-        const [avisRes, paramRes, notifsRes] = await Promise.all([
+        const [avisRes, paramRes] = await Promise.all([
           getAllAvis({ statut: 'en_attente' }),
           getParametreByKey('notificationsactives'),
           notificationService.getNotifications()
@@ -70,7 +68,6 @@ export default function NotificationsPage() {
 
         if (mounted) {
           setAvis(avisRes.data || []);
-          setNotifications(notifsRes.data || []);
           setNotificationsActives(paramRes.data?.valeur === 'true' || paramRes.data?.valeur === true);
         }
 
@@ -120,15 +117,7 @@ export default function NotificationsPage() {
     }
   };
 
-  // ← AJOUTE CETTE FONCTION
-  const loadNotifications = async () => {
-    try {
-      const response = await notificationService.getNotifications();
-      setNotifications(response.data || []);
-    } catch (err) {
-      console.error('Erreur:', err);
-    }
-  };
+
 
   const handleValiderAvis = async (id) => {
     setLoading(true);
