@@ -18,12 +18,12 @@ const PolitiqueCookies = () => {
 
   return (
     <>
-      <Box sx={{ py: 6, backgroundColor: '#f5f5f5', pt: 12 }}>
+      <Box sx={{ py: { xs: 4, md: 6 }, backgroundColor: '#f5f5f5', pt: { xs: 14, md: 16 } }}>
         <Container maxWidth="md">
           <Typography
             variant="h1"
             sx={{
-              fontSize: { xs: '2rem', md: '3rem' },
+              fontSize: { xs: '1.8rem', sm: '2.2rem', md: '3rem' },
               fontWeight: 800,
               color: 'primary.main',
               mb: 4,
@@ -33,7 +33,7 @@ const PolitiqueCookies = () => {
             Politique des Cookies
           </Typography>
 
-          <Box sx={{ backgroundColor: 'white', p: 4, borderRadius: 2, mb: 3 }}>
+          <Box sx={{ backgroundColor: 'white', p: { xs: 2, sm: 4 }, borderRadius: 2, mb: 3 }}>
             <Typography variant="h5" sx={{ fontWeight: 600, mt: 3, mb: 2 }}>
               1. Qu'est-ce qu'un Cookie ?
             </Typography>
@@ -156,23 +156,27 @@ const PolitiqueCookies = () => {
             zIndex: 1000,
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center',
+            alignItems: { xs: 'stretch', sm: 'center' },
+            flexDirection: { xs: 'column', sm: 'row' },
             gap: 2,
             flexWrap: 'wrap',
           }}
         >
-          <Typography variant="body2" sx={{ flex: 1, minWidth: '300px' }}>
+          <Typography
+            variant="body2"
+            sx={{ flex: 1, minWidth: 0, textAlign: { xs: 'left', sm: 'left' } }}
+          >
             Nous utilisons des cookies pour améliorer votre expérience. En continuant, vous acceptez notre politique des cookies.{' '}
             <Box component="a" href="/politique-cookies" sx={{ color: 'primary.main', textDecoration: 'underline', cursor: 'pointer' }}>
               En savoir plus
             </Box>
           </Typography>
-          <Box sx={{ display: 'flex', gap: 1 }}>
+          <Box sx={{ display: 'flex', gap: 1, width: { xs: '100%', sm: 'auto' } }}>
             <Button
               variant="outlined"
               size="small"
               onClick={handleDecline}
-              sx={{ color: 'white', borderColor: 'white' }}
+              sx={{ color: 'white', borderColor: 'white', width: { xs: '100%', sm: 'auto' } }}
             >
               Refuser
             </Button>
@@ -180,7 +184,7 @@ const PolitiqueCookies = () => {
               variant="contained"
               size="small"
               onClick={handleAccept}
-              sx={{ backgroundColor: 'primary.main' }}
+              sx={{ backgroundColor: 'primary.main', width: { xs: '100%', sm: 'auto' } }}
             >
               Accepter
             </Button>

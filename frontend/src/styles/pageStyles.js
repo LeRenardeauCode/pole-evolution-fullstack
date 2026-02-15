@@ -22,7 +22,11 @@ export const bodyMb1 = { mb: 1 };
 export const bodyMb3 = { mb: 3 };
 export const dialogActionsPadding = { p: 2 };
 
-export const layoutFullHeight = { display: 'flex', minHeight: '110vh' };
+export const layoutFullHeight = {
+  display: 'flex',
+  minHeight: '110vh',
+  flexDirection: { xs: 'column', md: 'row' },
+};
 export const leftPanel = {
   flex: { xs: '0 0 100%', md: '0 0 30%' },
   background:
@@ -31,10 +35,10 @@ export const leftPanel = {
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  p: 4,
+  p: { xs: 3, md: 4 },
 };
-export const logoImg = { width: 300, height: 'auto', mb: 3 };
-export const titleH3 = { fontSize: '2.5rem', fontWeight: 800, color: 'white', textAlign: 'center' };
+export const logoImg = { width: { xs: 220, sm: 260, md: 300 }, height: 'auto', mb: 3 };
+export const titleH3 = { fontSize: { xs: '2rem', sm: '2.3rem', md: '2.5rem' }, fontWeight: 800, color: 'white', textAlign: 'center' };
 export const subtitlePrimary = { fontSize: '1.2rem', fontWeight: 600, color: 'primary.main', textAlign: 'center', mt: 2 };
 export const rightPanel = { flex: 1, backgroundColor: '#100249', display: 'flex', alignItems: 'center', justifyContent: 'center', p: { xs: 3, md: 6 } };
 
@@ -51,17 +55,25 @@ export const primaryButtonDisabled = { '&:disabled': { borderColor: 'grey.500', 
 export const fullWidthButtonPx = { px: 4, width: { xs: '100%', sm: 'auto' } };
 
 export const loadingContainer = { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' };
-export const monCompteLayout = { display: 'flex', minHeight: '100vh' };
+export const monCompteLayout = {
+  display: 'flex',
+  minHeight: '100vh',
+  flexDirection: { xs: 'column', lg: 'row' },
+};
 export const monCompteSidebar = { flex: '0 0 20%', backgroundSize: 'cover', backgroundPosition: 'center', display: { xs: 'none', md: 'block' } };
-export const monCompteMainPanel = { flex: 1, p: { xs: 3, md: 12 } };
-export const monCompteTitle = { fontSize: { xs: '2rem', md: '3rem' }, fontWeight: 800, color: 'white', mb: 6 };
+export const monCompteMainPanel = { flex: 1, p: { xs: 2, sm: 3, md: 12 } };
+export const monCompteTitle = { fontSize: { xs: '1.8rem', sm: '2rem', md: '3rem' }, fontWeight: 800, color: 'white', mb: { xs: 4, md: 6 } };
 
 // MonCompte variant with background used in MonCompte.jsx
-export const monCompteMainPanelBg = { ...monCompteMainPanel, background: 'radial-gradient(circle, #C3135F 0%, #FF1966 0%, #870E58 0%, #4C0850 69%, #574A78 100%)' };
+export const monCompteMainPanelBg = {
+  ...monCompteMainPanel,
+  background: 'radial-gradient(circle, #C3135F 0%, #FF1966 0%, #870E58 0%, #4C0850 69%, #574A78 100%)',
+  pt: { xs: 12, md: 14 },
+};
 
 export const textFieldWhiteBg = { mb: 3, bgcolor: 'white' };
 export const textFieldMb4White = { mb: 4, bgcolor: 'white' };
-export const avatarProfile = { width: 80, height: 80, fontSize: '2rem', ml: 'auto' };
+export const avatarProfile = { width: 80, height: 80, fontSize: '2rem', ml: { xs: 0, sm: 'auto' } };
 export const buttonSaveProfile = { backgroundColor: 'navy.main', border: 1, borderColor: 'primary.main', color: 'white', py: 1.5, fontSize: '1rem', fontWeight: 600, textTransform: 'uppercase', mb: 4, '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)' } };
 
 export const badgeSuccess = { bgcolor: 'rgba(76, 175, 80, 0.1)', border: '2px solid #4CAF50', p: 2, borderRadius: 1 };

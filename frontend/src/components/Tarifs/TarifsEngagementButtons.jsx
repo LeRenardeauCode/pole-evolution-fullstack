@@ -22,15 +22,16 @@ export default function TarifsEngagementButtons({
           }
           size="large"
           sx={{
-            px: 5,
+            px: { xs: 3, sm: 5 },
             py: 1.5,
-            fontSize: "1.1rem",
+            fontSize: { xs: "1rem", sm: "1.1rem" },
             fontWeight: 600,
             textTransform: "none",
             borderRadius: 1,
             borderWidth: 2,
             borderColor: "white",
             color: "white",
+            width: { xs: "100%", sm: "auto" },
             backgroundColor:
               typeEngagement === "sansengagement"
                 ? "navy.main"
@@ -55,15 +56,16 @@ export default function TarifsEngagementButtons({
           }
           size="large"
           sx={{
-            px: 5,
+            px: { xs: 3, sm: 5 },
             py: 1.5,
-            fontSize: "1.1rem",
+            fontSize: { xs: "1rem", sm: "1.1rem" },
             fontWeight: 600,
             textTransform: "none",
             borderRadius: 1,
             borderWidth: 2,
             borderColor: "white",
             color: "white",
+            width: { xs: "100%", sm: "auto" },
             backgroundColor:
               typeEngagement === "engagement12mois"
                 ? "navy.main"

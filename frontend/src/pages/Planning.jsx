@@ -60,7 +60,7 @@ const Planning = () => {
             variant="h1"
             sx={{
               fontWeight: "bold",
-              fontSize: { xs: "2.5rem", md: "4rem" },
+              fontSize: { xs: "2rem", sm: "2.6rem", md: "4rem" },
               mb: 2,
             }}
           >
@@ -69,7 +69,10 @@ const Planning = () => {
               RÉSERVATION
             </Box>
           </Typography>
-          <Typography variant="h5" sx={{ fontWeight: 300 }}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: 300, fontSize: { xs: "1.1rem", sm: "1.25rem" } }}
+          >
             Réservez vos cours collectifs et découverte
           </Typography>
           <Typography variant="body1" sx={{ mt: 1, opacity: 0.9 }}>

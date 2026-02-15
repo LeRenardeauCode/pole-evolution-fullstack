@@ -56,7 +56,7 @@ const CalendarView = ({ cours, onReservationSuccess, currentDate }) => {
           lg: 'repeat(7, 1fr)'
         },
         gap: 2,
-        minHeight: 400
+        minHeight: { xs: 320, sm: 360, md: 400 }
       }}>
         {joursSemaine.map((jour) => {
           const coursDuJour = getCoursPourJour(jour);
@@ -72,7 +72,7 @@ const CalendarView = ({ cours, onReservationSuccess, currentDate }) => {
                 border: isToday ? '2px solid #8B5CF6' : '1px solid #E0E0E0',
                 borderRadius: 2,
                 overflow: 'hidden',
-                minHeight: 400
+                minHeight: { xs: 320, sm: 360, md: 400 }
               }}
             >
               <Box sx={{ 
@@ -96,7 +96,10 @@ const CalendarView = ({ cours, onReservationSuccess, currentDate }) => {
                 <Typography 
                   variant="h5" 
                   fontWeight="bold"
-                  sx={{ color: isToday ? 'white' : 'text.primary' }}
+                  sx={{
+                    color: isToday ? 'white' : 'text.primary',
+                    fontSize: { xs: '1.2rem', sm: '1.4rem' }
+                  }}
                 >
                   {format(jour, 'd', { locale: fr })}
                 </Typography>

@@ -23,14 +23,15 @@ const WeekNavigator = ({ currentDate, onDateChange }) => {
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center',
-      gap: 2,
-      mb: 3 
+      gap: { xs: 1.5, sm: 2 },
+      mb: 3,
+      flexDirection: { xs: 'column', sm: 'row' }
     }}>
       <IconButton onClick={handlePrevWeek} size="large" aria-label="Semaine précédente">
         <ChevronLeft />
       </IconButton>
 
-      <Box sx={{ textAlign: 'center', minWidth: '300px' }}>
+      <Box sx={{ textAlign: 'center', minWidth: { xs: 'auto', sm: '300px' } }}>
         <Typography variant="h6" fontWeight="bold">
           {formatDate(weekRange.debut, 'dd MMM')} - {formatDate(weekRange.fin, 'dd MMM yyyy')}
         </Typography>

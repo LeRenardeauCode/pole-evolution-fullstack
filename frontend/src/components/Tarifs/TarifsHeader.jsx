@@ -7,7 +7,7 @@ export default function TarifsHeader() {
         variant="h1"
         sx={{
           fontWeight: 700,
-          fontSize: { xs: "3rem", md: "5rem" },
+          fontSize: { xs: "2.2rem", sm: "3rem", md: "5rem" },
           mb: 3,
           textAlign: "center",
           color: "white",
@@ -28,6 +28,7 @@ export default function TarifsHeader() {
           px: 2,
           mb: 6,
           lineHeight: 1.6,
+          fontSize: { xs: "1rem", sm: "1.1rem" },
         }}
       >
         Des tarifs accessibles pour vous permettre de pratiquer en toute

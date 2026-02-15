@@ -77,7 +77,7 @@ const Login = () => {
           <Typography
             variant="h2"
             sx={{
-              fontSize: { xs: '2.5rem', md: '3rem' },
+              fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
               fontWeight: 800,
               color: 'white',
               textAlign: 'center',
@@ -92,7 +92,7 @@ const Login = () => {
               width: '100%',
               backgroundColor: 'navy.main',
               borderRadius: 0,
-              p: { xs: 4, md: 2 },
+              p: { xs: 3, sm: 4, md: 2 },
               border: 1,
               borderColor: 'white',
             }}
@@ -102,7 +102,7 @@ const Login = () => {
               src={logo}
               alt="Pole Evolution"
               sx={{
-                width: 180,
+                width: { xs: 140, sm: 180 },
                 height: 'auto',
                 display: 'block',
                 mx: 'auto',
@@ -202,7 +202,7 @@ const Login = () => {
                   borderRadius: 1,
                   color: 'white',
                   py: 1.5,
-                  fontSize: '1.1rem',
+                  fontSize: { xs: '1rem', sm: '1.1rem' },
                   fontWeight: 600,
                   textTransform: 'uppercase',
                   mb: 2,
@@ -227,7 +227,7 @@ const Login = () => {
                   borderRadius: 1,
                   color: 'white',
                   py: 1.5,
-                  fontSize: '1rem',
+                  fontSize: { xs: '0.95rem', sm: '1rem' },
                   fontWeight: 600,
                   textTransform: 'uppercase',
                   '&:hover': {

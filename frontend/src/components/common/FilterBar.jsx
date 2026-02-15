@@ -21,7 +21,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
       flexWrap: 'wrap',
       justifyContent: { xs: 'center', md: 'flex-start' }
     }}>
-      <FormControl sx={{ minWidth: 180 }} size="small">
+      <FormControl sx={{ minWidth: { xs: '100%', sm: 180 } }} size="small">
         <InputLabel id="type-label">Type de cours</InputLabel>
         <Select
           labelId="type-label"
@@ -36,7 +36,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
         </Select>
       </FormControl>
 
-      <FormControl sx={{ minWidth: 180 }} size="small">
+      <FormControl sx={{ minWidth: { xs: '100%', sm: 180 } }} size="small">
         <InputLabel id="niveau-label">Niveau</InputLabel>
         <Select
           labelId="niveau-label"
@@ -59,6 +59,7 @@ const FilterBar = ({ filters, onFilterChange }) => {
         variant={filters.placesDisponibles ? 'filled' : 'outlined'}
         sx={{ 
           height: 40,
+          width: { xs: '100%', sm: 'auto' },
           cursor: 'pointer',
           '&:hover': {
             transform: 'scale(1.05)',

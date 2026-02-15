@@ -18,10 +18,10 @@ const Cours = () => {
             backgroundImage: `url(${heroCoursImage})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            height: { xs: "850px", md: "1050px" },
+            height: { xs: "700px", sm: "800px", md: "1050px" },
             display: "flex",
             alignItems: "flex-start",
-            paddingTop: "200px",
+            paddingTop: { xs: "140px", sm: "180px", md: "200px" },
             justifyContent: "center",
             position: "relative",
             "&::before": {
@@ -43,8 +43,9 @@ const Cours = () => {
               zIndex: 20,
               fontWeight: "bold",
               textAlign: "center",
-              fontSize: { xs: "3rem", md: "5rem" },
+              fontSize: { xs: "2.2rem", sm: "3rem", md: "5rem" },
               position: "relative",
+              lineHeight: { xs: 1.1, sm: 1.15 },
             }}
           >
             LES{" "}
@@ -56,7 +57,7 @@ const Cours = () => {
         <Container
           sx={{
             position: "absolute",
-            bottom: { xs: "140px", md: "180px" },
+            bottom: { xs: "110px", sm: "140px", md: "180px" },
             left: "50%",
             transform: "translateX(-50%)",
             width: "100%",
@@ -66,7 +67,7 @@ const Cours = () => {
         >
           <Grid
             container
-            spacing={10}
+            spacing={{ xs: 4, sm: 6, md: 10 }}
             justifyContent="center"
             alignItems="stretch"
           >
@@ -90,7 +91,7 @@ const Cours = () => {
         <Box
           sx={{
             position: "absolute",
-            bottom: { xs: "60px", md: "80px" },
+            bottom: { xs: "30px", sm: "50px", md: "80px" },
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 10,
@@ -101,12 +102,13 @@ const Cours = () => {
             size="large"
             onClick={() => navigate("/planning")}
             sx={{
-              px: 6,
-              py: 2,
-              fontSize: "1.1rem",
+              px: { xs: 4, sm: 6 },
+              py: { xs: 1.5, sm: 2 },
+              fontSize: { xs: "1rem", sm: "1.1rem" },
               fontWeight: "bold",
               borderRadius: "12px",
               background: (theme) => theme.palette.navy.main,
+              width: { xs: "90vw", sm: "auto" },
               transition: "all 0.3s ease",
               "&:hover": {
                 transform: "translateY(-2px)",

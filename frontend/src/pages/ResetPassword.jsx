@@ -75,13 +75,26 @@ const ResetPassword = () => {
   };
 
   return (
-    <Box sx={{ py: 14, background: 'radial-gradient(circle, #C3135F 0%, #FF1966 0%, #870E58 0%, #4C0850 69%, #574A78 100%)', minHeight: '100vh' }}>
+    <Box
+      sx={{
+        py: { xs: 10, md: 14 },
+        background: 'radial-gradient(circle, #C3135F 0%, #FF1966 0%, #870E58 0%, #4C0850 69%, #574A78 100%)',
+        minHeight: '100vh',
+      }}
+    >
       <Container maxWidth="sm">
-        <Box sx={{ backgroundColor: 'white', p: 4, borderRadius: 2, boxShadow: 2 }}>
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            p: { xs: 3, sm: 4 },
+            borderRadius: 2,
+            boxShadow: 2,
+          }}
+        >
           <Typography
             variant="h2"
             sx={{
-              fontSize: '2rem',
+              fontSize: { xs: '1.7rem', sm: '2rem' },
               fontWeight: 800,
               color: 'primary.main',
               mb: 4,

@@ -59,6 +59,8 @@ const HeroSection = () => {
               mb: 2,
               opacity: 0.9,
               color: (theme) => theme.palette.navy.main,
+              fontSize: { xs: '1.6rem', sm: '2rem', md: '2.2rem' },
+              lineHeight: { xs: 1.2, sm: 1.25 },
             }}
           >
             "Laisse tes rêves prendre de la hauteur"
@@ -71,6 +73,8 @@ const HeroSection = () => {
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '2px',
+              fontSize: { xs: '2.2rem', sm: '3rem', md: '3.8rem' },
+              lineHeight: { xs: 1.1, sm: 1.05 },
             }}
           >
             PÔLE ÉVOLUTION
@@ -82,6 +86,7 @@ const HeroSection = () => {
             sx={{
               mb: 4,
               opacity: 0.95,
+              fontSize: { xs: '1rem', sm: '1.1rem' },
             }}
           >
             Dépassez vos limites. Apprenez la Pole Dance à votre rythme
@@ -96,6 +101,7 @@ const HeroSection = () => {
               variant="contained"
               size="large"
               onClick={() => navigate('/planning')}
+              sx={{ width: { xs: '100%', sm: 'auto' } }}
             >
               Réserver
             </Button>
@@ -104,6 +110,7 @@ const HeroSection = () => {
               variant="outlined"
               size="large"
               onClick={() => navigate('/cours')}
+              sx={{ width: { xs: '100%', sm: 'auto' } }}
             >
               En savoir plus
             </Button>

@@ -278,7 +278,7 @@ const MonCompte = () => {
                 flex: 1,
                 backgroundColor: "navy.main",
                 borderRadius: 0,
-                p: 4,
+                p: { xs: 3, md: 4 },
               }}
             >
               <MonCompteProfile

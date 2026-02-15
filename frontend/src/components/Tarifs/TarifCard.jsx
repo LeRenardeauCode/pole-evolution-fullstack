@@ -12,7 +12,9 @@ const TarifCard = memo(function TarifCard({
       <Box
         sx={{
           height: "100%",
-          width: "300px",
+          width: "100%",
+          maxWidth: 320,
+          mx: "auto",
           display: "flex",
           flexDirection: "column",
           borderRadius: 0,

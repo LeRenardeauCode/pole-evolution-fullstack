@@ -23,14 +23,15 @@ export default function MonCompteCourses({
         flex: 1,
         backgroundColor: "navy.main",
         borderRadius: 0,
-        p: 4,
+        p: { xs: 3, md: 4 },
       }}
     >
       <Box
         sx={{
           display: "flex",
-          alignItems: "center",
-          gap: 3,
+          alignItems: { xs: "flex-start", sm: "center" },
+          flexDirection: { xs: "column", sm: "row" },
+          gap: { xs: 2, sm: 3 },
           mb: 4,
         }}
       >
@@ -61,7 +62,7 @@ export default function MonCompteCourses({
         <Typography
           variant="h4"
           sx={{
-            fontSize: "2rem",
+            fontSize: { xs: "1.6rem", sm: "2rem" },
             fontWeight: 700,
             color: "white",
           }}

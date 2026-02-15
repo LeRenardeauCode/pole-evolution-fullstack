@@ -279,12 +279,15 @@ const ReviewsSection = () => {
                 {/* Previous Button */}
                 <IconButton
                   onClick={handlePrevSlide}
+                  size="small"
                   sx={{
                     position: "absolute",
-                    left: 8,
+                    left: { xs: 4, sm: 8 },
                     top: "50%",
                     transform: "translateY(-50%)",
                     zIndex: 5,
+                    width: { xs: 32, sm: 40 },
+                    height: { xs: 32, sm: 40 },
                     color: "white",
                     backgroundColor: "rgba(0, 0, 0, 0.35)",
                     border: "1px solid rgba(255, 255, 255, 0.4)",
@@ -298,7 +301,7 @@ const ReviewsSection = () => {
                 <Box
                   sx={{
                     width: "100%",
-                    px: { xs: 6, md: 10 },
+                    px: { xs: 4, sm: 6, md: 10 },
                     display: "flex",
                     transition: "transform 0.35s ease",
                     transform: `translateX(-${currentSlide * (100 / slidesPerView)}%)`,
@@ -398,12 +401,15 @@ const ReviewsSection = () => {
                 {/* Next Button */}
                 <IconButton
                   onClick={handleNextSlide}
+                  size="small"
                   sx={{
                     position: "absolute",
-                    right: 8,
+                    right: { xs: 4, sm: 8 },
                     top: "50%",
                     transform: "translateY(-50%)",
                     zIndex: 5,
+                    width: { xs: 32, sm: 40 },
+                    height: { xs: 32, sm: 40 },
                     color: "white",
                     backgroundColor: "rgba(0, 0, 0, 0.35)",
                     border: "1px solid rgba(255, 255, 255, 0.4)",
@@ -428,7 +434,7 @@ const ReviewsSection = () => {
                     key={index}
                     onClick={() => setCurrentSlide(index)}
                     sx={{
-                      width: index === currentSlide ? 30 : 10,
+                      width: index === currentSlide ? { xs: 22, sm: 30 } : { xs: 8, sm: 10 },
                       height: 8,
                       borderRadius: 4,
                       backgroundColor:
@@ -560,7 +566,11 @@ const ReviewsSection = () => {
                 }}
               />
 
-              <Stack direction="row" spacing={1} justifyContent="center">
+              <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={1}
+                justifyContent="center"
+              >
                 <Button
                   variant="outlined"
                   onClick={() => {

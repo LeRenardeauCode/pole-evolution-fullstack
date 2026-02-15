@@ -17,7 +17,7 @@ const RéglementIntérieur = () => {
             variant="h1"
             sx={{
               fontWeight: 700,
-              fontSize: { xs: "2rem", md: "3rem" },
+              fontSize: { xs: "1.8rem", sm: "2.2rem", md: "3rem" },
               mb: 2,
               color: "white",
             }}
@@ -27,7 +27,7 @@ const RéglementIntérieur = () => {
           <Typography
             variant="body1"
             sx={{
-              fontSize: "1.1rem",
+              fontSize: { xs: "1rem", sm: "1.1rem" },
               color: "white",
               maxWidth: "600px",
               mx: "auto",
@@ -42,7 +42,7 @@ const RéglementIntérieur = () => {
           <Paper
             elevation={2}
             sx={{
-              p: 4,
+              p: { xs: 3, sm: 4 },
               bgcolor: "primary.light",
               color: "white",
               borderRadius: 2,
@@ -55,6 +55,7 @@ const RéglementIntérieur = () => {
               sx={{
                 fontWeight: 600,
                 mb: 2,
+                fontSize: { xs: "1.4rem", sm: "1.6rem" },
               }}
             >
               Règlement Intérieur - Partie 1
@@ -100,7 +101,7 @@ const RéglementIntérieur = () => {
           <Paper
             elevation={2}
             sx={{
-              p: 4,
+              p: { xs: 3, sm: 4 },
               bgcolor: "secondary.light",
               color: "white",
               borderRadius: 2,
@@ -113,6 +114,7 @@ const RéglementIntérieur = () => {
               sx={{
                 fontWeight: 600,
                 mb: 2,
+                fontSize: { xs: "1.4rem", sm: "1.6rem" },
               }}
             >
               Règlement Intérieur - Partie 2
@@ -158,7 +160,7 @@ const RéglementIntérieur = () => {
 
         <Paper
           sx={{
-            p: 4,
+            p: { xs: 3, sm: 4 },
             bgcolor: "warning.light",
             borderLeft: "4px solid",
             borderColor: "warning.main",

@@ -2,12 +2,12 @@ import { Box, Container, Typography } from '@mui/material';
 
 const PolitiqueConfidentialite = () => {
   return (
-    <Box sx={{ py: 6, backgroundColor: '#f5f5f5', pt: 12 }}>
+    <Box sx={{ py: { xs: 4, md: 6 }, backgroundColor: '#f5f5f5', pt: { xs: 14, md: 16 } }}>
       <Container maxWidth="md">
         <Typography
           variant="h1"
           sx={{
-            fontSize: { xs: '2rem', md: '3rem' },
+            fontSize: { xs: '1.8rem', sm: '2.2rem', md: '3rem' },
             fontWeight: 800,
             color: 'primary.main',
             mb: 4,
@@ -17,7 +17,7 @@ const PolitiqueConfidentialite = () => {
           Politique de Confidentialité
         </Typography>
 
-        <Box sx={{ backgroundColor: 'white', p: 4, borderRadius: 2, mb: 3 }}>
+        <Box sx={{ backgroundColor: 'white', p: { xs: 2, sm: 4 }, borderRadius: 2, mb: 3 }}>
           <Typography variant="h5" sx={{ fontWeight: 600, mt: 3, mb: 2 }}>
             1. Introduction
           </Typography>

@@ -55,11 +55,12 @@ const APropos = () => {
           <Typography
             variant="h1"
             sx={{
-              fontSize: { xs: '2.5rem', md: '4rem', lg: '5rem' },
+              fontSize: { xs: '2rem', sm: '2.6rem', md: '4rem', lg: '5rem' },
               fontWeight: 800,
               color: 'white',
               mb: 2,
               textShadow: '0 4px 20px rgba(0, 0, 0, 0.8)',
+              lineHeight: { xs: 1.1, sm: 1.2 },
             }}
           >
             À PROPOS DU{' '}
@@ -70,7 +71,7 @@ const APropos = () => {
 
           <Typography
             sx={{
-              fontSize: { xs: '1.1rem', md: '1.4rem' },
+              fontSize: { xs: '1rem', sm: '1.1rem', md: '1.4rem' },
               color: 'white',
               fontWeight: 400,
               textShadow: '0 2px 10px rgba(0, 0, 0, 0.8)',
@@ -124,7 +125,7 @@ const APropos = () => {
                 sx={{
                   width: '100%',
                   maxWidth: { xs: 400, md: '100%' },
-                  height: { xs: 500, md: 700 },
+                  height: { xs: 420, sm: 520, md: 700 },
                   objectFit: 'cover',
                   borderRadius: 0,
                   border: '3px solid rgba(255, 255, 255, 0.15)',
@@ -143,7 +144,7 @@ const APropos = () => {
               <Typography
                 variant="h3"
                 sx={{
-                  fontSize: { xs: '2rem', md: '2.5rem' },
+                  fontSize: { xs: '1.7rem', sm: '2rem', md: '2.5rem' },
                   fontWeight: 700,
                   mb: 3,
                 }}
