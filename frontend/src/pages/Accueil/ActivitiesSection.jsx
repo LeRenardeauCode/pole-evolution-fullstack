@@ -97,6 +97,7 @@ const ActivitiesSection = () => {
 
         <Typography
           variant="subtitle1"
+          component="p"
           align="center"
           sx={{
             color: "secondary.main",

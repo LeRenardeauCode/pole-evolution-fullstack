@@ -18,7 +18,7 @@ const Cours = () => {
             backgroundImage: `url(${heroCoursImage})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            height: { xs: "700px", sm: "800px", md: "1050px" },
+            height: { xs: "560px", sm: "800px", md: "1050px" },
             display: "flex",
             alignItems: "flex-start",
             paddingTop: { xs: "140px", sm: "180px", md: "200px" },
@@ -56,13 +56,14 @@ const Cours = () => {
         </Box>
         <Container
           sx={{
-            position: "absolute",
-            bottom: { xs: "110px", sm: "140px", md: "180px" },
-            left: "50%",
-            transform: "translateX(-50%)",
+            position: { xs: "static", sm: "absolute" },
+            bottom: { sm: "140px", md: "180px" },
+            left: { sm: "50%" },
+            transform: { sm: "translateX(-50%)" },
             width: "100%",
             maxWidth: "lg",
             zIndex: 10,
+            mt: { xs: 4, sm: 0 },
           }}
         >
           <Grid
@@ -90,11 +91,12 @@ const Cours = () => {
         </Container>
         <Box
           sx={{
-            position: "absolute",
-            bottom: { xs: "30px", sm: "50px", md: "80px" },
-            left: "50%",
-            transform: "translateX(-50%)",
+            position: { xs: "static", sm: "absolute" },
+            bottom: { sm: "50px", md: "80px" },
+            left: { sm: "50%" },
+            transform: { sm: "translateX(-50%)" },
             zIndex: 10,
+            mt: { xs: 4, sm: 0 },
           }}
         >
           <Button

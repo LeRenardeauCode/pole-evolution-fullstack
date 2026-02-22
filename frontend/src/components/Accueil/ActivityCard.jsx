@@ -32,6 +32,8 @@ const ActivityCard = memo(({ activity }) => {
           loading="lazy"
           src={activity.image}
           alt={activity.title}
+          width={320}
+          height={200}
           sx={{
             width: '100%',
             height: '100%',

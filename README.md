@@ -31,7 +31,7 @@ Une plateforme Full-Stack moderne pour la gestion de cours d'activités de danse
 ## 🚀 Démarrage Rapide
 
 ### Prérequis
-- **Node.js** 20.19+ ou 22.12+
+- **Node.js** 18+
 - **npm** 9.0+
 - **MongoDB** 8.0+ (local ou Atlas)
 - **Docker** (optionnel)

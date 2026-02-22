@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   mongo:
-    image: mongo:7
+    image: mongo:8
     container_name: pole-evolution-mongo
     ports:
       - "27017:27017"

@@ -35,8 +35,11 @@ const CourseTypeCard = memo(({ cours }) => {
           loading="lazy"
           src={cours.illustration}
           alt={cours.titre}
+          width={300}
+          height={220}
           sx={{ 
-            maxWidth: '100%',
+            width: '100%',
+            height: '100%',
             objectFit: 'contain',
           }}
         />

@@ -57,6 +57,7 @@ const LevelsSection = () => {
 
         <Typography
           variant="subtitle1"
+          component="p"
           align="center"
           sx={{
             color: 'white',
@@ -67,7 +68,7 @@ const LevelsSection = () => {
           Que vous soyez débutante ou intermédiaire, nos cours s'adaptent à votre progression
         </Typography>
 
-        <Grid container spacing={{ xs: 4, md: 6 }} justifyContent="center">
+        <Grid container spacing={{ xs: 6, md: 6 }} justifyContent="center">
           {levels.map((level) => (
             <Grid item xs={12} md={4} key={level.id}>
               <Stack
@@ -76,8 +77,10 @@ const LevelsSection = () => {
                 sx={{
                   textAlign: 'center',
                   transition: 'transform 0.3s',
-                  '&:hover': {
-                    transform: 'translateY(-8px)',
+                  '@media (hover: hover)': {
+                    '&:hover': {
+                      transform: 'translateY(-8px)',
+                    },
                   },
                 }}
               >
@@ -90,7 +93,7 @@ const LevelsSection = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    p: 3,
+                    p: 2,
                     boxShadow: 4,
                   }}
                 >
@@ -99,7 +102,11 @@ const LevelsSection = () => {
                     loading="lazy"
                     src={level.image}
                     alt={level.title}
+                    width={64}
+                    height={64}
                     sx={{
+                      width: { xs: 56, sm: 64 },
+                      height: { xs: 56, sm: 64 },
                       objectFit: 'contain',
                       filter: 'brightness(0) invert(1)'
                     }}

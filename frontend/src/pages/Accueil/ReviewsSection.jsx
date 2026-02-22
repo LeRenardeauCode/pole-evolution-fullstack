@@ -21,6 +21,7 @@ import { FaStar } from "react-icons/fa";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import avisService from "@services/avisService";
 import { useAuth } from "@hooks/useAuth";
+import profImage from "@assets/images/ENSEIGNE.jpg";
 
 const ReviewsSection = () => {
   const { user } = useAuth();
@@ -169,6 +170,10 @@ const ReviewsSection = () => {
               >
                 <Box
                   component="img"
+                  src={profImage}
+                  alt="Coraline, professeure de pole dance"
+                  width={220}
+                  height={220}
                   sx={{
                     width: { xs: 180, sm: 200, md: 220 },
                     height: { xs: 180, sm: 200, md: 220 },
@@ -232,6 +237,7 @@ const ReviewsSection = () => {
 
                   <Typography
                     variant="subtitle1"
+                    component="p"
                     sx={{
                       fontStyle: "italic",
                       color: "primary.main",
@@ -280,6 +286,7 @@ const ReviewsSection = () => {
                 <IconButton
                   onClick={handlePrevSlide}
                   size="small"
+                  aria-label="Avis precedent"
                   sx={{
                     position: "absolute",
                     left: { xs: 4, sm: 8 },
@@ -402,6 +409,7 @@ const ReviewsSection = () => {
                 <IconButton
                   onClick={handleNextSlide}
                   size="small"
+                  aria-label="Avis suivant"
                   sx={{
                     position: "absolute",
                     right: { xs: 4, sm: 8 },

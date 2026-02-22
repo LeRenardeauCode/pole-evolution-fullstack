@@ -83,6 +83,7 @@ const HeroSection = () => {
           {/* Sous-titre */}
           <Typography
             variant="subtitle1"
+            component="p"
             sx={{
               mb: 4,
               opacity: 0.95,
