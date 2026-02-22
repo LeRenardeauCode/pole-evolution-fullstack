@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- Page d'accueil -->
+  <url>
+    <loc>https://poleevolution.fr/</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Cours -->
+  <url>
+    <loc>https://poleevolution.fr/cours</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Planning (réservation) -->
+  <url>
+    <loc>https://poleevolution.fr/planning</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Tarifs -->
+  <url>
+    <loc>https://poleevolution.fr/tarifs</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- À propos -->
+  <url>
+    <loc>https://poleevolution.fr/a-propos</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Galerie -->
+  <url>
+    <loc>https://poleevolution.fr/galerie</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- Contact -->
+  <url>
+    <loc>https://poleevolution.fr/contact</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Pages légales -->
+  <url>
+    <loc>https://poleevolution.fr/mentions-legales</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  
+  <url>
+    <loc>https://poleevolution.fr/politique-confidentialite</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  
+  <url>
+    <loc>https://poleevolution.fr/politique-cookies</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  
+  <url>
+    <loc>https://poleevolution.fr/reglement-interieur</loc>
+    <lastmod>2026-02-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+</urlset>

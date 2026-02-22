@@ -1,0 +1,13 @@
+# Robots.txt pour Pole Evolution
+# https://poleevolution.fr/robots.txt
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /mon-compte/
+
+# Sitemap
+Sitemap: https://poleevolution.fr/sitemap.xml
+
+# Crawl-delay (optionnel, pour éviter surcharge serveur)
+Crawl-delay: 10
