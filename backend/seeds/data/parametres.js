@@ -1,7 +1,7 @@
 const parametres = [
   {
     cle: "emailcontact",
-    valeur: "contact@poleevolution.com",
+    valeur: "jelvibm@gmail.com",
     type: "texte",
     categorie: "contact",
     description: "Email de contact principal",
@@ -17,7 +17,7 @@ const parametres = [
   },
   {
     cle: "adresseetablissement",
-    valeur: "1412B Rue Joffre, 62680 RUMAUCOURT",
+    valeur: "1412 Rue Joffre, 62860 Rumaucourt",
     type: "texte",
     categorie: "contact",
     description: "Adresse complète de l'établissement",
@@ -26,7 +26,7 @@ const parametres = [
 
   {
     cle: "footerfacebookurl",
-    valeur: "https://facebook.com/poleevolution",
+    valeur: "#",
     type: "texte",
     categorie: "reseaux_sociaux",
     description: "Lien Facebook",
@@ -34,7 +34,7 @@ const parametres = [
   },
   {
     cle: "footerinstagramurl",
-    valeur: "https://instagram.com/poleevolution",
+    valeur: "#",
     type: "texte",
     categorie: "reseaux_sociaux", 
     description: "Lien Instagram",
@@ -42,7 +42,7 @@ const parametres = [
   },
   {
     cle: "footertiktokurl",
-    valeur: "https://tiktok.com/@poleevolution",
+    valeur: "#",
     type: "texte",
     categorie: "reseaux_sociaux",
     description: "Lien TikTok",
@@ -134,7 +134,7 @@ Alors si toi aussi, tu souhaites repousser tes limites, sortir de ta zone de con
   },
   {
     cle: "emailexpediteur",
-    valeur: "noreply@poleevolution.com",
+    valeur: "jelvibm@gmail.com",
     type: "texte",
     categorie: "emails",
     description: "Adresse email d'expédition pour les emails automatiques",
@@ -178,7 +178,7 @@ Alors si toi aussi, tu souhaites repousser tes limites, sortir de ta zone de con
   },
   {
     cle: "footeradresseligne2",
-    valeur: "62680 RUMAUCOURT",
+    valeur: "62860 RUMAUCOURT",
     type: "texte",
     categorie: "footer",
     description: "Code postal et ville",
@@ -218,10 +218,10 @@ Alors si toi aussi, tu souhaites repousser tes limites, sortir de ta zone de con
   },
   {
     cle: "footermapimage",
-    valeur: "/uploads/google_map.png",
+    valeur: "",
     type: "texte",
     categorie: "footer",
-    description: "Image de la carte Google Maps",
+    description: "Image de la carte Google Maps (optionnel)",
     estModifiable: true,
   },
 ];

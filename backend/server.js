@@ -1,9 +1,23 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
-import morgan from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Charge .env.local EN PRIORITÉ (dev), sinon .env (prod)
+// IMPORTANT: override: true pour écrase les valeurs déjà chargées
+dotenv.config({ path: path.join(__dirname, '.env.local'), override: true });
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+// DEBUG: Log les variables chargées
+console.log('🔍 DEBUG Variables chargées:');
+console.log('PORT:', process.env.PORT);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('FRONTEND_URL:', process.env.FRONTEND_URL);
+
+import cors from 'cors';
+import morgan from 'morgan';
 import connectDB from './config/database.js';
 import { errorHandler } from './middleware/errorHandler.middleware.js';
 import fs from 'fs';
@@ -20,10 +34,6 @@ import contactRoutes from './routes/contact.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
 import parametreRoutes from './routes/parametre.routes.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-dotenv.config();
 
 connectDB();
 
