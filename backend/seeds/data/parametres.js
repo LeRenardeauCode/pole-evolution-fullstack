@@ -17,7 +17,7 @@ const parametres = [
   },
   {
     cle: "adresseetablissement",
-    valeur: "1412B Rue Joffre, 62680 RUMAUCOURT",
+    valeur: "1412 Rue Joffre, 62860 Rumaucourt",
     type: "texte",
     categorie: "contact",
     description: "Adresse complète de l'établissement",
@@ -178,7 +178,7 @@ Alors si toi aussi, tu souhaites repousser tes limites, sortir de ta zone de con
   },
   {
     cle: "footeradresseligne2",
-    valeur: "62680 RUMAUCOURT",
+    valeur: "62860 RUMAUCOURT",
     type: "texte",
     categorie: "footer",
     description: "Code postal et ville",

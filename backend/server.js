@@ -3,15 +3,18 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Charge .env.local EN PRIORITÉ si existe, sinon .env
-const envPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 
-  process.env.NODE_ENV === 'production' ? '.env' : '.env.local');
-dotenv.config({ path: envPath });
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Si .env.local n'existe pas en dev, charge .env par défaut
-if (process.env.NODE_ENV !== 'production' && !process.env.FRONTEND_URL?.includes('localhost')) {
-  dotenv.config();
-}
+// Charge .env.local EN PRIORITÉ (dev), sinon .env (prod)
+// IMPORTANT: override: true pour écrase les valeurs déjà chargées
+dotenv.config({ path: path.join(__dirname, '.env.local'), override: true });
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+// DEBUG: Log les variables chargées
+console.log('🔍 DEBUG Variables chargées:');
+console.log('PORT:', process.env.PORT);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('FRONTEND_URL:', process.env.FRONTEND_URL);
 
 import cors from 'cors';
 import morgan from 'morgan';
@@ -31,10 +34,6 @@ import contactRoutes from './routes/contact.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
 import parametreRoutes from './routes/parametre.routes.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-dotenv.config();
 
 connectDB();
 

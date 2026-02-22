@@ -54,22 +54,22 @@ const Footer = () => {
 
         setFooterData({
           adresseLigne1:
-            paramsMap.footer_adresse_ligne1 || footerData.adresseLigne1,
+            paramsMap.footeradresseligne1 || footerData.adresseLigne1,
           adresseLigne2:
-            paramsMap.footer_adresse_ligne2 || footerData.adresseLigne2,
-          description: paramsMap.footer_description || footerData.description,
+            paramsMap.footeradresseligne2 || footerData.adresseLigne2,
+          description: paramsMap.footerdescription || footerData.description,
           distanceCambrai:
-            paramsMap.footer_distance_cambrai || footerData.distanceCambrai,
+            paramsMap.footerdistancecambrai || footerData.distanceCambrai,
           distanceDouai:
-            paramsMap.footer_distance_douai || footerData.distanceDouai,
+            paramsMap.footerdistancedouai || footerData.distanceDouai,
           distanceArras:
-            paramsMap.footer_distance_arras || footerData.distanceArras,
-          facebookUrl: paramsMap.footer_facebook_url || footerData.facebookUrl,
+            paramsMap.footerdistancearras || footerData.distanceArras,
+          facebookUrl: paramsMap.footerfacebookurl || footerData.facebookUrl,
           instagramUrl:
-            paramsMap.footer_instagram_url || footerData.instagramUrl,
-          tiktokUrl: paramsMap.footer_tiktok_url || footerData.tiktokUrl,
-          mapImage: paramsMap.footer_map_image
-            ? `${import.meta.env.VITE_API_URL}${paramsMap.footer_map_image}`
+            paramsMap.footerinstagramurl || footerData.instagramUrl,
+          tiktokUrl: paramsMap.footertiktokurl || footerData.tiktokUrl,
+          mapImage: paramsMap.footermapimage
+            ? `${import.meta.env.VITE_API_URL}${paramsMap.footermapimage}`
             : mapImgDefault,
         });
       } catch (error) {

@@ -147,51 +147,12 @@ export default function AdminSidebar() {
           return (
             <ListItem key={item.path} disablePadding sx={{ mb: 1 }}>
               <ListItemButton
-                onClick={() }}>
-        <Divider sx={{ bgcolor: 'rgba(255,255,255,0.1)', my: 2 }} />
-        
-        <Box sx={{ px: 3, py: 2 }}>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={modeMaintenance}
-                onChange={handleToggleMaintenance}
-                disabled={loading}
+                onClick={() => navigate(item.path)}
                 sx={{
-                  '& .MuiSwitch-switchBase.Mui-checked': {
-                    color: '#ff9800'
-                  },
-                  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                    backgroundColor: '#ff9800'
-                  }
-                }}
-              />
-            }
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <BuildIcon sx={{ fontSize: '1rem' }} />
-                <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>
-                  Mode Maintenance
-                </Typography>
-              </Box>
-            }
-            sx={{ 
-              m: 0,
-              color: modeMaintenance ? '#ff9800' : 'rgba(255,255,255,0.7)',
-              '& .MuiFormControlLabel-label': {
-                fontSize: '0.875rem'
-              }
-            }}
-          />
-        </Box>
-
-        <Box sx={{ p: 3, textAlign: 'center' }}>
-          <img 
-            src={logo} 
-            alt="Pole Evolution" 
-            style={{ width: '120px', height: 'auto', opacity: 0.8 }}
-          />
-        </Box         '&:hover': {
+                  bgcolor: isActive ? 'rgba(139, 92, 246, 0.2)' : 'transparent',
+                  color: isActive ? '#fff' : 'rgba(255,255,255,0.7)',
+                  borderRadius: 1,
+                  '&:hover': {
                     bgcolor: isActive ? 'rgba(139, 92, 246, 0.3)' : 'rgba(255,255,255,0.05)'
                   },
                   transition: 'all 0.2s ease'
@@ -216,6 +177,43 @@ export default function AdminSidebar() {
           );
         })}
       </List>
+
+      <Divider sx={{ bgcolor: 'rgba(255,255,255,0.1)', my: 2 }} />
+      
+      <Box sx={{ px: 3, py: 2 }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={modeMaintenance}
+              onChange={handleToggleMaintenance}
+              disabled={loading}
+              sx={{
+                '& .MuiSwitch-switchBase.Mui-checked': {
+                  color: '#ff9800'
+                },
+                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                  backgroundColor: '#ff9800'
+                }
+              }}
+            />
+          }
+          label={
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <BuildIcon sx={{ fontSize: '1rem' }} />
+              <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>
+                Mode Maintenance
+              </Typography>
+            </Box>
+          }
+          sx={{ 
+            m: 0,
+            color: modeMaintenance ? '#ff9800' : 'rgba(255,255,255,0.7)',
+            '& .MuiFormControlLabel-label': {
+              fontSize: '0.875rem'
+            }
+          }}
+        />
+      </Box>
 
       <Box sx={{ mt: 'auto', p: 3, textAlign: 'center' }}>
         <img 

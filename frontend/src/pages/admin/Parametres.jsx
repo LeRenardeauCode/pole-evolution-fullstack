@@ -6,7 +6,8 @@ import {
   CardContent,
   Typography,
   TextField,
-  Button
+  Button,
+  Divider
 } from '@mui/material';
 import { toast } from 'react-toastify';
 import { getParametres, updateParametre } from '@services/adminService';
@@ -113,7 +114,17 @@ export default function Parametres() {
       setLoading(false);
     }
   };
-,
+
+  const handleSaveContact = async () => {
+    setLoading(true);
+    try {
+      await Promise.all([
+        updateParametre('emailcontact', emailContact),
+        updateParametre('telephonecontact', telephoneContact),
+        updateParametre('adresseetablissement', adresseEtablissement),
+        updateParametre('footerfacebookurl', facebookUrl),
+        updateParametre('footerinstagramurl', instagramUrl),
+        updateParametre('footertiktokurl', tiktokUrl),
         updateParametre('footeradresseligne1', footerAdresseLigne1),
         updateParametre('footeradresseligne2', footerAdresseLigne2),
         updateParametre('footerdescription', footerDescription),
@@ -137,17 +148,7 @@ export default function Parametres() {
         updateParametre('nometablissement', nomEtablissement),
         updateParametre('mentionslegales', mentionsLegales)
       ]);
-      toast.success('Informations légales
-    try {
-      await Promise.all([
-        updateParametre('emailcontact', emailContact),
-        updateParametre('telephonecontact', telephoneContact),
-        updateParametre('adresseetablissement', adresseEtablissement),
-        updateParametre('footerfacebookurl', facebookUrl),
-        updateParametre('footerinstagramurl', instagramUrl),
-        updateParametre('footertiktokurl', tiktokUrl)
-      ]);
-      toast.success('Informations de contact modifiées avec succès');
+      toast.success('Informations légales modifiées avec succès');
     } catch (err) {
       console.error('Erreur:', err);
       toast.error(err.response?.data?.message || 'Erreur lors de la modification');
@@ -272,135 +273,176 @@ export default function Parametres() {
         <Grid item xs={12}>
           <Card elevation={0} sx={{ border: '1px solid #e0e0e0' }}>
             <CardContent>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
                 Informations de contact du studio
               </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={4}>
-                  <TextField
-                    fullWidth
-                    label="Email de contact"
-                    value={emailContact}
-                    onChange={(e) => setEmailContact(e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <TextField
-                    fullWidth
-                    label="Téléphone"
-                    value={telephoneContact}
-                    onChange={(e) => setTelephoneContact(e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <TextField
-                    fullWidth
-                    label="Adresse"
-                    value={adresseEtablissement}
-                    onChange={(e) => setAdresseEtablissement(e.target.value)}
-                  />
-                </Grid>
 
-                <Grid item xs={12}>
-                  <Typography variant="subtitle2" sx={{ mt: 2, mb: 1, fontWeight: 600, color: 'text.secondary' }}>
-                    Réseaux sociaux
-                  </Typography>
+              {/* Section: Coordonnées principales */}
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: '#6B7280', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  📍 Coordonnées principales
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={4}>
+                    <TextField
+                      fullWidth
+                      label="Email de contact"
+                      value={emailContact}
+                      onChange={(e) => setEmailContact(e.target.value)}
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <TextField
+                      fullWidth
+                      label="Téléphone"
+                      value={telephoneContact}
+                      onChange={(e) => setTelephoneContact(e.target.value)}
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <TextField
+                      fullWidth
+                      label="Adresse"
+                      value={adresseEtablissement}
+                      onChange={(e) => setAdresseEtablissement(e.target.value)}
+                      size="small"
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} md={4}>
-                  <TextField
-                    fullWidth
-                    label="URL Facebook"
-                    value={facebookUrl}
-                    onChange={(e) => setFacebookUrl(e.target.value)}
-                    placeholder="https://facebook.com/... ou # pour désactiver"
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <TextField
-                    fullWidth
-                    label="URL Instagram"
-                    value={instagramUrl}
-                    onChange={(e) => setInstagramUrl(e.target.value)}
-                    placeholder="https://instagram.com/... ou # pour désactiver"
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <TextField
-                    fullWidth
-                    label="URL TikTok"
-                    value={tiktokUrl}
-                    onChange={(e) => setTiktokUrl(e.target.value)}
-                    placeholder="https://tiktok.com/... ou # pour désactiver"
-                  />
-                </Grid>
+              </Box>
 
-                <Grid item xs={12}>
-                  <Typography variant="subtitle2" sx={{ mt: 2, mb: 1, fontWeight: 600, color: 'text.secondary' }}>
-                    Informations Footer
-                  </Typography>
+              <Divider sx={{ my: 2 }} />
+
+              {/* Section: Réseaux sociaux */}
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: '#6B7280', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  🔗 Réseaux sociaux
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={4}>
+                    <TextField
+                      fullWidth
+                      label="URL Facebook"
+                      value={facebookUrl}
+                      onChange={(e) => setFacebookUrl(e.target.value)}
+                      placeholder="https://facebook.com/..."
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <TextField
+                      fullWidth
+                      label="URL Instagram"
+                      value={instagramUrl}
+                      onChange={(e) => setInstagramUrl(e.target.value)}
+                      placeholder="https://instagram.com/..."
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <TextField
+                      fullWidth
+                      label="URL TikTok"
+                      value={tiktokUrl}
+                      onChange={(e) => setTiktokUrl(e.target.value)}
+                      placeholder="https://tiktok.com/..."
+                      size="small"
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    fullWidth
-                    label="Adresse Footer - Ligne 1"
-                    value={footerAdresseLigne1}
-                    onChange={(e) => setFooterAdresseLigne1(e.target.value)}
-                    placeholder="1412 Rue Joffre"
-                  />
+              </Box>
+
+              <Divider sx={{ my: 2 }} />
+
+              {/* Section: Adresse et localisation Footer */}
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: '#6B7280', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  📌 Adresse du footer
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Adresse - Ligne 1"
+                      value={footerAdresseLigne1}
+                      onChange={(e) => setFooterAdresseLigne1(e.target.value)}
+                      placeholder="1412 Rue Joffre"
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Adresse - Ligne 2"
+                      value={footerAdresseLigne2}
+                      onChange={(e) => setFooterAdresseLigne2(e.target.value)}
+                      placeholder="62680 RUMAUCOURT"
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={2}
+                      label="Description de localisation"
+                      value={footerDescription}
+                      onChange={(e) => setFooterDescription(e.target.value)}
+                      placeholder="Ex: Village à 3 minutes de Baralle/Marquion..."
+                      size="small"
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    fullWidth
-                    label="Adresse Footer - Ligne 2"
-                    value={footerAdresseLigne2}
-                    onChange={(e) => setFooterAdresseLigne2(e.target.value)}
-                    placeholder="62680 RUMAUCOURT"
-                  />
+              </Box>
+
+              <Divider sx={{ my: 2 }} />
+
+              {/* Section: Distances villes proches */}
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, color: '#6B7280', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  🚗 Distances villes proches
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={4}>
+                    <TextField
+                      fullWidth
+                      label="Distance Cambrai"
+                      value={footerDistanceCambrai}
+                      onChange={(e) => setFooterDistanceCambrai(e.target.value)}
+                      placeholder="25 minutes de Cambrai"
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <TextField
+                      fullWidth
+                      label="Distance Douai"
+                      value={footerDistanceDouai}
+                      onChange={(e) => setFooterDistanceDouai(e.target.value)}
+                      placeholder="25 minutes de Douai"
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <TextField
+                      fullWidth
+                      label="Distance Arras"
+                      value={footerDistanceArras}
+                      onChange={(e) => setFooterDistanceArras(e.target.value)}
+                      placeholder="Environ 30 minutes d'Arras"
+                      size="small"
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    multiline
-                    rows={2}
-                    label="Description localisation"
-                    value={footerDescription}
-                    onChange={(e) => setFooterDescription(e.target.value)}
-                    placeholder="Rumaucourt est un petit village..."
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <TextField
-                    fullWidth
-                    label="Distance Cambrai"
-                    value={footerDistanceCambrai}
-                    onChange={(e) => setFooterDistanceCambrai(e.target.value)}
-                    placeholder="25 minutes de Cambrai"
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <TextField
-                    fullWidth
-                    label="Distance Douai"
-                    value={footerDistanceDouai}
-                    onChange={(e) => setFooterDistanceDouai(e.target.value)}
-                    placeholder="25 minutes de Douai"
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <TextField
-                    fullWidth
-                    label="Distance Arras"
-                    value={footerDistanceArras}
-                    onChange={(e) => setFooterDistanceArras(e.target.value)}
-                    placeholder="Environ 30 minutes d'Arras"
-                  />
-                </Grid>
-              </Grid>
+              </Box>
+
               <Button
                 variant="contained"
                 onClick={handleSaveContact}
                 disabled={loading}
-                sx={{ mt: 2 }}
+                sx={{ mt: 1, fontWeight: 600 }}
               >
                 Enregistrer les informations
               </Button>
