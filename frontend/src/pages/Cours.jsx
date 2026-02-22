@@ -97,6 +97,9 @@ const Cours = () => {
             transform: { sm: "translateX(-50%)" },
             zIndex: 10,
             mt: { xs: 4, sm: 0 },
+            width: { xs: "100%", sm: "auto" },
+            display: { xs: "flex", sm: "block" },
+            justifyContent: { xs: "center", sm: "initial" },
           }}
         >
           <Button

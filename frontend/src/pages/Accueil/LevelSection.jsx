@@ -93,7 +93,7 @@ const LevelsSection = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    p: 2,
+                    p: 0,
                     boxShadow: 4,
                   }}
                 >
@@ -102,11 +102,11 @@ const LevelsSection = () => {
                     loading="lazy"
                     src={level.image}
                     alt={level.title}
-                    width={64}
-                    height={64}
+                    width={120}
+                    height={120}
                     sx={{
-                      width: { xs: 56, sm: 64 },
-                      height: { xs: 56, sm: 64 },
+                      width: '100%',
+                      height: '100%',
                       objectFit: 'contain',
                       filter: 'brightness(0) invert(1)'
                     }}
