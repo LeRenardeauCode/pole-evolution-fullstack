@@ -20,6 +20,7 @@ export const getUtilisateurs = async (req, res) => {
 
     if (search) {
       query.$or = [
+        { pseudo: { $regex: search, $options: "i" } },
         { prenom: { $regex: search, $options: "i" } },
         { nom: { $regex: search, $options: "i" } },
         { email: { $regex: search, $options: "i" } },
@@ -83,6 +84,7 @@ export const updateUtilisateur = async (req, res) => {
     const fieldsToUpdate = {
       prenom: req.body.prenom,
       nom: req.body.nom,
+      pseudo: req.body.pseudo,
       email: req.body.email,
       telephone: req.body.telephone,
       role: req.body.role,

@@ -1,42 +1,5 @@
-import { useState, useEffect } from "react";
-import {
-  Box,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  TextField,
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
-  Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
-  Stack,
-} from "@mui/material";
-import {
-  Check as CheckIcon,
-  Close as CloseIcon,
-  Delete as DeleteIcon,
-  Edit as EditIcon,
-  PlayArrow as PlayIcon,
-  Pause as PauseIcon,
-  CardMembership as ForfaitIcon,
-  RemoveCircle as RemoveIcon,
-  AddCircle as AddIcon,
-} from "@mui/icons-material";
+import { useState, useEffect, useMemo } from "react";
+import { Box, Grid, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import {
   getUtilisateurs,
@@ -46,6 +9,12 @@ import {
   rejectUtilisateur,
   modifierSeancesForfait,
 } from "@services/adminService";
+import { headerTitle } from "@/styles/pageStyles";
+import ElevesFilters from "@components/admin/Eleves/ElevesFilters";
+import ElevesInfoCard from "@components/admin/Eleves/ElevesInfoCard";
+import ElevesTable from "@components/admin/Eleves/ElevesTable";
+import ElevesEditDialog from "@components/admin/Eleves/ElevesEditDialog";
+import ElevesForfaitsDialog from "@components/admin/Eleves/ElevesForfaitsDialog";
 
 export default function Eleves() {
   const [utilisateurs, setUtilisateurs] = useState([]);
@@ -268,11 +237,13 @@ export default function Eleves() {
     }
   };
 
-  const filteredUsers = utilisateurs.filter((user) =>
-    `${user.prenom} ${user.nom} ${user.email}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase()),
-  );
+  const filteredUsers = useMemo(() => {
+    return utilisateurs.filter((user) =>
+      `${user.pseudo || ""} ${user.prenom} ${user.nom} ${user.email}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()),
+    );
+  }, [utilisateurs, searchTerm]);
 
   const getStatutColor = (statut) => {
     switch (statut) {
@@ -289,512 +260,64 @@ export default function Eleves() {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
+      <Typography variant="h4" sx={headerTitle}>
         Élèves
       </Typography>
 
       <Grid container spacing={3}>
+        {/* Filtres et recherche */}
         <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                Modifier un nom
-              </Typography>
-              <TextField
-                fullWidth
-                label="Rechercher un élève"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Nom, prénom ou email..."
-                sx={{ mb: 2 }}
-              />
-              <Typography variant="body2" color="text.secondary">
-                Recherchez un élève dans le tableau ci-dessous, puis cliquez sur
-                l'icône{" "}
-                <EditIcon fontSize="small" sx={{ verticalAlign: "middle" }} />{" "}
-                pour modifier son nom.
-              </Typography>
-            </CardContent>
-          </Card>
+          <ElevesFilters
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+          />
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                Suspendre / Supprimer un utilisateur
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                • <strong>Suspendre</strong> : L'utilisateur ne peut plus se
-                connecter (estActif = false)
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                • <strong>Supprimer</strong> : Suppression définitive (attention
-                : impossible si l'utilisateur a des réservations actives)
-              </Typography>
-            </CardContent>
-          </Card>
+          <ElevesInfoCard />
         </Grid>
 
         <Grid item xs={12}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                Voir les membres inscrits sur le site
-              </Typography>
-              <TableContainer component={Paper} variant="outlined">
-                <Table>
-                  <TableHead>
-                    <TableRow sx={{ bgcolor: "grey.100" }}>
-                      <TableCell>
-                        <strong>Prénom</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Nom</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Email</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Role</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Forfait/Abo</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Statut validation</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Actif</strong>
-                      </TableCell>
-                      <TableCell>
-                        <strong>Date inscription</strong>
-                      </TableCell>
-                      <TableCell align="right">
-                        <strong>Actions</strong>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {filteredUsers.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={9} align="center">
-                          Aucun utilisateur trouvé
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      filteredUsers.map((user) => {
-                        const forfaitActif = user.forfaitsActifs?.find(
-                          (f) => f.estActif && f.seancesRestantes > 0,
-                        );
-                        const hasAbonnement = user.abonnementActif?.forfaitId;
-
-                        return (
-                          <TableRow key={user._id}>
-                            <TableCell>{user.prenom}</TableCell>
-                            <TableCell>{user.nom}</TableCell>
-                            <TableCell>{user.email}</TableCell>
-                            <TableCell>
-                              <Chip
-                                label={user.role}
-                                color={
-                                  user.role === "admin" ? "primary" : "default"
-                                }
-                                size="small"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Stack direction="row" spacing={0.5}>
-                                {forfaitActif && (
-                                  <Chip
-                                    label={`Forfait (${forfaitActif.seancesRestantes})`}
-                                    color="success"
-                                    size="small"
-                                    onClick={() => handleOpenForfaits(user)}
-                                    sx={{ cursor: "pointer" }}
-                                    icon={<ForfaitIcon />}
-                                  />
-                                )}
-                                {hasAbonnement && (
-                                  <Chip
-                                    label="Abonnement"
-                                    color="primary"
-                                    size="small"
-                                    onClick={() => handleOpenForfaits(user)}
-                                    sx={{ cursor: "pointer" }}
-                                  />
-                                )}
-                                {!forfaitActif && !hasAbonnement && (
-                                  <Chip
-                                    label="Aucun"
-                                    color="default"
-                                    size="small"
-                                  />
-                                )}
-                              </Stack>
-                            </TableCell>
-                            <TableCell>
-                              <Chip
-                                label={user.statutValidationAdmin || "N/A"}
-                                color={getStatutColor(
-                                  user.statutValidationAdmin,
-                                )}
-                                size="small"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Chip
-                                label={user.estActif ? "Actif" : "Suspendu"}
-                                color={user.estActif ? "success" : "error"}
-                                size="small"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              {new Date(
-                                user.dateInscription,
-                              ).toLocaleDateString("fr-FR")}
-                            </TableCell>
-                            <TableCell align="right">
-                              {user.statutValidationAdmin === "pending" && (
-                                <>
-                                  <IconButton
-                                    size="small"
-                                    color="success"
-                                    onClick={() => handleApprove(user._id)}
-                                    title="Approuver"
-                                  >
-                                    <CheckIcon fontSize="small" />
-                                  </IconButton>
-                                  <IconButton
-                                    size="small"
-                                    color="error"
-                                    onClick={() => handleReject(user)}
-                                    title="Rejeter"
-                                  >
-                                    <CloseIcon fontSize="small" />
-                                  </IconButton>
-                                </>
-                              )}
-                              <IconButton
-                                size="small"
-                                onClick={() => handleEditNom(user)}
-                                title="Modifier"
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                color={user.estActif ? "warning" : "success"}
-                                onClick={() => handleSuspendre(user)}
-                                title={
-                                  user.estActif ? "Suspendre" : "Réactiver"
-                                }
-                              >
-                                {user.estActif ? (
-                                  <PauseIcon fontSize="small" />
-                                ) : (
-                                  <PlayIcon fontSize="small" />
-                                )}
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                color="error"
-                                onClick={() => handleDeleteUser(user._id)}
-                                disabled={user.role === "admin"}
-                                title="Supprimer"
-                              >
-                                <DeleteIcon fontSize="small" />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
+          <ElevesTable
+            users={filteredUsers}
+            loading={loading}
+            onEdit={handleEditNom}
+            onSuspend={handleSuspendre}
+            onDelete={handleDeleteUser}
+            onApprove={handleApprove}
+            onReject={handleReject}
+            onViewForfaits={handleOpenForfaits}
+            getStatutColor={getStatutColor}
+          />
         </Grid>
       </Grid>
 
-      <Dialog
+      <ElevesEditDialog
         open={openDialog}
+        mode={dialogMode}
         onClose={() => setOpenDialog(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>
-          {dialogMode === "edit" && "Modifier le nom"}
-          {dialogMode === "reject" && "Rejeter l'utilisateur"}
-        </DialogTitle>
-        <DialogContent>
-          {dialogMode === "edit" && (
-            <Box sx={{ mt: 2 }}>
-              <TextField
-                fullWidth
-                label="Prénom"
-                value={newPrenom}
-                onChange={(e) => setNewPrenom(e.target.value)}
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                fullWidth
-                label="Nom"
-                value={newNom}
-                onChange={(e) => setNewNom(e.target.value)}
-              />
-            </Box>
-          )}
-          {dialogMode === "reject" && (
-            <TextField
-              fullWidth
-              label="Raison du rejet"
-              value={raisonRejet}
-              onChange={(e) => setRaisonRejet(e.target.value)}
-              multiline
-              rows={3}
-              required
-              sx={{ mt: 2 }}
-            />
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>Annuler</Button>
-          <Button
-            onClick={
-              dialogMode === "edit" ? handleUpdateNom : handleConfirmReject
-            }
-            variant="contained"
-            disabled={loading}
-          >
-            Confirmer
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onConfirm={
+          dialogMode === "edit" ? handleUpdateNom : handleConfirmReject
+        }
+        loading={loading}
+        newPrenom={newPrenom}
+        onPrenomChange={setNewPrenom}
+        newNom={newNom}
+        onNomChange={setNewNom}
+        raisonRejet={raisonRejet}
+        onRaisonChange={setRaisonRejet}
+      />
 
-      <Dialog
+      <ElevesForfaitsDialog
         open={openForfaitDialog}
         onClose={() => setOpenForfaitDialog(false)}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle
-          sx={{ bgcolor: "primary.main", color: "white", fontWeight: 700 }}
-        >
-          Gestion Forfaits & Abonnements - {selectedUser?.prenom}{" "}
-          {selectedUser?.nom}
-        </DialogTitle>
-        <DialogContent sx={{ pt: 3 }}>
-          {selectedUser && (
-            <Box>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                Forfaits actifs
-              </Typography>
-              {selectedUser.forfaitsActifs?.filter((f) => f.estActif).length >
-              0 ? (
-                <List>
-                  {selectedUser.forfaitsActifs
-                    .filter((f) => f.estActif)
-                    .map((forfait, index) => (
-                      <Card key={index} sx={{ mb: 2 }}>
-                        <CardContent>
-                          <Stack
-                            direction="row"
-                            justifyContent="space-between"
-                            alignItems="center"
-                          >
-                            <Box>
-                              <Typography variant="body1" fontWeight={600}>
-                                Forfait (ID:{" "}
-                                {forfait.forfaitId?.toString().slice(-6)})
-                              </Typography>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                Acheté le{" "}
-                                {new Date(forfait.dateAchat).toLocaleDateString(
-                                  "fr-FR",
-                                )}
-                              </Typography>
-                              {forfait.dateExpiration && (
-                                <Typography
-                                  variant="body2"
-                                  color="warning.main"
-                                >
-                                  Expire le{" "}
-                                  {new Date(
-                                    forfait.dateExpiration,
-                                  ).toLocaleDateString("fr-FR")}
-                                </Typography>
-                              )}
-                            </Box>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 1,
-                              }}
-                            >
-                              <IconButton
-                                size="small"
-                                color="error"
-                                onClick={() =>
-                                  handleModifierSeances(index, "remove")
-                                }
-                                disabled={forfait.seancesRestantes === 0}
-                              >
-                                <RemoveIcon />
-                              </IconButton>
-                              <Chip
-                                label={`${forfait.seancesRestantes} / ${forfait.seancesAchetees} séances`}
-                                color={
-                                  forfait.seancesRestantes > 0
-                                    ? "success"
-                                    : "error"
-                                }
-                              />
-                              <IconButton
-                                size="small"
-                                color="success"
-                                onClick={() =>
-                                  handleModifierSeances(index, "add")
-                                }
-                              >
-                                <AddIcon />
-                              </IconButton>
-                              <Button
-                                variant="outlined"
-                                color="error"
-                                size="small"
-                                onClick={() => handleDesactiverForfait(index)}
-                              >
-                                Désactiver
-                              </Button>
-                            </Box>
-                          </Stack>
-                          <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
-                            <TextField
-                              type="number"
-                              size="small"
-                              label="Définir nb séances"
-                              value={newSeances}
-                              onChange={(e) =>
-                                setNewSeances(Number(e.target.value))
-                              }
-                              sx={{ width: 200 }}
-                            />
-                            <Button
-                              variant="contained"
-                              size="small"
-                              onClick={() =>
-                                handleModifierSeances(index, "set")
-                              }
-                            >
-                              Appliquer
-                            </Button>
-                          </Box>
-                        </CardContent>
-                      </Card>
-                    ))}
-                </List>
-              ) : (
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 3 }}
-                >
-                  Aucun forfait actif
-                </Typography>
-              )}
-
-              <Divider sx={{ my: 3 }} />
-
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                Abonnement actif
-              </Typography>
-              {selectedUser.abonnementActif?.forfaitId ? (
-                <Card>
-                  <CardContent>
-                    <Typography variant="body1" fontWeight={600}>
-                      Abonnement (ID:{" "}
-                      {selectedUser.abonnementActif.forfaitId
-                        .toString()
-                        .slice(-6)}
-                      )
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Du{" "}
-                      {new Date(
-                        selectedUser.abonnementActif.dateDebut,
-                      ).toLocaleDateString("fr-FR")}{" "}
-                      au{" "}
-                      {new Date(
-                        selectedUser.abonnementActif.dateFin,
-                      ).toLocaleDateString("fr-FR")}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mt: 1 }}>
-                      <strong>Montant mensuel :</strong>{" "}
-                      {selectedUser.abonnementActif.montantMensuel}€
-                    </Typography>
-                    <Typography variant="body2">
-                      <strong>Statut paiement :</strong>{" "}
-                      <Chip
-                        label={selectedUser.abonnementActif.statutPaiement}
-                        color={
-                          selectedUser.abonnementActif.statutPaiement ===
-                          "actif"
-                            ? "success"
-                            : "error"
-                        }
-                        size="small"
-                      />
-                    </Typography>
-                  </CardContent>
-                </Card>
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  Aucun abonnement actif
-                </Typography>
-              )}
-
-              <Divider sx={{ my: 3 }} />
-
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                Historique des forfaits
-              </Typography>
-              {selectedUser.forfaitsActifs?.filter((f) => !f.estActif).length >
-              0 ? (
-                <List dense>
-                  {selectedUser.forfaitsActifs
-                    .filter((f) => !f.estActif)
-                    .map((forfait, index) => (
-                      <ListItem key={index}>
-                        <ListItemText
-                          primary={`Forfait (ID: ${forfait.forfaitId?.toString().slice(-6)})`}
-                          secondary={`Acheté le ${new Date(forfait.dateAchat).toLocaleDateString("fr-FR")} - Désactivé - ${forfait.seancesRestantes}/${forfait.seancesAchetees} séances restantes`}
-                        />
-                      </ListItem>
-                    ))}
-                </List>
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  Aucun historique
-                </Typography>
-              )}
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
-          <Button
-            onClick={() => setOpenForfaitDialog(false)}
-            variant="contained"
-          >
-            Fermer
-          </Button>
-        </DialogActions>
-      </Dialog>
+        selectedUser={selectedUser}
+        newSeances={newSeances}
+        onNewSeancesChange={setNewSeances}
+        onModifierSeances={handleModifierSeances}
+        onDesactiverForfait={handleDesactiverForfait}
+        loading={loading}
+      />
     </Box>
   );
 }

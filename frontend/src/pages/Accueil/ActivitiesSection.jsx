@@ -1,6 +1,6 @@
 import { Box, Container, Typography, Grid, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import ActivityCard from "@components/UI/ActivityCard";
+import { ActivityCard } from "@components/Accueil";
 
 import imgCoursClasse from "@assets/images/img_collectif.jpg";
 import imgCoursParticulier from "@assets/images/img_cours.jpg";
@@ -69,7 +69,7 @@ const ActivitiesSection = () => {
           sx={{
             display: "inline-block",
             mx: "auto",
-            px: 4,
+            px: { xs: 2, sm: 4 },
             py: 1,
             mb: 3,
             background: "rgba(87, 74, 120, 0.3)",
@@ -77,6 +77,8 @@ const ActivitiesSection = () => {
             position: "relative",
             left: "50%",
             transform: "translateX(-50%)",
+            maxWidth: "100%",
+            textAlign: "center",
           }}
         >
           <Typography

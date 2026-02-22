@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const currentUser = authService.getCurrentUser();
     if (currentUser && authService.isTokenValid()) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUser(currentUser);
     }
     setLoading(false);

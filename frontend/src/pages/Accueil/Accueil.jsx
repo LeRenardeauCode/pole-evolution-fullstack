@@ -3,7 +3,7 @@ import HeroSection from './HeroSection';
 import ActivitiesSection from './ActivitiesSection';
 import LevelsSection from './LevelSection';
 import ReviewsSection from './ReviewsSection';
-import FadeIn from '../../components/animations/FadeIn';
+import FadeIn from '@components/animations/FadeIn';
 
 const Accueil = () => {
   return (

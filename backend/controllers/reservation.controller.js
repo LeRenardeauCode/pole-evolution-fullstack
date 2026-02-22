@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import {
   Reservation,
   Cours,
@@ -5,6 +6,10 @@ import {
   Forfait,
   Notification,
 } from "../models/index.js";
+import {
+  sendReservationNotificationToAdmin,
+  sendReservationConfirmationToUser,
+} from "../utils/emailService.js";
 
 export const getMesReservations = async (req, res) => {
   try {
@@ -150,16 +155,19 @@ export const createReservation = async (req, res) => {
         });
       }
 
+      // ← FIX: Convertir forfaitId en ObjectId et comparer correctement
+      const forfaitIdAsObject = new mongoose.Types.ObjectId(forfaitId);
+      
       const forfaitActif = utilisateur.forfaitsActifs.find(
         (f) =>
-          f.forfaitId.toString() === forfaitId &&
+          f.forfaitId.equals(forfaitIdAsObject) &&
           f.estActif &&
           f.seancesRestantes > 0,
       );
 
       if (!forfaitActif) {
         return res.status(400).json({
-          success: false,
+          success: false, 
           message: "Forfait invalide ou plus de séances disponibles",
         });
       }
@@ -230,6 +238,38 @@ export const createReservation = async (req, res) => {
       coursId: cours._id,
       reservationId: reservation._id,
     });
+
+    // Envoyer emails (non bloquants)
+    try {
+      // Email notification admin
+      await sendReservationNotificationToAdmin({
+        nomEleve: utilisateur.nom,
+        prenomEleve: utilisateur.prenom,
+        emailEleve: utilisateur.email,
+        telephoneEleve: utilisateur.telephone,
+        niveauPole: utilisateur.niveauPole,
+        nomCours: cours.nom,
+        typeCours: cours.type,
+        dateDebut: cours.dateDebut,
+        montant: reservationData.paiement.montant,
+        reservationId: reservation._id,
+      });
+    } catch (emailError) {
+      console.error("Erreur notification admin réservation membre:", emailError.message);
+    }
+
+    try {
+      await sendReservationConfirmationToUser({
+        nomEleve: utilisateur.nom,
+        prenomEleve: utilisateur.prenom,
+        emailEleve: utilisateur.email,
+        nomCours: cours.nom,
+        dateDebut: cours.dateDebut,
+        lienValidation: null, 
+      });
+    } catch (emailError) {
+      console.error("Erreur confirmation réservation membre:", emailError.message);
+    }
 
     const reservationComplete = await Reservation.findById(reservation._id)
       .populate("cours", "nom type niveau dateDebut dateFin")
@@ -333,8 +373,37 @@ export const createReservationInvite = async (req, res) => {
     }
     await cours.save();
 
-    // TODO: Envoyer email de validation (à implémenter avec Nodemailer)
-    // const lienValidation = `${process.env.FRONTEND_URL}/validation/${tokenValidation}`;
+    const lienValidation = `${process.env.FRONTEND_URL}/validation-reservation?token=${tokenValidation}&email=${encodeURIComponent(emailInvite)}`;
+
+    try {
+      await sendReservationNotificationToAdmin({
+        nomEleve: nomEleve,
+        prenomEleve: "",
+        emailEleve: emailInvite,
+        telephoneEleve: telephoneInvite,
+        niveauPole: niveauPoleInvite || "jamais",
+        nomCours: cours.nom,
+        typeCours: cours.type,
+        dateDebut: cours.dateDebut,
+        montant: cours.type === "decouverte" ? 15 : 25,
+        reservationId: reservation._id,
+      });
+    } catch (emailError) {
+      console.error("Erreur notification admin réservation:", emailError.message);
+    }
+
+    try {
+      await sendReservationConfirmationToUser({
+        nomEleve: nomEleve,
+        prenomEleve: "",
+        emailEleve: emailInvite,
+        nomCours: cours.nom,
+        dateDebut: cours.dateDebut,
+        lienValidation,
+      });
+    } catch (emailError) {
+      console.error("Erreur confirmation réservation invité:", emailError.message);
+    }
 
     const reservationComplete = await Reservation.findById(
       reservation._id,
@@ -672,7 +741,7 @@ export const validerReservation = async (req, res) => {
       });
     }
 
-    if (reservation.statut !== "enattente") {
+    if (reservation.statut !== "en_attente") {
       return res.status(400).json({
         success: false,
         message: "Seules les réservations en attente peuvent être validées",

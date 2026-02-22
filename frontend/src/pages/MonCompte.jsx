@@ -1,39 +1,26 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Container,
-  Typography,
-  TextField,
-  MenuItem,
-  Button,
-  Alert,
-  CircularProgress,
-  Avatar,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Divider,
-  Chip,
-  Stack,
-} from "@mui/material";
-import {
-  Warning as WarningIcon,
-  CheckCircle as CheckCircleIcon,
-  Cancel as CancelIcon,
-  CardMembership as ForfaitIcon,
-  CalendarMonth as CalendarIcon,
-} from "@mui/icons-material";
+import { Box, Container, Typography, Alert, CircularProgress } from "@mui/material";
+import { useAuth } from "@hooks/useAuth";
 import authService from "@services/authService";
 import reservationService from "@services/reservationService";
-
+import {
+  loadingContainer,
+  monCompteLayout,
+  monCompteSidebar,
+  monCompteMainPanelBg,
+  monCompteTitle,
+  bodyMb3,
+} from "@/styles/pageStyles";
+import MonCompteProfile from "@components/MonCompte/MonCompteProfile";
+import MonComptePassword from "@components/MonCompte/MonComptePassword";
+import MonCompteCourses from "@components/MonCompte/MonCompteCourses";
+import MonCompteReglement from "@components/MonCompte/MonCompteReglement";
 import backgroundImg from "@assets/images/img_hero2.png";
-import logo from "@assets/images/thumbnail_LOGO_POLE_EVOLUTION-removebg-preview.png";
 
 const MonCompte = () => {
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
+  const { updateUser } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -48,8 +35,7 @@ const MonCompte = () => {
   const [userData, setUserData] = useState(null);
 
   const [formData, setFormData] = useState({
-    prenom: "",
-    nom: "",
+    pseudo: "",
     email: "",
     telephone: "",
     niveauPole: "",
@@ -74,8 +60,7 @@ const MonCompte = () => {
         setUserData(profileResponse.user);
 
         setFormData({
-          prenom: profileResponse.user.prenom || "",
-          nom: profileResponse.user.nom || "",
+          pseudo: profileResponse.user.pseudo || "",
           email: profileResponse.user.email || "",
           telephone: profileResponse.user.telephone || "",
           niveauPole: profileResponse.user.niveauPole || "",
@@ -124,8 +109,10 @@ const MonCompte = () => {
     };
   }, []);
 
-  const forfaitsActifs =
-    userData?.forfaitsActifs?.filter((f) => f.estActif && f.seancesRestantes > 0) || [];
+  const forfaitsActifs = useMemo(() => {
+    return userData?.forfaitsActifs?.filter((f) => f.estActif && f.seancesRestantes > 0) || [];
+  }, [userData?.forfaitsActifs]);
+
   const abonnementActif =
     userData?.abonnementActif?.forfaitId &&
     userData?.abonnementActif?.statutPaiement === "actif";
@@ -142,10 +129,6 @@ const MonCompte = () => {
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswordData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handlePhotoClick = () => {
-    fileInputRef.current?.click();
   };
 
   const handlePhotoChange = async (e) => {
@@ -174,6 +157,7 @@ const MonCompte = () => {
       const currentUser = JSON.parse(localStorage.getItem("user"));
       currentUser.photoUrl = response.user.photoUrl;
       localStorage.setItem("user", JSON.stringify(currentUser));
+      updateUser(currentUser);
 
       setSuccess("Photo de profil mise à jour avec succès !");
       setError(null);
@@ -189,8 +173,7 @@ const MonCompte = () => {
   const handleUpdateProfile = async () => {
     try {
       await authService.updateProfile({
-        prenom: formData.prenom,
-        nom: formData.nom,
+        pseudo: formData.pseudo,
         telephone: formData.telephone,
         niveauPole: formData.niveauPole,
       });
@@ -255,60 +238,30 @@ const MonCompte = () => {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+      <Box sx={loadingContainer}>
         <CircularProgress size={60} sx={{ color: "primary.main" }} />
       </Box>
     );
   }
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
-      <Box
-        sx={{
-          flex: "0 0 20%",
-          backgroundImage: `url(${backgroundImg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          display: { xs: "none", md: "block" },
-        }}
-      />
+    <Box sx={monCompteLayout}>
+      <Box sx={{ ...monCompteSidebar, backgroundImage: `url(${backgroundImg})` }} />
 
-      <Box
-        sx={{
-          flex: 1,
-          background:
-            "radial-gradient(circle, #C3135F 0%, #FF1966 0%, #870E58 0%, #4C0850 69%, #574A78 100%)",
-          p: { xs: 3, md: 12 },
-        }}
-      >
+      <Box sx={monCompteMainPanelBg}>
         <Container maxWidth="xl">
-          <Typography
-            variant="h2"
-            sx={{
-              fontSize: { xs: "2rem", md: "3rem" },
-              fontWeight: 800,
-              color: "white",
-              mb: 6,
-            }}
-          >
+          <Typography variant="h2" sx={monCompteTitle}>
             Mon Compte
           </Typography>
 
           {error && (
-            <Alert severity="error" sx={{ mb: 3 }}>
+            <Alert severity="error" sx={bodyMb3}>
               {error}
             </Alert>
           )}
 
           {success && (
-            <Alert severity="success" sx={{ mb: 3 }}>
+            <Alert severity="success" sx={bodyMb3}>
               {success}
             </Alert>
           )}
@@ -325,714 +278,45 @@ const MonCompte = () => {
                 flex: 1,
                 backgroundColor: "navy.main",
                 borderRadius: 0,
-                p: 4,
+                p: { xs: 3, md: 4 },
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 3,
-                  mb: 4,
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 100,
-                    height: 100,
-                    border: "3px solid",
-                    borderColor: "primary.main",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    p: 1,
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={logo}
-                    alt="Logo"
-                    sx={{
-                      width: "100%",
-                      height: "auto",
-                    }}
-                  />
-                </Box>
-
-                <Box sx={{ flex: 1 }}>
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      fontSize: "2rem",
-                      fontWeight: 700,
-                      color: "white",
-                      mb: 1,
-                    }}
-                  >
-                    Mon profil
-                  </Typography>
-
-                  <Typography
-                    onClick={handlePhotoClick}
-                    sx={{
-                      fontSize: "0.9rem",
-                      color: "primary.main",
-                      cursor: "pointer",
-                      textDecoration: "underline",
-                      "&:hover": {
-                        color: "white",
-                      },
-                    }}
-                  >
-                    Éditer ma photo de profil
-                  </Typography>
-
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoChange}
-                    style={{ display: "none" }}
-                  />
-                </Box>
-
-                <Avatar
-                  src={profilePhoto || undefined}
-                  key={photoKey}
-                  sx={{
-                    width: 80,
-                    height: 80,
-                    bgcolor: profilePhoto ? "transparent" : "primary.main",
-                    fontSize: "2rem",
-                    ml: "auto",
-                  }}
-                >
-                  {!profilePhoto &&
-                    (formData.prenom?.[0]?.toUpperCase() || "U")}
-                </Avatar>
-              </Box>
-
-              <TextField
-                fullWidth
-                label="Prénom"
-                name="prenom"
-                value={formData.prenom}
-                onChange={handleChange}
-                variant="filled"
-                sx={{ mb: 3, bgcolor: "white" }}
+              <MonCompteProfile
+                formData={formData}
+                onFormChange={handleChange}
+                profilePhoto={profilePhoto}
+                photoKey={photoKey}
+                onPhotoChange={handlePhotoChange}
+                onSaveProfile={handleUpdateProfile}
+                loading={loading}
               />
 
-              <TextField
-                fullWidth
-                label="Nom"
-                name="nom"
-                value={formData.nom}
-                onChange={handleChange}
-                variant="filled"
-                sx={{ mb: 3, bgcolor: "white" }}
+              <MonComptePassword
+                passwordData={passwordData}
+                onPasswordChange={handlePasswordChange}
+                onSubmit={handleUpdatePassword}
+                loading={loading}
               />
-
-              <TextField
-                fullWidth
-                label="E-Mail"
-                name="email"
-                value={formData.email}
-                disabled
-                variant="outlined"
-                helperText="Mail en lecture seule"
-                sx={{ mb: 3 }}
-              />
-
-              <TextField
-                fullWidth
-                label="Téléphone"
-                name="telephone"
-                value={formData.telephone}
-                onChange={handleChange}
-                variant="filled"
-                sx={{ mb: 3, bgcolor: "white" }}
-              />
-
-              <TextField
-                fullWidth
-                select
-                label="Niveau en pole dance*"
-                name="niveauPole"
-                value={formData.niveauPole}
-                onChange={handleChange}
-                variant="filled"
-                sx={{ mb: 4, bgcolor: "white" }}
-              >
-                <MenuItem value="jamais">Jamais pratiqué</MenuItem>
-                <MenuItem value="debutant">Débutant</MenuItem>
-                <MenuItem value="intermediaire">Intermédiaire</MenuItem>
-                <MenuItem value="avance">Avancé</MenuItem>
-              </TextField>
-
-              <Button
-                onClick={handleUpdateProfile}
-                fullWidth
-                sx={{
-                  backgroundColor: "navy.main",
-                  border: 1,
-                  borderColor: "primary.main",
-                  color: "white",
-                  py: 1.5,
-                  fontSize: "1rem",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  mb: 4,
-                  "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                  },
-                }}
-              >
-                Enregistrer
-              </Button>
-
-              <Typography
-                sx={{
-                  fontSize: "1.2rem",
-                  fontWeight: 600,
-                  color: "white",
-                  mb: 3,
-                }}
-              >
-                Modifier mon mot de passe
-              </Typography>
-
-              <Box component="form" onSubmit={handleUpdatePassword}>
-                <TextField
-                  fullWidth
-                  type="password"
-                  label="Ancien mot de passe"
-                  name="ancienMotDePasse"
-                  value={passwordData.ancienMotDePasse}
-                  onChange={handlePasswordChange}
-                  variant="filled"
-                  sx={{ mb: 3, bgcolor: "white" }}
-                />
-
-                <TextField
-                  fullWidth
-                  type="password"
-                  label="Nouveau mot de passe"
-                  name="nouveauMotDePasse"
-                  value={passwordData.nouveauMotDePasse}
-                  onChange={handlePasswordChange}
-                  variant="filled"
-                  sx={{ mb: 3, bgcolor: "white" }}
-                />
-
-                <Button
-                  type="submit"
-                  fullWidth
-                  sx={{
-                    backgroundColor: "navy.main",
-                    color: "white",
-                    border: 1,
-                    borderColor: "primary.main",
-                    py: 1.5,
-                    fontSize: "1rem",
-                    fontWeight: 600,
-                    textTransform: "uppercase",
-                    "&:hover": {
-                      background:
-                        "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                    },
-                  }}
-                >
-                  Modifier le mot de passe
-                </Button>
-              </Box>
             </Box>
 
-            <Box
-              sx={{
-                flex: 1,
-                backgroundColor: "navy.main",
-                borderRadius: 0,
-                p: 4,
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 3,
-                  mb: 4,
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 100,
-                    height: 100,
-                    border: "3px solid",
-                    borderColor: "primary.main",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    p: 1,
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={logo}
-                    alt="Logo"
-                    sx={{
-                      width: "100%",
-                      height: "auto",
-                    }}
-                  />
-                </Box>
-
-                <Typography
-                  variant="h4"
-                  sx={{
-                    fontSize: "2rem",
-                    fontWeight: 700,
-                    color: "white",
-                  }}
-                >
-                  Mes cours
-                </Typography>
-              </Box>
-
-              <Box sx={{ mb: 3 }}>
-                <Typography
-                  sx={{
-                    fontSize: "1.1rem",
-                    fontWeight: 600,
-                    color: "white",
-                    mb: 2,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                  }}
-                >
-                  <ForfaitIcon /> Mes forfaits & abonnements
-                </Typography>
-
-                {forfaitsActifs.length > 0 && (
-                  <Stack spacing={1} sx={{ mb: 2 }}>
-                    {forfaitsActifs.map((forfait, index) => (
-                      <Box
-                        key={index}
-                        sx={{
-                          bgcolor: "rgba(76, 175, 80, 0.1)",
-                          border: "2px solid #4CAF50",
-                          p: 2,
-                          borderRadius: 1,
-                        }}
-                      >
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}>
-                          <CheckCircleIcon sx={{ color: "#4CAF50" }} />
-                          <Typography sx={{ color: "white", fontWeight: 600 }}>
-                            {forfait.seancesRestantes} séances restantes
-                          </Typography>
-                        </Box>
-                        <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.7)" }}>
-                          Acheté le {new Date(forfait.dateAchat).toLocaleDateString('fr-FR')}
-                          {forfait.dateExpiration && (
-                            <> • Expire le {new Date(forfait.dateExpiration).toLocaleDateString('fr-FR')}</>
-                          )}
-                        </Typography>
-                      </Box>
-                    ))}
-                  </Stack>
-                )}
-
-                {abonnementActif && (
-                  <Box
-                    sx={{
-                      bgcolor: "rgba(33, 150, 243, 0.1)",
-                      border: "2px solid #2196F3",
-                      p: 2,
-                      borderRadius: 1,
-                      mb: 2,
-                    }}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}>
-                      <CalendarIcon sx={{ color: "#2196F3" }} />
-                      <Typography sx={{ color: "white", fontWeight: 600 }}>
-                        Abonnement {userData.abonnementActif.frequenceSeances} cours/semaine
-                      </Typography>
-                    </Box>
-                    <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.7)" }}>
-                      Du {new Date(userData.abonnementActif.dateDebut).toLocaleDateString('fr-FR')} au{' '}
-                      {new Date(userData.abonnementActif.dateFin).toLocaleDateString('fr-FR')}
-                    </Typography>
-                  </Box>
-                )}
-
-                {forfaitsActifs.length === 0 && !abonnementActif && (
-                  <Box
-                    sx={{
-                      bgcolor: "rgba(255, 152, 0, 0.1)",
-                      border: "2px solid #FF9800",
-                      p: 2,
-                      borderRadius: 1,
-                    }}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}>
-                      <CancelIcon sx={{ color: "#FF9800" }} />
-                      <Typography sx={{ color: "white", fontWeight: 600 }}>
-                        Aucun forfait ou abonnement actif
-                      </Typography>
-                    </Box>
-                    <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.7)" }}>
-                      Consultez la page <strong>Tarifs</strong> pour souscrire à un forfait
-                    </Typography>
-                  </Box>
-                )}
-              </Box>
-
-              <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
-
-              <TextField
-                fullWidth
-                label="Prochain cours à venir"
-                value={
-                  nextReservation?.cours?.nom || "Aucune réservation à venir"
-                }
-                slotProps={{ input: { readOnly: true } }}
-                variant="outlined"
-                sx={{
-                  mb: 3,
-                  "& .MuiOutlinedInput-root": {
-                    color: "white",
-                    "& fieldset": {
-                      borderColor: "rgba(255, 255, 255, 0.3)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "rgba(255, 255, 255, 0.7)",
-                  },
-                }}
-              />
-
-              <TextField
-                fullWidth
-                label="Date / Heure"
-                value={
-                  nextReservation?.cours?.dateDebut
-                    ? new Date(nextReservation.cours.dateDebut).toLocaleString(
-                        "fr-FR",
-                        {
-                          weekday: "long",
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        },
-                      )
-                    : "Aucune réservation à venir"
-                }
-                slotProps={{ input: { readOnly: true } }}
-                variant="outlined"
-                sx={{
-                  mb: 3,
-                  "& .MuiOutlinedInput-root": {
-                    color: "white",
-                    "& fieldset": {
-                      borderColor: "rgba(255, 255, 255, 0.3)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "rgba(255, 255, 255, 0.7)",
-                  },
-                }}
-              />
-
-              <TextField
-                fullWidth
-                label="Type de cours"
-                value={
-                  nextReservation?.cours?.type
-                    ? `${nextReservation.cours.type} - Niveau ${nextReservation.cours.niveau || ""}`
-                    : "Aucune réservation à venir"
-                }
-                slotProps={{ input: { readOnly: true } }}
-                variant="outlined"
-                sx={{
-                  mb: 3,
-                  "& .MuiOutlinedInput-root": {
-                    color: "white",
-                    "& fieldset": {
-                      borderColor: "rgba(255, 255, 255, 0.3)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "rgba(255, 255, 255, 0.7)",
-                  },
-                }}
-              />
-
-              <TextField
-                fullWidth
-                label="Statut de réservation"
-                value={
-                  nextReservation?.statut === "confirmee"
-                    ? "Confirmée"
-                    : nextReservation?.statut === "enattente"
-                      ? "En attente"
-                      : "Aucune réservation à venir"
-                }
-                slotProps={{ input: { readOnly: true } }}
-                variant="outlined"
-                sx={{
-                  mb: 4,
-                  "& .MuiOutlinedInput-root": {
-                    color: "white",
-                    "& fieldset": {
-                      borderColor: "rgba(255, 255, 255, 0.3)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "rgba(255, 255, 255, 0.7)",
-                  },
-                }}
-              />
-
-              <Button
-                onClick={() => navigate("/planning")}
-                fullWidth
-                sx={{
-                  backgroundColor: "navy.main",
-                  color: "white",
-                  border: 1,
-                  borderColor: "primary.main",
-                  py: 1.5,
-                  fontSize: "1rem",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  mb: 2,
-                  "&:hover": {
-                    background:
-                      "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                  },
-                }}
-              >
-                Voir planning
-              </Button>
-
-              <Button
-                onClick={handleCancelReservation}
-                disabled={!nextReservation}
-                fullWidth
-                sx={{
-                  backgroundColor: "transparent",
-                  border: "2px solid",
-                  borderColor: nextReservation
-                    ? "primary.main"
-                    : "rgba(255, 255, 255, 0.3)",
-                  color: nextReservation
-                    ? "primary.main"
-                    : "rgba(255, 255, 255, 0.5)",
-                  py: 1.5,
-                  fontSize: "1rem",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  mb: 2,
-                  "&:hover": nextReservation
-                    ? {
-                        background:
-                          "linear-gradient(135deg, #FF1966 0%, #D41173 100%)",
-                        color: "white",
-                        borderColor: "transparent",
-                      }
-                    : {},
-                }}
-              >
-                Annuler une réservation*
-              </Button>
-
-              <Typography
-                sx={{
-                  fontSize: "0.85rem",
-                  color: "primary.main",
-                  textAlign: "center",
-                  fontStyle: "italic",
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                  "&:hover": {
-                    color: "white",
-                  },
-                }}
-                onClick={() => setOpenReglement(true)}
-              >
-                *Voir conditions d'annulations
-              </Typography>
-            </Box>
+            <MonCompteCourses
+              forfaitsActifs={forfaitsActifs}
+              abonnementActif={abonnementActif}
+              nextReservation={nextReservation}
+              userData={userData}
+              onNavigatePlanning={() => navigate("/planning")}
+              onCancelReservation={handleCancelReservation}
+              onOpenReglement={() => setOpenReglement(true)}
+              loading={loading}
+            />
           </Box>
         </Container>
       </Box>
 
-      <Dialog
+      <MonCompteReglement
         open={openReglement}
         onClose={() => setOpenReglement(false)}
-        maxWidth="md"
-        fullWidth
-        PaperProps={{
-          sx: {
-            bgcolor: "#1a1a1a",
-            color: "white",
-          },
-        }}
-      >
-        <DialogTitle
-          sx={{
-            bgcolor: "#8B5CF6",
-            color: "white",
-            fontWeight: 700,
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-          }}
-        >
-          <WarningIcon />
-          Conditions d'annulation - Règlement intérieur
-        </DialogTitle>
-
-        <DialogContent sx={{ mt: 2 }}>
-          <Box
-            sx={{
-              mb: 3,
-              p: 2,
-              bgcolor: "rgba(139, 92, 246, 0.1)",
-              border: "2px solid #8B5CF6",
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{ fontWeight: 700, mb: 2, color: "#FF1966" }}
-            >
-              Article 4 - Accueil et annulation
-            </Typography>
-
-            <Typography variant="body1">
-              Merci d'arriver <strong>5 à 15 minutes à l'avance</strong> afin de
-              commencer le cours à l'heure. Merci de prévenir en cas de retard.
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{ fontWeight: 700, fontSize: "1.1rem", color: "#FF1966" }}
-            >
-              ⚠️ Tout cours non décommandé au maximum <strong>24 heures</strong>{" "}
-              à l'avance sera dû.
-            </Typography>
-          </Box>
-
-          <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
-
-          <Typography
-            variant="h6"
-            sx={{ fontWeight: 700, mb: 2, color: "#FF1966" }}
-          >
-            Paiement obligatoire AVANT le cours pour les cours à l'unité et découverte
-          </Typography>
-          <Typography variant="body2">
-            Le paiement doit être effectué SUR PLACE mais AVANT le début du
-            cours.
-            <br />
-            Merci de vous présenter 5 à 15 minutes à l'avance avec votre
-            règlement.
-          </Typography>
-
-          <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
-
-          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-            Qu'est-ce que cela signifie concrètement ?
-          </Typography>
-
-          <Typography variant="body1">
-            <strong>Si vous annulez PLUS de 24h avant le cours :</strong>
-          </Typography>
-          <Typography variant="body2" sx={{ pl: 2 }}>
-            • Aucune pénalité
-            <br />
-            • Votre séance reste disponible dans votre forfait
-            <br />• Vous pouvez réserver un autre cours sans problème
-          </Typography>
-
-          <Typography variant="body1" sx={{ mt: 2 }}>
-            <strong>Si vous annulez MOINS de 24h avant le cours :</strong>
-          </Typography>
-          <Typography variant="body2" sx={{ pl: 2 }}>
-            • <strong>Forfait :</strong> La séance sera déduite de votre forfait
-            (même si vous ne venez pas)
-            <br />• <strong>Cours à l'unité :</strong> Le cours étant déjà payé,
-            aucun remboursement ne sera effectué.
-          </Typography>
-
-          <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
-
-          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-            Exemple concret
-          </Typography>
-          <Typography variant="body2">
-            Vous avez un cours le <strong>Lundi à 18h</strong>.
-          </Typography>
-          <Typography variant="body2" sx={{ pl: 2 }}>
-            ✅ Vous pouvez annuler <strong>jusqu'à Dimanche 18h</strong> sans
-            pénalité
-            <br />❌ Si vous annulez <strong>après Dimanche 18h</strong>, la
-            séance sera déduite
-          </Typography>
-
-          <Divider sx={{ my: 3, bgcolor: "rgba(255,255,255,0.2)" }} />
-
-          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-            Autres règles importantes
-          </Typography>
-
-          <Typography variant="body2">
-            <strong>Tenue idéale (Article 3) :</strong>
-            <br />
-            • Short de sport / brassière (ventre, bras, jambes et aisselles
-            dénudés)
-            <br />
-            • Bijoux retirés avant le cours
-            <br />• Interdit d'appliquer crème ou huile le jour du cours
-          </Typography>
-
-          <Typography variant="body2">
-            <strong>Certificat médical (Article 1) :</strong>
-            <br />
-            • Non obligatoire mais vivement recommandé
-            <br />
-            • Valable 3 ans
-            <br />• Pratique déconseillée en cas de grossesse, problème
-            cardiaque, hémophilie
-          </Typography>
-
-          <Typography variant="body2">
-            <strong>Déroulement des cours (Article 5) :</strong>
-            <br />
-            • Durée : 1h15 à 1h30
-            <br />
-            • Minimum 5 élèves / Maximum 10 élèves
-            <br />• Paiement : chèque, espèces ou virement bancaire
-          </Typography>
-        </DialogContent>
-
-        <DialogActions sx={{ p: 2 }}>
-          <Button
-            onClick={() => setOpenReglement(false)}
-            variant="contained"
-            sx={{
-              bgcolor: "#8B5CF6",
-              "&:hover": {
-                bgcolor: "#FF1966",
-              },
-            }}
-          >
-            J'ai compris
-          </Button>
-        </DialogActions>
-      </Dialog>
+      />
     </Box>
   );
 };

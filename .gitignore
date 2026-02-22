@@ -1,6 +1,5 @@
 # Dépendances
 node_modules/
-package-lock.json
 
 # Variables environnement (SENSIBLE - ne JAMAIS commit)
 .env
@@ -25,3 +24,8 @@ temp/
 
 # Tests
 coverage/
+# Build outputs
+dist/
+frontend/dist/
+backend/dist/
+build/

@@ -4,8 +4,8 @@ import { Logout as LogoutIcon } from '@mui/icons-material';
 import { useAuth } from '@hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import AdminSidebar from '@components/Admin/AdminSidebar';
-import NotificationBell from '@components/Admin/NotificationBell';
+import AdminSidebar from '@components/admin/AdminSidebar';
+import NotificationBell from '@components/admin/NotificationBell';
 
 
 export default function AdminLayout() {
@@ -42,6 +42,7 @@ export default function AdminLayout() {
               onClick={handleLogout}
               sx={{ color: 'white', ml: 1 }}
               title="Déconnexion"
+              aria-label="Déconnexion"
             >
               <LogoutIcon />
             </IconButton>

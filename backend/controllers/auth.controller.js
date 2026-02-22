@@ -3,15 +3,37 @@ import { Utilisateur } from "../models/index.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
+import crypto from "crypto";
+import { sendResetPasswordEmail, sendWelcomeEmail } from "../utils/emailService.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const buildAuthUserPayload = (user) => {
+  const payload = {
+    id: user._id,
+    email: user.email,
+    role: user.role,
+    pseudo: user.pseudo,
+    statutValidationAdmin: user.statutValidationAdmin,
+    niveauPole: user.niveauPole,
+    photoUrl: user.photoUrl,
+  };
+
+  if (user.role === "admin") {
+    payload.prenom = user.prenom;
+    payload.nom = user.nom;
+  }
+
+  return payload;
+};
 
 export const register = async (req, res) => {
   try {
     const {
       prenom,
       nom,
+      pseudo,
       email,
       motDePasse,
       telephone,
@@ -20,11 +42,11 @@ export const register = async (req, res) => {
       accepteContact,
     } = req.body;
 
-    if (!prenom || !nom || !email || !motDePasse) {
+    if (!prenom || !nom || !pseudo || !email || !motDePasse) {
       return res.status(400).json({
         success: false,
         message:
-          "Veuillez fournir tous les champs obligatoires (prénom, nom, email, mot de passe).",
+          "Veuillez fournir tous les champs obligatoires (prénom, nom, pseudo, email, mot de passe).",
       });
     }
 
@@ -38,9 +60,20 @@ export const register = async (req, res) => {
       });
     }
 
+    const existingPseudo = await Utilisateur.findOne({
+      pseudo: new RegExp(`^${pseudo.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i"),
+    });
+    if (existingPseudo) {
+      return res.status(400).json({
+        success: false,
+        message: "Ce pseudo est déjà utilisé.",
+      });
+    }
+
     const user = await Utilisateur.create({
       prenom,
       nom,
+      pseudo,
       email: email.toLowerCase(),
       motDePasse,
       telephone,
@@ -55,6 +88,23 @@ export const register = async (req, res) => {
       emailVerifie: false,
     });
 
+    const emailVerificationToken = crypto.randomBytes(32).toString("hex");
+    user.tokenVerificationEmail = emailVerificationToken;
+    user.tokenVerificationEmailExpire = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    await user.save({ validateBeforeSave: false });
+
+    const validationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${emailVerificationToken}&email=${encodeURIComponent(email)}`;
+
+    try {
+      await sendWelcomeEmail({
+        email: user.email,
+        prenom: user.prenom,
+        validationUrl,
+      });
+    } catch (emailError) {
+      console.error("Erreur envoi email de bienvenue:", emailError.message);
+    }
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE || "30d",
     });
@@ -65,15 +115,24 @@ export const register = async (req, res) => {
         "Inscription réussie. Votre compte est en attente de validation par un administrateur.",
       token,
       user: {
-        id: user._id,
-        prenom: user.prenom,
-        nom: user.nom,
-        email: user.email,
-        role: user.role,
-        statutValidationAdmin: user.statutValidationAdmin,
+        ...buildAuthUserPayload(user),
       },
     });
   } catch (error) {
+    if (error?.code === 11000 && error?.keyPattern?.pseudo) {
+      return res.status(400).json({
+        success: false,
+        message: "Ce pseudo est déjà utilisé.",
+      });
+    }
+
+    if (error?.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: error.message,
@@ -132,13 +191,7 @@ export const login = async (req, res) => {
       message: "Connexion réussie.",
       token,
       user: {
-        id: user._id,
-        prenom: user.prenom,
-        nom: user.nom,
-        email: user.email,
-        role: user.role,
-        statutValidationAdmin: user.statutValidationAdmin,
-        niveauPole: user.niveauPole,
+        ...buildAuthUserPayload(user),
       },
     });
   } catch (error) {
@@ -166,20 +219,13 @@ export const getMe = async (req, res) => {
     res.status(200).json({
       success: true,
       user: {
-        id: user.id,
-        prenom: user.prenom,
-        nom: user.nom,
-        email: user.email,
+        ...buildAuthUserPayload(user),
         telephone: user.telephone,
         dateNaissance: user.dateNaissance,
-        niveauPole: user.niveauPole,
         accepteContact: user.accepteContact,
-        role: user.role,
-        statutValidationAdmin: user.statutValidationAdmin,
-        photoUrl: user.photoUrl,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
-        
+
         forfaitsActifs: user.forfaitsActifs || [],
         abonnementActif: user.abonnementActif || null,
         nombreCoursReserves: user.nombreCoursReserves || 0,
@@ -197,8 +243,7 @@ export const getMe = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const fieldsToUpdate = {
-      prenom: req.body.prenom,
-      nom: req.body.nom,
+      pseudo: req.body.pseudo,
       telephone: req.body.telephone,
       dateNaissance: req.body.dateNaissance,
       niveauPole: req.body.niveauPole,
@@ -224,9 +269,30 @@ export const updateProfile = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Profil mis à jour avec succès.",
-      user,
+      user: {
+        ...buildAuthUserPayload(user),
+        telephone: user.telephone,
+        dateNaissance: user.dateNaissance,
+        accepteContact: user.accepteContact,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
     });
   } catch (error) {
+    if (error?.code === 11000 && error?.keyPattern?.pseudo) {
+      return res.status(400).json({
+        success: false,
+        message: "Ce pseudo est déjà utilisé.",
+      });
+    }
+
+    if (error?.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: error.message,
@@ -275,13 +341,7 @@ export const uploadPhoto = async (req, res) => {
       success: true,
       message: "Photo de profil mise à jour avec succès",
       user: {
-        id: user._id,
-        prenom: user.prenom,
-        nom: user.nom,
-        email: user.email,
-        role: user.role,
-        photoUrl: user.photoUrl,
-        niveauPole: user.niveauPole,
+        ...buildAuthUserPayload(user),
       },
     });
   } catch (error) {
@@ -339,4 +399,140 @@ export const logout = async (req, res) => {
     success: true,
     message: "Déconnexion réussie. Veuillez supprimer le token côté client.",
   });
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Veuillez fournir une adresse email.",
+      });
+    }
+
+    const user = await Utilisateur.findOne({
+      email: email.toLowerCase(),
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "Aucun utilisateur trouvé avec cet email. Veuillez vérifier votre adresse.",
+      });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    user.tokenResetPassword = hashedToken;
+    user.tokenResetPasswordExpire = new Date(Date.now() + 30 * 60 * 1000);
+    await user.save({ validateBeforeSave: false });
+
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&email=${email}`;
+
+    try {
+      await sendResetPasswordEmail({
+        email: user.email,
+        prenom: user.prenom,
+        resetUrl,
+      });
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Un email de réinitialisation a été envoyé à votre adresse. Veuillez vérifier votre boîte mail.",
+      });
+    } catch (emailError) {
+      user.tokenResetPassword = undefined;
+      user.tokenResetPasswordExpire = undefined;
+      await user.save({ validateBeforeSave: false });
+
+      return res.status(500).json({
+        success: false,
+        message:
+          "Erreur lors de l'envoi de l'email. Veuillez réessayer plus tard.",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token, email, newPassword, confirmPassword } = req.body;
+
+    if (!token || !email || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Veuillez fournir tous les champs requis.",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Les mots de passe ne correspondent pas.",
+      });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: "Le mot de passe doit contenir au moins 8 caractères.",
+      });
+    }
+
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    const user = await Utilisateur.findOne({
+      email: email.toLowerCase(),
+      tokenResetPassword: hashedToken,
+      tokenResetPasswordExpire: { $gt: new Date() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Le lien de réinitialisation est invalide ou a expiré. Veuillez demander un nouveau lien.",
+      });
+    }
+
+    user.motDePasse = newPassword;
+    user.tokenResetPassword = undefined;
+    user.tokenResetPasswordExpire = undefined;
+    await user.save();
+
+    const newToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE || "30d",
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Mot de passe réinitialisé avec succès.",
+      token: newToken,
+      user: {
+        id: user._id,
+        prenom: user.prenom,
+        nom: user.nom,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };

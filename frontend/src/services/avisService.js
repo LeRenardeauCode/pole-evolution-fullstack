@@ -1,53 +1,46 @@
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL;
+import api from './api';
 
 const avisService = {
   getAvisVisibles: async (limit = 3) => {
-    const response = await axios.get(`${API_URL}/avis/publics`, {
+    const response = await api.get('/avis/publics', {
       params: { limit }
     });
     return response.data.data;
   },
 
   getAvisCours: async (coursId) => {
-    const response = await axios.get(`${API_URL}/avis/cours/${coursId}`);
+    const response = await api.get(`/avis/cours/${coursId}`);
     return response.data;
   },
 
-  createAvis: async (avisData, token) => {
-    const response = await axios.post(
-      `${API_URL}/avis`,
-      avisData,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
+  createAvis: async (avisData) => {
+    const response = await api.post(
+      '/avis',
+      avisData
     );
     return response.data;
   },
 
-  getMesAvis: async (token) => {
-    const response = await axios.get(`${API_URL}/avis/mes-avis`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  createAvisGeneral: async (avisData) => {
+    const response = await api.post('/avis/general', avisData);
     return response.data;
   },
 
-  updateAvis: async (avisId, avisData, token) => {
-    const response = await axios.put(
-      `${API_URL}/avis/${avisId}`,
-      avisData,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
+  getMesAvis: async () => {
+    const response = await api.get('/avis/mes-avis');
+    return response.data;
+  },
+
+  updateAvis: async (avisId, avisData) => {
+    const response = await api.put(
+      `/avis/${avisId}`,
+      avisData
     );
     return response.data;
   },
 
-  deleteAvis: async (avisId, token) => {
-    const response = await axios.delete(`${API_URL}/avis/${avisId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  deleteAvis: async (avisId) => {
+    const response = await api.delete(`/avis/${avisId}`);
     return response.data;
   },
 };

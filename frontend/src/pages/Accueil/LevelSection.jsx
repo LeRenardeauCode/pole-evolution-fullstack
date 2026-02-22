@@ -67,7 +67,7 @@ const LevelsSection = () => {
           Que vous soyez débutante ou intermédiaire, nos cours s'adaptent à votre progression
         </Typography>
 
-        <Grid container spacing={6} justifyContent="center">
+        <Grid container spacing={{ xs: 4, md: 6 }} justifyContent="center">
           {levels.map((level) => (
             <Grid item xs={12} md={4} key={level.id}>
               <Stack
@@ -83,8 +83,8 @@ const LevelsSection = () => {
               >
                 <Box
                   sx={{
-                    width: 120,
-                    height: 120,
+                    width: { xs: 96, sm: 110, md: 120 },
+                    height: { xs: 96, sm: 110, md: 120 },
                     borderRadius: '50%',
                     backgroundColor: level.color,
                     display: 'flex',
@@ -96,6 +96,7 @@ const LevelsSection = () => {
                 >
                   <Box
                     component="img"
+                    loading="lazy"
                     src={level.image}
                     alt={level.title}
                     sx={{
@@ -111,6 +112,8 @@ const LevelsSection = () => {
                     fontWeight: 700,
                     color: 'white',
                     textTransform: 'uppercase',
+                    fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
+                    lineHeight: 1.15,
                   }}
                 >
                   {level.title}

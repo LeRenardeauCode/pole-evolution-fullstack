@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Box, Container, Typography, IconButton, CircularProgress, Alert } from '@mui/material';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useGallery } from '@hooks/useGallery';
+import { optimizeCloudinaryUrl } from '@utils/imageOptimization';
 
 const Galerie = () => {
   const { medias, featuredMedias, loading, error } = useGallery();
@@ -70,20 +71,21 @@ const Galerie = () => {
                 width: '100%',
                 maxWidth: 1200,
                 mx: 'auto',
-                height: { xs: 500, md: 700 },
+                height: { xs: 420, sm: 520, md: 700 },
               }}
             >
               {featuredMedias[0] && (
                 <Box
                   component="img"
-                  src={featuredMedias[0].url}
+                  loading="lazy"
+                  src={optimizeCloudinaryUrl(featuredMedias[0].url, { width: 400, quality: 'auto:best' })}
                   alt={featuredMedias[0].titre || 'Photo 1'}
                   sx={{
                     position: 'absolute',
                     top: { xs: 0, md: 20 },
                     left: { xs: 0, md: '5%' },
                     width: { xs: '45%', md: '35%' },
-                    height: { xs: 180, md: 280 },
+                    height: { xs: 160, sm: 200, md: 280 },
                     objectFit: 'cover',
                     borderRadius: 2,
                     border: '3px solid rgba(255, 255, 255, 0.15)',
@@ -96,14 +98,15 @@ const Galerie = () => {
               {featuredMedias[1] && (
                 <Box
                   component="img"
-                  src={featuredMedias[1].url}
+                  loading="lazy"
+                  src={optimizeCloudinaryUrl(featuredMedias[1].url, { width: 500, quality: 'auto:best' })}
                   alt={featuredMedias[1].titre || 'Photo 2'}
                   sx={{
                     position: 'absolute',
                     top: { xs: 20, md: 60 },
                     right: { xs: 0, md: '8%' },
                     width: { xs: '50%', md: '40%' },
-                    height: { xs: 200, md: 320 },
+                    height: { xs: 180, sm: 220, md: 320 },
                     objectFit: 'cover',
                     borderRadius: 2,
                     border: '3px solid rgba(255, 255, 255, 0.15)',
@@ -116,14 +119,15 @@ const Galerie = () => {
               {featuredMedias[2] && (
                 <Box
                   component="img"
-                  src={featuredMedias[2].url}
+                  loading="lazy"
+                  src={optimizeCloudinaryUrl(featuredMedias[2].url, { width: 450, quality: 'auto:best' })}
                   alt={featuredMedias[2].titre || 'Photo 3'}
                   sx={{
                     position: 'absolute',
                     bottom: { xs: 120, md: 150 },
                     left: { xs: '15%', md: '20%' },
                     width: { xs: '40%', md: '32%' },
-                    height: { xs: 180, md: 260 },
+                    height: { xs: 160, sm: 200, md: 260 },
                     objectFit: 'cover',
                     borderRadius: 2,
                     border: '3px solid rgba(255, 255, 255, 0.15)',
@@ -136,14 +140,15 @@ const Galerie = () => {
               {featuredMedias[3] && (
                 <Box
                   component="img"
-                  src={featuredMedias[3].url}
+                  loading="lazy"
+                  src={optimizeCloudinaryUrl(featuredMedias[3].url, { width: 500, quality: 'auto:best' })}
                   alt={featuredMedias[3].titre || 'Photo 4'}
                   sx={{
                     position: 'absolute',
                     bottom: { xs: 100, md: 120 },
                     right: { xs: '5%', md: '12%' },
                     width: { xs: '45%', md: '38%' },
-                    height: { xs: 200, md: 300 },
+                    height: { xs: 180, sm: 220, md: 300 },
                     objectFit: 'cover',
                     borderRadius: 2,
                     border: '3px solid rgba(255, 255, 255, 0.15)',
@@ -168,7 +173,9 @@ const Galerie = () => {
               textAlign: 'center',
               textShadow: '0 4px 20px rgba(0, 0, 0, 0.7)',
               zIndex: 10,
-              whiteSpace: 'nowrap',
+              whiteSpace: { xs: 'normal', md: 'nowrap' },
+              lineHeight: { xs: 1.1, sm: 1.15 },
+              maxWidth: { xs: '90%', md: 'none' },
             }}
           >
             GALERIE{' '}
@@ -205,18 +212,19 @@ const Galerie = () => {
           </Typography>
 
           {medias.length > 0 ? (
-            <Box sx={{ position: 'relative', maxWidth: 1000, mx: 'auto', px: { xs: 8, md: 12 } }}>
+            <Box sx={{ position: 'relative', maxWidth: 1000, mx: 'auto', px: { xs: 5, sm: 8, md: 12 } }}>
               <IconButton
                 onClick={handlePrevSlide}
+                aria-label="Image précédente"
                 sx={{
                   position: 'absolute',
-                  left: { xs: -10, md: 0 },
+                  left: { xs: 0, md: 0 },
                   top: '50%',
                   transform: 'translateY(-50%)',
                   zIndex: 10,
-                  width: { xs: 50, md: 70 },
-                  height: { xs: 50, md: 70 },
-                  border: '3px solid',
+                  width: { xs: 44, md: 70 },
+                  height: { xs: 44, md: 70 },
+                  border: { xs: '2px solid', md: '3px solid' },
                   borderColor: 'primary.main',
                   backgroundColor: 'rgba(0, 0, 0, 0.5)',
                   color: 'primary.main',
@@ -236,7 +244,7 @@ const Galerie = () => {
                   position: 'relative',
                   overflow: 'hidden',
                   borderRadius: 3,
-                  height: { xs: 400, md: 600 },
+                  height: { xs: 320, sm: 420, md: 600 },
                 }}
               >
                 {medias.map((media, index) => {
@@ -260,7 +268,8 @@ const Galerie = () => {
                     >
                       <Box
                         component="img"
-                        src={media.url}
+                        loading="lazy"
+                        src={optimizeCloudinaryUrl(media.url, { width: 800, quality: 'auto:good' })}
                         alt={media.titre || `Slide ${index + 1}`}
                         sx={{
                           width: '100%',
@@ -279,15 +288,16 @@ const Galerie = () => {
 
               <IconButton
                 onClick={handleNextSlide}
+                aria-label="Image suivante"
                 sx={{
                   position: 'absolute',
-                  right: { xs: -10, md: 0 },
+                  right: { xs: 0, md: 0 },
                   top: '50%',
                   transform: 'translateY(-50%)',
                   zIndex: 10,
-                  width: { xs: 50, md: 70 },
-                  height: { xs: 50, md: 70 },
-                  border: '3px solid',
+                  width: { xs: 44, md: 70 },
+                  height: { xs: 44, md: 70 },
+                  border: { xs: '2px solid', md: '3px solid' },
                   borderColor: 'primary.main',
                   backgroundColor: 'rgba(0, 0, 0, 0.5)',
                   color: 'primary.main',
@@ -315,8 +325,8 @@ const Galerie = () => {
                     key={index}
                     onClick={() => setCurrentSlide(index)}
                     sx={{
-                      width: index === currentSlide ? 40 : 12,
-                      height: 12,
+                      width: index === currentSlide ? { xs: 28, sm: 40 } : { xs: 10, sm: 12 },
+                      height: { xs: 10, sm: 12 },
                       borderRadius: 6,
                       backgroundColor:
                         index === currentSlide ? 'primary.main' : 'rgba(255, 255, 255, 0.3)',

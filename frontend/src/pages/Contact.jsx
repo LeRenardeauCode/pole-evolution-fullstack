@@ -113,7 +113,7 @@ const Contact = () => {
               <Typography
                 variant="h2"
                 sx={{
-                  fontSize: { xs: '2.5rem', md: '3.5rem' },
+                  fontSize: { xs: '2rem', sm: '2.5rem', md: '3.5rem' },
                   fontWeight: 800,
                   background: 'linear-gradient(90deg, #FF1966 0%, #100249 100%)',
                   WebkitBackgroundClip: 'text',
@@ -126,7 +126,7 @@ const Contact = () => {
 
               <Box
                 sx={{
-                  width: 300,
+                  width: { xs: 200, sm: 260, md: 300 },
                   height: 10,
                   background: '#100249',
                   mb: 6,
@@ -135,6 +135,7 @@ const Contact = () => {
 
               <Box
                 component="img"
+                loading="lazy"
                 src={logo}
                 alt="Pole Evolution Logo"
                 sx={{
@@ -164,7 +165,14 @@ const Contact = () => {
                   </Alert>
                 )}
 
-                <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    gap: 2,
+                    mb: 3,
+                    flexDirection: { xs: 'column', sm: 'row' },
+                  }}
+                >
                   <TextField
                     fullWidth
                     label="Nom"

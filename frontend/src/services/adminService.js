@@ -168,6 +168,16 @@ export const rejeterAvis = async (id, raison) => {
   return response.data;
 };
 
+export const updateAvis = async (id, data) => {
+  const response = await api.put(`/avis/${id}`, data);
+  return response.data;
+};
+
+export const deleteAvis = async (id) => {
+  const response = await api.delete(`/avis/${id}`);
+  return response.data;
+};
+
 export const getStatsAvis = async () => {
   const response = await api.get('/avis/admin/stats');
   return response.data;

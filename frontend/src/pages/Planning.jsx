@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Box,
   Container,
@@ -6,9 +6,8 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
-import CalendarView from "@/components/UI/CalendarView";
-import WeekNavigator from "@/components/UI/WeekNavigator";
-import FilterBar from "@/components/UI/FilterBar";
+import { CalendarView, WeekNavigator } from "@components/Planning";
+import { FilterBar } from "@components/common";
 import { useCours } from "@/hooks/useCours";
 
 const Planning = () => {
@@ -21,9 +20,11 @@ const Planning = () => {
 
   const { cours, loading, error, refetch } = useCours(currentDate, filters);
 
-  const coursAffichables = cours.filter((c) => {
-    return ["collectif", "decouverte"].includes(c.type);
-  });
+  const coursAffichables = useMemo(() => {
+    return cours.filter((c) => {
+      return ["collectif", "decouverte"].includes(c.type);
+    });
+  }, [cours]);
 
   return (
     <Box>
@@ -59,7 +60,7 @@ const Planning = () => {
             variant="h1"
             sx={{
               fontWeight: "bold",
-              fontSize: { xs: "2.5rem", md: "4rem" },
+              fontSize: { xs: "2rem", sm: "2.6rem", md: "4rem" },
               mb: 2,
             }}
           >
@@ -68,7 +69,10 @@ const Planning = () => {
               RÉSERVATION
             </Box>
           </Typography>
-          <Typography variant="h5" sx={{ fontWeight: 300 }}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: 300, fontSize: { xs: "1.1rem", sm: "1.25rem" } }}
+          >
             Réservez vos cours collectifs et découverte
           </Typography>
           <Typography variant="body1" sx={{ mt: 1, opacity: 0.9 }}>

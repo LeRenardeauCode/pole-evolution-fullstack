@@ -4,6 +4,7 @@ const users = [
   {
     prenom: 'Admin',
     nom: 'Pole Evolution',
+    pseudo: 'admin',
     email: 'admin@poleevolution.com',
     motDePasse: bcrypt.hashSync('Admin123!', 10),
     telephone: '0612345678',
@@ -24,6 +25,7 @@ const users = [
   {
     prenom: 'Marie',
     nom: 'Dupont',
+    pseudo: 'marie.dupont',
     email: 'marie.dupont@example.com',
     motDePasse: bcrypt.hashSync('User123!', 10),
     telephone: '0623456789',
@@ -46,6 +48,7 @@ const users = [
   {
     prenom: 'Sophie',
     nom: 'Martin',
+    pseudo: 'sophie.martin',
     email: 'sophie.martin@example.com',
     motDePasse: bcrypt.hashSync('User123!', 10),
     telephone: '0634567890',
@@ -68,6 +71,7 @@ const users = [
   {
     prenom: 'Julie',
     nom: 'Leroy',
+    pseudo: 'julie.leroy',
     email: 'julie.leroy@example.com',
     motDePasse: bcrypt.hashSync('User123!', 10),
     telephone: '0645678901',

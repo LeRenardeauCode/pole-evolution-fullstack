@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getCoursPlanningSemaine } from '@/services/coursService';
+import { getCoursPlanningSemaine } from '@services/coursService';
 
 export const useCours = (currentDate, filters) => {
   const [cours, setCours] = useState([]);
@@ -23,6 +23,7 @@ export const useCours = (currentDate, filters) => {
 
   useEffect(() => {
     fetchCours();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDate, type, niveau, placesDisponibles]);
 
   return { cours, loading, error, refetch: fetchCours };

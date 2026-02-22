@@ -12,7 +12,7 @@ export const getAvisPublics = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const avis = await Avis.find(query)
-      .populate("utilisateur", "prenom nom")
+      .populate("utilisateur", "pseudo photoUrl")
       .populate("cours", "nom type niveau dateDebut")
       .sort({ datePublication: -1 })
       .limit(parseInt(limit))
@@ -43,7 +43,7 @@ export const getAvisCours = async (req, res) => {
       statut: "approuve",
       estPublic: true,
     })
-      .populate("utilisateur", "prenom nom")
+      .populate("utilisateur", "pseudo photoUrl")
       .sort({ datePublication: -1 });
 
     const noteMoyenne =
@@ -148,13 +148,74 @@ export const createAvis = async (req, res) => {
     await Notification.creer({
       type: "nouvel_avis_admin",
       titre: "Nouvel avis à valider",
-      message: `${req.user.prenom} ${req.user.nom} a laissé un avis (${note}/5) pour "${cours.nom}"`,
+      message: `${req.user.pseudo || "Un membre"} a laissé un avis (${note}/5) pour "${cours.nom}"`,
       priorite: "basse",
       utilisateurId: null,
     });
 
     const avisComplet = await Avis.findById(avis._id)
-      .populate("utilisateur", "prenom nom")
+      .populate("utilisateur", "pseudo photoUrl")
+      .populate("cours", "nom type");
+
+    res.status(201).json({
+      success: true,
+      message:
+        "Avis créé avec succès. Il sera visible après validation par un administrateur.",
+      data: avisComplet,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const createAvisGeneral = async (req, res) => {
+  try {
+    const { note, commentaire } = req.body;
+
+    if (!note || !commentaire) {
+      return res.status(400).json({
+        success: false,
+        message: "La note et le commentaire sont requis",
+      });
+    }
+
+    if (note < 1 || note > 5) {
+      return res.status(400).json({
+        success: false,
+        message: "La note doit être entre 1 et 5",
+      });
+    }
+
+    if (commentaire.trim().length < 10) {
+      return res.status(400).json({
+        success: false,
+        message: "Le commentaire doit contenir au moins 10 caractères",
+      });
+    }
+
+    const avis = await Avis.create({
+      utilisateur: req.user._id,
+      note,
+      commentaire,
+      nomAffiche: req.user.pseudo || undefined,
+      statut: "en_attente",
+      estPublic: false,
+      source: "site_web",
+    });
+
+    await Notification.creer({
+      type: "nouvel_avis_admin",
+      titre: "Nouvel avis à valider",
+      message: `${req.user.pseudo || "Un membre"} a laissé un avis (${note}/5) général`,
+      priorite: "basse",
+      utilisateurId: null,
+    });
+
+    const avisComplet = await Avis.findById(avis._id)
+      .populate("utilisateur", "pseudo photoUrl")
       .populate("cours", "nom type");
 
     res.status(201).json({
@@ -182,7 +243,10 @@ export const updateAvis = async (req, res) => {
       });
     }
 
-    if (avis.utilisateur.toString() !== req.user._id.toString()) {
+    if (
+      avis.utilisateur.toString() !== req.user._id.toString() &&
+      req.user.role !== "admin"
+    ) {
       return res.status(403).json({
         success: false,
         message: "Vous ne pouvez modifier que vos propres avis",
@@ -205,7 +269,7 @@ export const updateAvis = async (req, res) => {
       new: true,
       runValidators: true,
     })
-      .populate("utilisateur", "prenom nom")
+      .populate("utilisateur", "pseudo photoUrl")
       .populate("cours", "nom type");
 
     res.status(200).json({
@@ -284,7 +348,7 @@ export const validerAvis = async (req, res) => {
 
     if (avis.utilisateur) {
       await Notification.creer({
-        type: "avis_client",
+        type: "avis_valide",
         titre: "Votre avis a été publié",
         message:
           "Merci pour votre témoignage ! Il est maintenant visible sur notre site.",
@@ -335,7 +399,7 @@ export const rejeterAvis = async (req, res) => {
 
     if (avis.utilisateur) {
       await Notification.creer({
-        type: "avis_client",
+        type: "avis_rejete",
         titre: "Avis rejeté",
         message: `Votre avis a été rejeté. Raison : ${raison}`,
         priorite: "normale",

@@ -65,7 +65,7 @@ const Login = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          p: { xs: 3, md: 6 },
+          p: { xs: 3, md: 12 },
         }}
       >
         <Box
@@ -77,7 +77,7 @@ const Login = () => {
           <Typography
             variant="h2"
             sx={{
-              fontSize: { xs: '2.5rem', md: '3rem' },
+              fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
               fontWeight: 800,
               color: 'white',
               textAlign: 'center',
@@ -92,7 +92,7 @@ const Login = () => {
               width: '100%',
               backgroundColor: 'navy.main',
               borderRadius: 0,
-              p: { xs: 4, md: 2 },
+              p: { xs: 3, sm: 4, md: 2 },
               border: 1,
               borderColor: 'white',
             }}
@@ -102,7 +102,7 @@ const Login = () => {
               src={logo}
               alt="Pole Evolution"
               sx={{
-                width: 180,
+                width: { xs: 140, sm: 180 },
                 height: 'auto',
                 display: 'block',
                 mx: 'auto',
@@ -161,7 +161,7 @@ const Login = () => {
                 required
                 variant="outlined"
                 sx={{
-                  mb: 4,
+                  mb: 2,
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 0,
                     '& fieldset': {
@@ -175,6 +175,22 @@ const Login = () => {
                 }}
               />
 
+              <Box sx={{ textAlign: 'right', mb: 4 }}>
+                <Link
+                  to="/reset-password"
+                  style={{
+                    color: '#FF1966',
+                    textDecoration: 'none',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                  }}
+                  onMouseEnter={(e) => e.target.style.textDecoration = 'underline'}
+                  onMouseLeave={(e) => e.target.style.textDecoration = 'none'}
+                >
+                  Mot de passe oublié ?
+                </Link>
+              </Box>
+
               <Button
                 type="submit"
                 fullWidth
@@ -186,7 +202,7 @@ const Login = () => {
                   borderRadius: 1,
                   color: 'white',
                   py: 1.5,
-                  fontSize: '1.1rem',
+                  fontSize: { xs: '1rem', sm: '1.1rem' },
                   fontWeight: 600,
                   textTransform: 'uppercase',
                   mb: 2,
@@ -211,7 +227,7 @@ const Login = () => {
                   borderRadius: 1,
                   color: 'white',
                   py: 1.5,
-                  fontSize: '1rem',
+                  fontSize: { xs: '0.95rem', sm: '1rem' },
                   fontWeight: 600,
                   textTransform: 'uppercase',
                   '&:hover': {

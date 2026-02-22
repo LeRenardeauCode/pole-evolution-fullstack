@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect } from 'react';
 import {
   AppBar,
@@ -33,29 +34,10 @@ const Header = () => {
   useEffect(() => {
     if (user?.photoUrl) {
       setProfilePhoto(user.photoUrl);
+    } else {
+      setProfilePhoto(null);
     }
-
-    const handleStorageChange = () => {
-      const updatedUser = JSON.parse(localStorage.getItem('user'));
-      if (updatedUser?.photoUrl) {
-        setProfilePhoto(updatedUser?.photoUrl);
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    const interval = setInterval(() => {
-      const currentUser = JSON.parse(localStorage.getItem('user'));
-      if (currentUser?.photoUrl && currentUser.photoUrl !== profilePhoto) {
-        setProfilePhoto(currentUser.photoUrl);
-      }
-    }, 1000);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      clearInterval(interval);
-    };
-  }, [user]); // ✅ Seulement 'user' dans les dépendances
+  }, [user?.photoUrl]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -175,7 +157,7 @@ const Header = () => {
 
               {isAuthenticated ? (
                 <>
-                  <IconButton onClick={handleMenuOpen} sx={{ ml: 2 }}>
+                  <IconButton onClick={handleMenuOpen} sx={{ ml: 2 }} aria-label="Menu utilisateur">
                     <Avatar
                       src={profilePhoto || undefined}
                       key={profilePhoto} // ✅ Force refresh quand photoUrl change
@@ -186,13 +168,13 @@ const Header = () => {
                         boxShadow: scrolled ? 'none' : '0px 2px 8px rgba(0, 0, 0, 0.5)',
                       }}
                     >
-                      {!profilePhoto && user?.prenom?.charAt(0).toUpperCase()}
+                      {!profilePhoto && user?.pseudo?.charAt(0).toUpperCase()}
                     </Avatar>
                   </IconButton>
 
                   <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
                     <MenuItem disabled sx={{ fontWeight: 600 }}>
-                      {user?.prenom} {user?.nom}
+                      {user?.pseudo || "Compte"}
                     </MenuItem>
                     <MenuItem onClick={() => { handleMenuClose(); navigate('/mon-compte'); }}>
                       Mon compte
@@ -227,6 +209,7 @@ const Header = () => {
               color="inherit"
               edge="end"
               onClick={handleDrawerToggle}
+              aria-label="Ouvrir menu mobile"
               sx={{
                 display: { lg: 'none' },
                 filter: scrolled ? 'none' : 'drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.8))',
@@ -251,7 +234,7 @@ const Header = () => {
         }}
       >
         <Box sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <IconButton onClick={handleDrawerToggle} sx={{ color: 'white' }}>
+          <IconButton onClick={handleDrawerToggle} sx={{ color: 'white' }} aria-label="Fermer menu">
             <FaTimes size={24} />
           </IconButton>
         </Box>

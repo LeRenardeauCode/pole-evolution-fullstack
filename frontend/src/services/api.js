@@ -1,5 +1,5 @@
 import axios from "axios";
-import authService from "@/services/authService";
+import authService from "@services/authService";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -34,11 +34,14 @@ api.interceptors.response.use(
       error.config?.url,
     );
 
-    if (error.response?.status === 401) {
+    const requestUrl = error.config?.url || "";
+    const isPasswordUpdate = requestUrl.includes("/auth/update-password");
+
+    if (error.response?.status === 401 && !isPasswordUpdate) {
       authService.logout();
       try {
         window.dispatchEvent(new CustomEvent('auth:logout'));
-      } catch (e) {
+      } catch {
         window.location.href = "/connexion";
       }
     }

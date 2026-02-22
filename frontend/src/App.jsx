@@ -9,24 +9,33 @@ import Header from "@components/layout/Header";
 import Footer from "@components/layout/Footer";
 import ProtectedRoute from "@components/common/ProtectedRoute";
 
+// Pages légères (chargement immédiat)
 import Accueil from "@pages/Accueil/Accueil";
-import Cours from "@pages/Cours";
-import Planning from "@pages/Planning"
-import Tarifs from "@pages/Tarifs"
-const ShowAnimations = lazy(() => import('@/pages/ShowAnimations'));
-const Galerie = lazy(() => import('@pages/Galerie'));
 import APropos from '@pages/APropos';
 import Contact from '@pages/Contact';
 import Login from '@pages/Login';
-import Register from '@pages/Register';
-import MonCompte from '@pages/MonCompte';
+import ResetPassword from '@pages/ResetPassword';
+import PolitiqueConfidentialite from '@pages/PolitiqueConfidentialite';
+import MentionsLegales from '@pages/MentionsLegales';
+import PolitiqueCookies from '@pages/PolitiqueCookies';
+import RéglementIntérieur from '@pages/RéglementIntérieur';
 
-const AdminLayout = lazy(() => import('@pages/Admin/AdminLayout'));
-import CoursPlanning from '@pages/Admin/CoursPlanning';
-import Eleves from '@pages/Admin/Eleves';
-import TarifsContenu from '@pages/Admin/TarifsContenu';
-import NotificationsPage from '@pages/Admin/Notifications';
-import Parametres from '@pages/Admin/Parametres';
+// Pages lourdes (lazy-loading)
+const Cours = lazy(() => import('@pages/Cours'));
+const Planning = lazy(() => import('@pages/Planning'));
+const Tarifs = lazy(() => import('@pages/Tarifs'));
+const Register = lazy(() => import('@pages/Register'));
+const MonCompte = lazy(() => import('@pages/MonCompte'));
+const ShowAnimations = lazy(() => import('@pages/ShowAnimations'));
+const Galerie = lazy(() => import('@pages/Galerie'));
+
+// Admin pages (lazy-loading)
+const AdminLayout = lazy(() => import('@pages/admin/AdminLayout'));
+const CoursPlanning = lazy(() => import('@pages/admin/CoursPlanning'));
+const Eleves = lazy(() => import('@pages/admin/Eleves'));
+const TarifsContenu = lazy(() => import('@pages/admin/TarifsContenu'));
+const NotificationsPage = lazy(() => import('@pages/admin/Notifications'));
+const Parametres = lazy(() => import('@pages/admin/Parametres'));
 
 import theme from '@utils/theme';
 
@@ -44,22 +53,29 @@ function App() {
               <main style={{ flex: 1 }}>
                 <Routes>
                   <Route path="/" element={<Accueil />} />
-                  <Route path="/cours" element={<Cours />} />
-                  <Route path="/planning" element={<Planning />} />
-                  <Route path="/tarifs" element={<Tarifs />} />
-                  <Route path="/show-animations" element={<Suspense fallback={<div /> }><ShowAnimations /></Suspense>} />
-                  <Route path="/galerie" element={<Suspense fallback={<div /> }><Galerie /></Suspense>} />
+                  <Route path="/cours" element={<Suspense fallback={<div />}><Cours /></Suspense>} />
+                  <Route path="/planning" element={<Suspense fallback={<div />}><Planning /></Suspense>} />
+                  <Route path="/tarifs" element={<Suspense fallback={<div />}><Tarifs /></Suspense>} />
+                  <Route path="/show-animations" element={<Suspense fallback={<div />}><ShowAnimations /></Suspense>} />
+                  <Route path="/galerie" element={<Suspense fallback={<div />}><Galerie /></Suspense>} />
                   <Route path="/a-propos" element={<APropos />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/connexion" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="/register" element={<Suspense fallback={<div />}><Register /></Suspense>} />
+                  <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
+                  <Route path="/mentions-legales" element={<MentionsLegales />} />
+                  <Route path="/politique-cookies" element={<PolitiqueCookies />} />
+                  <Route path="/reglement-interieur" element={<RéglementIntérieur />} />
 
                   {/* Routes protégées utilisateur */}
                   <Route
                     path="/mon-compte"
                     element={
                       <ProtectedRoute>
-                        <MonCompte />
+                        <Suspense fallback={<div />}>
+                          <MonCompte />
+                        </Suspense>
                       </ProtectedRoute>
                     }
                   />
@@ -83,17 +99,17 @@ function App() {
           path="/admin/*"
           element={
             <ProtectedRoute adminOnly>
-              <Suspense fallback={<div /> }>
+              <Suspense fallback={<div />}>
                 <AdminLayout />
               </Suspense>
             </ProtectedRoute>
           }
         >
-          <Route path="cours" element={<CoursPlanning />} />
-          <Route path="eleves" element={<Eleves />} />
-          <Route path="tarifs" element={<TarifsContenu />} />
-          <Route path="notifications" element={<NotificationsPage />} />
-          <Route path="parametres" element={<Parametres />} />
+          <Route path="cours" element={<Suspense fallback={<div />}><CoursPlanning /></Suspense>} />
+          <Route path="eleves" element={<Suspense fallback={<div />}><Eleves /></Suspense>} />
+          <Route path="tarifs" element={<Suspense fallback={<div />}><TarifsContenu /></Suspense>} />
+          <Route path="notifications" element={<Suspense fallback={<div />}><NotificationsPage /></Suspense>} />
+          <Route path="parametres" element={<Suspense fallback={<div />}><Parametres /></Suspense>} />
         </Route>
       </Routes>
 

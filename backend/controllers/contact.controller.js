@@ -1,6 +1,7 @@
 import MessageContact from '../models/MessageContact.js';
 import Notification from '../models/Notification.js';
 import asyncHandler from 'express-async-handler';
+import { sendContactNotificationToAdmin, sendContactConfirmationToUser } from '../utils/emailService.js';
 
 export const envoyerMessage = asyncHandler(async (req, res) => {
   const { nom, prenom, email, telephone, sujet, message } = req.body;
@@ -25,6 +26,7 @@ export const envoyerMessage = asyncHandler(async (req, res) => {
     userAgent: req.get('user-agent')
   });
 
+  // Créer notification dans le système
   await Notification.creer({
     type: 'nouveau_message',
     titre: `Nouveau message: ${sujet}`,
@@ -33,6 +35,34 @@ export const envoyerMessage = asyncHandler(async (req, res) => {
     messageContactId: messageContact._id,
     lienAction: `/admin/messages/${messageContact._id}`
   });
+
+  // Envoyer emails (non bloquant - ne pas faire échouer la requête si erreur email)
+  try {
+    // Notification à l'admin
+    await sendContactNotificationToAdmin({
+      nom,
+      prenom,
+      email,
+      telephone,
+      sujet,
+      message
+    });
+  } catch (emailError) {
+    console.error('Erreur envoi email admin:', emailError.message);
+    // Continue sans bloquer
+  }
+
+  try {
+    // Confirmation à l'utilisateur
+    await sendContactConfirmationToUser({
+      email,
+      prenom,
+      nom
+    });
+  } catch (emailError) {
+    console.error('Erreur envoi email confirmation:', emailError.message);
+    // Continue sans bloquer
+  }
 
   res.status(201).json({
     success: true,

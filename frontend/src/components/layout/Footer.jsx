@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
-import parametreService from "@/services/parametreService";
+import parametreService from "@services/parametreService";
 
 import mapImgDefault from "@/assets/images/google_map.png";
 import banniereImgDefault from "@/assets/images/ENSEIGNE.jpg";
@@ -80,6 +80,7 @@ const Footer = () => {
     };
 
     fetchFooterParams();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {
@@ -219,6 +220,7 @@ const Footer = () => {
           >
             <Box
               component="img"
+              loading="lazy"
               src={banniereImgDefault}
               alt="Pole Evolution"
               sx={{
@@ -233,6 +235,7 @@ const Footer = () => {
                 href={footerData.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Facebook"
                 sx={{
                   color: "white",
                   "&:hover": {
@@ -250,6 +253,7 @@ const Footer = () => {
                 href={footerData.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Instagram"
                 sx={{
                   color: "white",
                   "&:hover": {
@@ -267,6 +271,7 @@ const Footer = () => {
                 href={footerData.tiktokUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="TikTok"
                 sx={{
                   color: "white",
                   "&:hover": {
@@ -363,6 +368,24 @@ const Footer = () => {
                 }}
               >
                 Politique des cookies
+              </MuiLink>
+
+              <MuiLink
+                component={Link}
+                to="/reglement-interieur"
+                sx={{
+                  color: "white",
+                  opacity: 0.7,
+                  textDecoration: "none",
+                  fontSize: "14px",
+                  "&:hover": {
+                    color: "primary.main",
+                    opacity: 1,
+                  },
+                  transition: "all 0.3s",
+                }}
+              >
+                Règlement intérieur
               </MuiLink>
 
               <MuiLink

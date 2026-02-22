@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
+// eslint-disable-next-line no-unused-vars
+import { useInView, motion } from 'framer-motion';
 import { useRef } from 'react';
 
 const FadeIn = ({ children, delay = 0, direction = 'up' }) => {
