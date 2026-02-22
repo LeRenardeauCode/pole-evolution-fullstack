@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import {
   Reservation,
   Cours,
@@ -154,16 +155,19 @@ export const createReservation = async (req, res) => {
         });
       }
 
+      // ← FIX: Convertir forfaitId en ObjectId et comparer correctement
+      const forfaitIdAsObject = new mongoose.Types.ObjectId(forfaitId);
+      
       const forfaitActif = utilisateur.forfaitsActifs.find(
         (f) =>
-          f.forfaitId.toString() === forfaitId &&
+          f.forfaitId.equals(forfaitIdAsObject) &&
           f.estActif &&
           f.seancesRestantes > 0,
       );
 
       if (!forfaitActif) {
         return res.status(400).json({
-          success: false,
+          success: false, 
           message: "Forfait invalide ou plus de séances disponibles",
         });
       }
@@ -255,14 +259,13 @@ export const createReservation = async (req, res) => {
     }
 
     try {
-      // Email confirmation membre
       await sendReservationConfirmationToUser({
         nomEleve: utilisateur.nom,
         prenomEleve: utilisateur.prenom,
         emailEleve: utilisateur.email,
         nomCours: cours.nom,
         dateDebut: cours.dateDebut,
-        lienValidation: null, // Les membres n'ont pas besoin de valider
+        lienValidation: null, 
       });
     } catch (emailError) {
       console.error("Erreur confirmation réservation membre:", emailError.message);
@@ -370,12 +373,9 @@ export const createReservationInvite = async (req, res) => {
     }
     await cours.save();
 
-    // Lien de validation pour invités
     const lienValidation = `${process.env.FRONTEND_URL}/validation-reservation?token=${tokenValidation}&email=${encodeURIComponent(emailInvite)}`;
 
-    // Envoyer emails (non bloquants)
     try {
-      // Email notification admin
       await sendReservationNotificationToAdmin({
         nomEleve: nomEleve,
         prenomEleve: "",
@@ -393,7 +393,6 @@ export const createReservationInvite = async (req, res) => {
     }
 
     try {
-      // Email confirmation invité
       await sendReservationConfirmationToUser({
         nomEleve: nomEleve,
         prenomEleve: "",
@@ -742,7 +741,7 @@ export const validerReservation = async (req, res) => {
       });
     }
 
-    if (reservation.statut !== "enattente") {
+    if (reservation.statut !== "en_attente") {
       return res.status(400).json({
         success: false,
         message: "Seules les réservations en attente peuvent être validées",

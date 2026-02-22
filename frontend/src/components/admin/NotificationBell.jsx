@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   IconButton,
   Badge,
@@ -27,13 +27,14 @@ export default function NotificationBell() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [countNonLu, setCountNonLu] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const isLoadingRef = useRef(false);
   const open = Boolean(anchorEl);
 
   const loadNotifications = useCallback(async () => {
-    if (isLoading) return;
+    // ← Utiliser une ref pour éviter la boucle infinie
+    if (isLoadingRef.current) return;
 
-    setIsLoading(true);
+    isLoadingRef.current = true;
     try {
       const [notifData, countData] = await Promise.all([
         getNotifications({ limit: 10 }),
@@ -44,9 +45,9 @@ export default function NotificationBell() {
     } catch (err) {
       console.error("Erreur chargement notifications:", err);
     } finally {
-      setIsLoading(false);
+      isLoadingRef.current = false;
     }
-  }, [isLoading]);
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -62,7 +63,7 @@ export default function NotificationBell() {
     return () => {
       mounted = false;
     };
-  }, [loadNotifications]);
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
