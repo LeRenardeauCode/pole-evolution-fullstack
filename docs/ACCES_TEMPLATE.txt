@@ -1,0 +1,239 @@
+╔══════════════════════════════════════════════════════════════╗
+║         POLE EVOLUTION - ACCÈS CONFIDENTIELS                 ║
+║         Date de livraison : 22 février 2026                  ║
+║         ⚠️  DOCUMENT STRICTEMENT CONFIDENTIEL  ⚠️           ║
+╚══════════════════════════════════════════════════════════════╝
+
+⚠️  NE PARTAGEZ JAMAIS CES IDENTIFIANTS PAR EMAIL NON CRYPTÉ
+⚠️  CHANGEZ TOUS LES MOTS DE PASSE LORS DE LA PREMIÈRE CONNEXION
+
+
+═══════════════════════════════════════════════════════════════
+1. SITE WEB - ACCÈS PUBLIC
+═══════════════════════════════════════════════════════════════
+
+URL Production    : https://poleevolution.fr
+URL Admin         : https://poleevolution.fr/admin
+
+
+═══════════════════════════════════════════════════════════════
+2. COMPTE ADMINISTRATEUR (SITE WEB)
+═══════════════════════════════════════════════════════════════
+
+Email             : admin@poleevolution.com
+Mot de passe      : Admin123!
+
+❗ À CHANGER IMMÉDIATEMENT APRÈS PREMIÈRE CONNEXION ❗
+
+Procédure changement :
+1. Connexion sur /admin
+2. Cliquer sur l'icône profil en haut à droite
+3. "Mon compte" → "Modifier mon mot de passe"
+4. Nouveau mot de passe (min 8 caractères, 1 majuscule, 1 chiffre)
+
+
+═══════════════════════════════════════════════════════════════
+3. MONGODB ATLAS (BASE DE DONNÉES)
+═══════════════════════════════════════════════════════════════
+
+URL Tableau de bord  : https://cloud.mongodb.com
+Email                : [VOTRE_EMAIL_MONGODB]
+Mot de passe         : [VOTRE_MDP_MONGODB]
+
+Nom du cluster       : pole-evolution-prod
+Région               : eu-west-3 (Paris)
+Tier                 : M0 Sandbox (GRATUIT)
+
+URL Connexion BDD    : mongodb+srv://poleevolution-app:[PASSWORD]@pole-evolution-prod.xxxxx.mongodb.net/poleevolution
+
+⚠️  NE MODIFIEZ RIEN dans Atlas sauf si accompagné par développeur
+
+
+═══════════════════════════════════════════════════════════════
+4. VERCEL (HÉBERGEMENT FRONTEND)
+═══════════════════════════════════════════════════════════════
+
+URL Dashboard        : https://vercel.com/dashboard
+Connexion via        : GitHub (compte ci-dessous)
+
+Projet               : pole-evolution-frontend
+Branche deployée     : main
+URL Production       : https://poleevolution.vercel.app
+
+Actions possibles :
+- Voir les logs de déploiement
+- Vérifier le trafic
+- Gérer le nom de domaine
+
+
+═══════════════════════════════════════════════════════════════
+5. RAILWAY (HÉBERGEMENT BACKEND)
+═══════════════════════════════════════════════════════════════
+
+URL Dashboard        : https://railway.app/dashboard
+Connexion via        : GitHub (compte ci-dessous)
+
+Projet               : pole-evolution-backend
+URL API              : https://pole-evolution-backend.up.railway.app
+
+Coût mensuel         : ~5€ ($5 crédit inclus)
+Carte bancaire       : [VOTRE_CARTE ou CARTE_DEV]
+
+Actions possibles :
+- Voir les logs serveur
+- Redémarrer le service
+- Consulter la consommation RAM/CPU
+
+
+═══════════════════════════════════════════════════════════════
+6. GITHUB (CODE SOURCE)
+═══════════════════════════════════════════════════════════════
+
+URL Repository       : https://github.com/LeRenardeauCode/pole-evolution-fullstack
+Connexion            : Compte développeur (ci-dessous)
+
+⚠️  Option 1 : Accès en lecture seule (recommandé)
+    → Vous recevrez une invitation "Collaborator" par email
+    
+⚠️  Option 2 : Transfert du repo vers votre compte GitHub
+    → Vous devenez propriétaire unique du code
+    → Nécessite création compte GitHub à votre nom
+
+
+Compte développeur (accès temporaire si Option 1) :
+Email GitHub         : [EMAIL_DEV_GITHUB]
+Mot de passe         : [FOURNI ORALEMENT UNIQUEMENT]
+
+❗ Accès révoqué après transfert complet (Option 2)
+
+
+═══════════════════════════════════════════════════════════════
+7. CLOUDINARY (HÉBERGEMENT IMAGES)
+═══════════════════════════════════════════════════════════════
+
+URL Dashboard        : https://cloudinary.com/console
+Email                : [VOTRE_EMAIL_CLOUDINARY]
+Mot de passe         : [VOTRE_MDP_CLOUDINARY]
+
+Cloud Name           : [CLOUD_NAME]
+API Key              : [API_KEY]
+API Secret           : [API_SECRET]
+
+Usage actuel         : ~500 MB / 25 GB (gratuit)
+
+
+═══════════════════════════════════════════════════════════════
+8. EMAIL (ENVOI NOTIFICATIONS)
+═══════════════════════════════════════════════════════════════
+
+Compte email utilisé : contact@poleevolution.fr
+Fournisseur          : [Gmail/OVH/Autre]
+
+App Password         : [APP_PASSWORD_16_CHARS]
+
+⚠️  Ceci est un "App Password", PAS votre mot de passe email normal
+⚠️  Généré depuis les paramètres de sécurité de votre compte email
+
+
+═══════════════════════════════════════════════════════════════
+9. DOMAINE (NOM DE DOMAINE)
+═══════════════════════════════════════════════════════════════
+
+Nom de domaine       : poleevolution.fr
+Registrar            : OVH / Namecheap / Gandi / [AUTRE]
+URL Gestion          : [URL_PANNEAU_DOMAINE]
+
+Email propriétaire   : [VOTRE_EMAIL]
+Mot de passe         : [VOTRE_MDP_REGISTRAR]
+
+Date expiration      : [JJ/MM/AAAA]
+Renouvellement auto  : ☑ OUI  ☐ NON
+
+DNS Configuration :
+  A Record     @ → [IP_VERCEL]
+  CNAME Record www → cname.vercel-dns.com
+  CNAME Record api → [RAILWAY_DOMAIN]
+
+
+═══════════════════════════════════════════════════════════════
+10. VARIABLES D'ENVIRONNEMENT (SECRETS)
+═══════════════════════════════════════════════════════════════
+
+⚠️  CES CLÉS NE DOIVENT JAMAIS ÊTRE PARTAGÉES
+
+JWT_SECRET (Backend Railway) :
+[CLEF_64_CARACTERES_ALEATOIRES]
+
+MONGO_URI (Backend Railway) :
+mongodb+srv://poleevolution-app:[PASSWORD]@pole-evolution-prod.xxxxx.mongodb.net/poleevolution
+
+CLOUDINARY_API_SECRET (Backend Railway) :
+[CLOUDINARY_SECRET]
+
+
+═══════════════════════════════════════════════════════════════
+11. CONTACTS SUPPORT
+═══════════════════════════════════════════════════════════════
+
+Développeur principal :
+Nom                  : [TON_NOM]
+Email                : [TON_EMAIL]
+Téléphone            : [TON_TELEPHONE]
+Disponibilité        : Lun-Ven 9h-18h
+
+Support d'urgence (site down) :
+Email prioritaire    : [EMAIL_URGENCE]
+Délai réponse        : <24h
+
+
+═══════════════════════════════════════════════════════════════
+12. PROCÉDURES D'URGENCE
+═══════════════════════════════════════════════════════════════
+
+🚨 Site inaccessible :
+1. Vérifier https://status.vercel.com (outage Vercel ?)
+2. Vérifier https://railway.app/status (outage Railway ?)
+3. Contacter développeur avec screenshot erreur
+
+🚨 Mot de passe admin oublié :
+1. Contacter développeur par email
+2. Fournir justificatif d'identité
+3. Reset effectué sous 24h
+
+🚨 Base de données compromise :
+1. NE PAS PANIQUER
+2. Appeler développeur immédiatement
+3. Restauration backup sous 2h
+
+
+═══════════════════════════════════════════════════════════════
+13. CHECKLIST PREMIÈRE CONNEXION
+═══════════════════════════════════════════════════════════════
+
+☐ Changer mot de passe admin site web
+☐ Changer mot de passe MongoDB Atlas
+☐ Vérifier accès Vercel Dashboard
+☐ Vérifier accès Railway Dashboard
+☐ Tester création d'un cours
+☐ Tester validation d'une réservation
+☐ Vérifier réception emails notifications
+☐ Sauvegarder ce fichier en lieu sûr (coffre-fort numérique)
+
+
+═══════════════════════════════════════════════════════════════
+14. CHANGELOG ACCÈS
+═══════════════════════════════════════════════════════════════
+
+[DD/MM/YYYY] - Livraison initiale - [Développeur]
+[  /  /    ] - Changement MDP admin - [Cliente]
+[  /  /    ] - Transfert repo GitHub - [Développeur]
+[  /  /    ] - [Autre modification]
+
+
+═══════════════════════════════════════════════════════════════
+               FIN DU DOCUMENT - BONNE CHANCE ! 🎉
+═══════════════════════════════════════════════════════════════
+
+Document généré le : 22/02/2026
+Version : 1.0
+Livré par : [TON_NOM]

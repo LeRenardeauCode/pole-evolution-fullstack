@@ -19,12 +19,22 @@ export default function Parametres() {
   const [placesMax, setPlacesMax] = useState('10');
   const [delaiReservation, setDelaiReservation] = useState('2');
 
+  const [nomEtablissement, setNomEtablissement] = useState('');
+  const [mentionsLegales, setMentionsLegales] = useState('');
+
   const [emailContact, setEmailContact] = useState('');
   const [telephoneContact, setTelephoneContact] = useState('');
   const [adresseEtablissement, setAdresseEtablissement] = useState('');
   const [facebookUrl, setFacebookUrl] = useState('');
   const [instagramUrl, setInstagramUrl] = useState('');
   const [tiktokUrl, setTiktokUrl] = useState('');
+
+  const [footerAdresseLigne1, setFooterAdresseLigne1] = useState('');
+  const [footerAdresseLigne2, setFooterAdresseLigne2] = useState('');
+  const [footerDescription, setFooterDescription] = useState('');
+  const [footerDistanceCambrai, setFooterDistanceCambrai] = useState('');
+  const [footerDistanceDouai, setFooterDistanceDouai] = useState('');
+  const [footerDistanceArras, setFooterDistanceArras] = useState('');
 
   useEffect(() => {
     let mounted = true;
@@ -42,12 +52,22 @@ export default function Parametres() {
           setPlacesMax(findParam('placesmaxparcours'));
           setDelaiReservation(findParam('delaireservationminimum'));
 
+          setNomEtablissement(findParam('nometablissement'));
+          setMentionsLegales(findParam('mentionslegales'));
+
           setEmailContact(findParam('emailcontact'));
           setTelephoneContact(findParam('telephonecontact'));
           setAdresseEtablissement(findParam('adresseetablissement'));
           setFacebookUrl(findParam('footerfacebookurl'));
           setInstagramUrl(findParam('footerinstagramurl'));
           setTiktokUrl(findParam('footertiktokurl'));
+
+          setFooterAdresseLigne1(findParam('footeradresseligne1'));
+          setFooterAdresseLigne2(findParam('footeradresseligne2'));
+          setFooterDescription(findParam('footerdescription'));
+          setFooterDistanceCambrai(findParam('footerdistancecambrai'));
+          setFooterDistanceDouai(findParam('footerdistancedouai'));
+          setFooterDistanceArras(findParam('footerdistancearras'));
         }
       } catch (err) {
         console.error('Erreur chargement paramètres:', err);
@@ -93,9 +113,31 @@ export default function Parametres() {
       setLoading(false);
     }
   };
+,
+        updateParametre('footeradresseligne1', footerAdresseLigne1),
+        updateParametre('footeradresseligne2', footerAdresseLigne2),
+        updateParametre('footerdescription', footerDescription),
+        updateParametre('footerdistancecambrai', footerDistanceCambrai),
+        updateParametre('footerdistancedouai', footerDistanceDouai),
+        updateParametre('footerdistancearras', footerDistanceArras)
+      ]);
+      toast.success('Informations de contact modifiées avec succès');
+    } catch (err) {
+      console.error('Erreur:', err);
+      toast.error(err.response?.data?.message || 'Erreur lors de la modification');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handleSaveContact = async () => {
+  const handleSaveLegal = async () => {
     setLoading(true);
+    try {
+      await Promise.all([
+        updateParametre('nometablissement', nomEtablissement),
+        updateParametre('mentionslegales', mentionsLegales)
+      ]);
+      toast.success('Informations légales
     try {
       await Promise.all([
         updateParametre('emailcontact', emailContact),
@@ -197,6 +239,40 @@ export default function Parametres() {
           <Card elevation={0} sx={{ border: '1px solid #e0e0e0' }}>
             <CardContent>
               <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                Informations légales
+              </Typography>
+              <TextField
+                fullWidth
+                label="Nom de l'établissement"
+                value={nomEtablissement}
+                onChange={(e) => setNomEtablissement(e.target.value)}
+                helperText="Nom affiché sur le site"
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                fullWidth
+                label="Mentions légales"
+                value={mentionsLegales}
+                onChange={(e) => setMentionsLegales(e.target.value)}
+                helperText="SIRET, TVA, etc."
+                sx={{ mb: 2 }}
+              />
+              <Button
+                variant="contained"
+                onClick={handleSaveLegal}
+                disabled={loading}
+                fullWidth
+              >
+                Enregistrer
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12}>
+          <Card elevation={0} sx={{ border: '1px solid #e0e0e0' }}>
+            <CardContent>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                 Informations de contact du studio
               </Typography>
               <Grid container spacing={2}>
@@ -224,13 +300,19 @@ export default function Parametres() {
                     onChange={(e) => setAdresseEtablissement(e.target.value)}
                   />
                 </Grid>
+
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2" sx={{ mt: 2, mb: 1, fontWeight: 600, color: 'text.secondary' }}>
+                    Réseaux sociaux
+                  </Typography>
+                </Grid>
                 <Grid item xs={12} md={4}>
                   <TextField
                     fullWidth
                     label="URL Facebook"
                     value={facebookUrl}
                     onChange={(e) => setFacebookUrl(e.target.value)}
-                    placeholder="https://facebook.com/..."
+                    placeholder="https://facebook.com/... ou # pour désactiver"
                   />
                 </Grid>
                 <Grid item xs={12} md={4}>
@@ -239,7 +321,7 @@ export default function Parametres() {
                     label="URL Instagram"
                     value={instagramUrl}
                     onChange={(e) => setInstagramUrl(e.target.value)}
-                    placeholder="https://instagram.com/..."
+                    placeholder="https://instagram.com/... ou # pour désactiver"
                   />
                 </Grid>
                 <Grid item xs={12} md={4}>
@@ -248,7 +330,69 @@ export default function Parametres() {
                     label="URL TikTok"
                     value={tiktokUrl}
                     onChange={(e) => setTiktokUrl(e.target.value)}
-                    placeholder="https://tiktok.com/..."
+                    placeholder="https://tiktok.com/... ou # pour désactiver"
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2" sx={{ mt: 2, mb: 1, fontWeight: 600, color: 'text.secondary' }}>
+                    Informations Footer
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Adresse Footer - Ligne 1"
+                    value={footerAdresseLigne1}
+                    onChange={(e) => setFooterAdresseLigne1(e.target.value)}
+                    placeholder="1412 Rue Joffre"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Adresse Footer - Ligne 2"
+                    value={footerAdresseLigne2}
+                    onChange={(e) => setFooterAdresseLigne2(e.target.value)}
+                    placeholder="62680 RUMAUCOURT"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    multiline
+                    rows={2}
+                    label="Description localisation"
+                    value={footerDescription}
+                    onChange={(e) => setFooterDescription(e.target.value)}
+                    placeholder="Rumaucourt est un petit village..."
+                  />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Distance Cambrai"
+                    value={footerDistanceCambrai}
+                    onChange={(e) => setFooterDistanceCambrai(e.target.value)}
+                    placeholder="25 minutes de Cambrai"
+                  />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Distance Douai"
+                    value={footerDistanceDouai}
+                    onChange={(e) => setFooterDistanceDouai(e.target.value)}
+                    placeholder="25 minutes de Douai"
+                  />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    fullWidth
+                    label="Distance Arras"
+                    value={footerDistanceArras}
+                    onChange={(e) => setFooterDistanceArras(e.target.value)}
+                    placeholder="Environ 30 minutes d'Arras"
                   />
                 </Grid>
               </Grid>

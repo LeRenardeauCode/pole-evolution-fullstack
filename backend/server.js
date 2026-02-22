@@ -1,9 +1,20 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
-import morgan from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+// Charge .env.local EN PRIORITÉ si existe, sinon .env
+const envPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 
+  process.env.NODE_ENV === 'production' ? '.env' : '.env.local');
+dotenv.config({ path: envPath });
+
+// Si .env.local n'existe pas en dev, charge .env par défaut
+if (process.env.NODE_ENV !== 'production' && !process.env.FRONTEND_URL?.includes('localhost')) {
+  dotenv.config();
+}
+
+import cors from 'cors';
+import morgan from 'morgan';
 import connectDB from './config/database.js';
 import { errorHandler } from './middleware/errorHandler.middleware.js';
 import fs from 'fs';
