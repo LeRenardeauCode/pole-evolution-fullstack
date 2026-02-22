@@ -85,33 +85,19 @@ const LevelsSection = () => {
                 }}
               >
                 <Box
+                  component="img"
+                  loading="lazy"
+                  src={level.image}
+                  alt={level.title}
+                  width={160}
+                  height={160}
                   sx={{
-                    width: { xs: 96, sm: 110, md: 120 },
-                    height: { xs: 96, sm: 110, md: 120 },
-                    borderRadius: '50%',
-                    backgroundColor: level.color,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    p: 0,
-                    boxShadow: 4,
+                    width: { xs: 120, sm: 140, md: 160 },
+                    height: { xs: 120, sm: 140, md: 160 },
+                    objectFit: 'contain',
+                    filter: 'brightness(0) invert(1)',
                   }}
-                >
-                  <Box
-                    component="img"
-                    loading="lazy"
-                    src={level.image}
-                    alt={level.title}
-                    width={120}
-                    height={120}
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain',
-                      filter: 'brightness(0) invert(1)'
-                    }}
-                  />
-                </Box>
+                />
 
                 <Typography
                   variant="h4"

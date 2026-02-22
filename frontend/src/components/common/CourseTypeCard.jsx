@@ -26,7 +26,7 @@ const CourseTypeCard = memo(({ cours }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          bgcolor: '#E8E8E8',
+          bgcolor: 'transparent',
           flexShrink: 0,
         }}
       >
@@ -40,7 +40,8 @@ const CourseTypeCard = memo(({ cours }) => {
           sx={{ 
             width: '100%',
             height: '100%',
-            objectFit: 'contain',
+            objectFit: 'cover',
+            objectPosition: 'center',
           }}
         />
       </Box>
