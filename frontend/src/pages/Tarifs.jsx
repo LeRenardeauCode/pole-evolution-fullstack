@@ -26,8 +26,8 @@ const Tarifs = () => {
 
   const handleClickAcheter = (forfait) => {
     if (!user) {
-      toast.info("Connectez-vous pour demander un forfait");
-      navigate("/connexion");
+      toast.info("Découvrez notre planning de cours !");
+      navigate("/planning");
       return;
     }
     setSelectedForfait(forfait);

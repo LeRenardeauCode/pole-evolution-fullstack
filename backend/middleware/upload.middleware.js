@@ -1,5 +1,6 @@
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -27,9 +28,14 @@ export const uploadMedia = multer({
   }
 });
 
+const profileUploadDir = path.join(__dirname, '..', 'uploads', 'profiles');
+if (!fs.existsSync(profileUploadDir)) {
+  fs.mkdirSync(profileUploadDir, { recursive: true });
+}
+
 const storageDisk = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/profiles/');
+    cb(null, profileUploadDir);
   },
   filename: (req, file, cb) => {
     const uniqueName = `${req.user.id}-${Date.now()}${path.extname(file.originalname)}`;
