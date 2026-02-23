@@ -8,7 +8,9 @@ Pole-Evolution/
 │   ├── ARBORESCENCE PROJET.md
 │   ├── CHECKLIST JURY.md
 │   ├── CONTEXTE PROJET
+│   ├── DEPLOIEMENT_RENDER_GRATUIT.md
 │   ├── DICTIONNAIRE DE DONNEES Pole Evolution.xlsx
+│   ├── DOCKER_MINIMAL.md
 │   └── REFACTORING_SESSION.md
 │
 ├── backend/

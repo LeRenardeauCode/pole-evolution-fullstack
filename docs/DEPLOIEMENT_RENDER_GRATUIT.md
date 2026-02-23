@@ -1,5 +1,6 @@
-+
-# 🆓 DÉPLOIEMENT GRATUIT AVEC RENDER.COM
+# 🆓 DEPLOIEMENT GRATUIT AVEC RENDER.COM
+
+SECURITY NOTE: This guide uses placeholders only. Never store real secrets in docs.
 
 **Alternative 100% gratuite à Railway**  
 **Temps estimé** : 40 minutes  
@@ -90,19 +91,19 @@ Clique **"Add Environment Variable"** et ajoute **UNE PAR UNE** :
 ```env
 NODE_ENV=production
 PORT=10000
-MONGO_URI=mongodb+srv://poleevolution-app:TON_PASSWORD@pole-evolution-prod.xxxxx.mongodb.net/poleevolution?retryWrites=true&w=majority
-JWT_SECRET=kkQZwb97KjtkgoVhwybVTa5bH9t3n4xHZh4CuSZtvVD
+MONGO_URI=mongodb+srv://poleevolution-app:YOUR_PASSWORD@your-cluster.mongodb.net/poleevolution?retryWrites=true&w=majority
+JWT_SECRET=YOUR_JWT_SECRET
 JWT_EXPIRE=7d
-FRONTEND_URL=https://poleevolution.vercel.app
-CLOUDINARY_CLOUD_NAME=dd2bqbguu
-CLOUDINARY_API_KEY=589171755188141
-CLOUDINARY_API_SECRET=rd31mWSroD4-aLO95cAEOHyP-Fs
+FRONTEND_URL=https://your-vercel-domain
+CLOUDINARY_CLOUD_NAME=YOUR_CLOUDINARY_CLOUD_NAME
+CLOUDINARY_API_KEY=YOUR_CLOUDINARY_API_KEY
+CLOUDINARY_API_SECRET=YOUR_CLOUDINARY_API_SECRET
 EMAIL_SERVICE=gmail
-EMAIL_USER=jelvibm@gmail.com
-EMAIL_PASSWORD=kixs ksmf lpcf iasv
-EMAIL_FROM=Pole Evolution <jelvibm@gmail.com>
-ADRESSE_STUDIO=123 Rue de la Danse, 62136 Lestrem
-TELEPHONE_CONTACT=07 67 26 94 71
+EMAIL_USER=your-email@example.com
+EMAIL_PASSWORD=YOUR_APP_PASSWORD
+EMAIL_FROM=Pole Evolution <your-email@example.com>
+ADRESSE_STUDIO=Your Studio Address
+TELEPHONE_CONTACT=Your Contact Phone
 ```
 
 ⚠️ **ATTENTION** :
@@ -186,7 +187,7 @@ VITE_API_URL=https://pole-evolution-backend.onrender.com
 
 1. **Backend santé** : `https://TON-RENDER.onrender.com/api/health`
 2. **Frontend** : Ouvre site Vercel
-3. **Se connecter** : `admin@poleevolution.com` / `Admin123!`
+3. **Se connecter** : utilisez un compte admin cree dans votre base
 4. **Créer un cours** depuis /admin
 5. **Vérifier emails**
 

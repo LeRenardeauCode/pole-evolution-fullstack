@@ -1,4 +1,6 @@
-# 📋 SESSION REFACTORING ARCHIVE - ÉLÉMENTS COMPLÉTÉS
+# 📋 SESSION REFACTORING ARCHIVE - ELEMENTS COMPLETES
+
+OBSOLETE: archive interne, ne pas utiliser comme guide de prod.
 
 **Dernière mise à jour:** 12 février 2026  
 **Status:** ✅ Session complétée - Éléments refactorisés archivés

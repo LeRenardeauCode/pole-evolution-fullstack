@@ -1,6 +1,7 @@
 # Docker minimal (Pole Evolution)
 
 Objectif: lancer frontend + backend + MongoDB avec Docker Compose, sans complexite.
+Usage: local dev uniquement (pas pour la production).
 
 ## Prerequis
 - Docker Desktop installe et actif
