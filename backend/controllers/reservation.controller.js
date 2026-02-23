@@ -239,37 +239,28 @@ export const createReservation = async (req, res) => {
       reservationId: reservation._id,
     });
 
-    // Envoyer emails (non bloquants)
-    try {
-      // Email notification admin
-      await sendReservationNotificationToAdmin({
-        nomEleve: utilisateur.nom,
-        prenomEleve: utilisateur.prenom,
-        emailEleve: utilisateur.email,
-        telephoneEleve: utilisateur.telephone,
-        niveauPole: utilisateur.niveauPole,
-        nomCours: cours.nom,
-        typeCours: cours.type,
-        dateDebut: cours.dateDebut,
-        montant: reservationData.paiement.montant,
-        reservationId: reservation._id,
-      });
-    } catch (emailError) {
-      console.error("Erreur notification admin réservation membre:", emailError.message);
-    }
+    // Envoyer emails (non bloquants - fire-and-forget)
+    sendReservationNotificationToAdmin({
+      nomEleve: utilisateur.nom,
+      prenomEleve: utilisateur.prenom,
+      emailEleve: utilisateur.email,
+      telephoneEleve: utilisateur.telephone,
+      niveauPole: utilisateur.niveauPole,
+      nomCours: cours.nom,
+      typeCours: cours.type,
+      dateDebut: cours.dateDebut,
+      montant: reservationData.paiement.montant,
+      reservationId: reservation._id,
+    }).catch(e => console.error("Erreur notification admin:", e.message));
 
-    try {
-      await sendReservationConfirmationToUser({
-        nomEleve: utilisateur.nom,
-        prenomEleve: utilisateur.prenom,
-        emailEleve: utilisateur.email,
-        nomCours: cours.nom,
-        dateDebut: cours.dateDebut,
-        lienValidation: null, 
-      });
-    } catch (emailError) {
-      console.error("Erreur confirmation réservation membre:", emailError.message);
-    }
+    sendReservationConfirmationToUser({
+      nomEleve: utilisateur.nom,
+      prenomEleve: utilisateur.prenom,
+      emailEleve: utilisateur.email,
+      nomCours: cours.nom,
+      dateDebut: cours.dateDebut,
+      lienValidation: null, 
+    }).catch(e => console.error("Erreur confirmation:", e.message));
 
     const reservationComplete = await Reservation.findById(reservation._id)
       .populate("cours", "nom type niveau dateDebut dateFin")

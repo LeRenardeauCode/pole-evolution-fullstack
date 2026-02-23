@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
+import { Phone, Email } from "@mui/icons-material";
 import parametreService from "@services/parametreService";
 
 import mapImgDefault from "@/assets/images/google_map.png";
@@ -28,6 +29,8 @@ const Footer = () => {
     facebookUrl: "https://facebook.com/poleevolution",
     instagramUrl: "https://instagram.com/poleevolution",
     tiktokUrl: "https://tiktok.com/@poleevolution",
+    telephone: "07 67 26 94 71",
+    email: "poleevolution62860@gmail.com",
     mapImage: mapImgDefault,
   });
 
@@ -68,6 +71,8 @@ const Footer = () => {
           instagramUrl:
             paramsMap.footerinstagramurl || footerData.instagramUrl,
           tiktokUrl: paramsMap.footertiktokurl || footerData.tiktokUrl,
+          telephone: paramsMap.footertelephone || footerData.telephone,
+          email: paramsMap.footeremail || footerData.email,
           mapImage: paramsMap.footermapimage
             ? `${import.meta.env.VITE_API_URL}${paramsMap.footermapimage}`
             : mapImgDefault,
@@ -228,6 +233,27 @@ const Footer = () => {
                 width: "auto",
               }}
             />
+
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={{ xs: 1, sm: 3 }} alignItems="center">
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Phone sx={{ fontSize: 20, color: "primary.main" }} />
+                <MuiLink
+                  href={`tel:${footerData.telephone.replace(/\s/g, '')}`}
+                  sx={{ color: "white", textDecoration: "none", fontSize: "0.95rem", "&:hover": { color: "primary.main" }, transition: "all 0.3s" }}
+                >
+                  {footerData.telephone}
+                </MuiLink>
+              </Box>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Email sx={{ fontSize: 20, color: "primary.main" }} />
+                <MuiLink
+                  href={`mailto:${footerData.email}`}
+                  sx={{ color: "white", textDecoration: "none", fontSize: "0.95rem", "&:hover": { color: "primary.main" }, transition: "all 0.3s" }}
+                >
+                  {footerData.email}
+                </MuiLink>
+              </Box>
+            </Stack>
 
             <Stack direction="row" spacing={2}>
               <IconButton

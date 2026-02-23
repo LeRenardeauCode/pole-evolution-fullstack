@@ -1,7 +1,7 @@
 const parametres = [
   {
     cle: "emailcontact",
-    valeur: "jelvibm@gmail.com",
+    valeur: "poleevolution62860@gmail.com",
     type: "texte",
     categorie: "contact",
     description: "Email de contact principal",
@@ -134,7 +134,7 @@ Alors si toi aussi, tu souhaites repousser tes limites, sortir de ta zone de con
   },
   {
     cle: "emailexpediteur",
-    valeur: "jelvibm@gmail.com",
+    valeur: "poleevolution62860@gmail.com",
     type: "texte",
     categorie: "emails",
     description: "Adresse email d'expédition pour les emails automatiques",
@@ -222,6 +222,22 @@ Alors si toi aussi, tu souhaites repousser tes limites, sortir de ta zone de con
     type: "texte",
     categorie: "footer",
     description: "Image de la carte Google Maps (optionnel)",
+    estModifiable: true,
+  },
+  {
+    cle: "footertelephone",
+    valeur: "07 67 26 94 71",
+    type: "texte",
+    categorie: "footer",
+    description: "Numéro de téléphone affiché dans le footer",
+    estModifiable: true,
+  },
+  {
+    cle: "footeremail",
+    valeur: "poleevolution62860@gmail.com",
+    type: "texte",
+    categorie: "footer",
+    description: "Email de contact affiché dans le footer",
     estModifiable: true,
   },
 ];
