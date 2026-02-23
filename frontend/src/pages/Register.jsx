@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -13,6 +13,7 @@ import {
   FormControlLabel,
   RadioGroup,
   Radio,
+  LinearProgress,
 } from "@mui/material";
 import authService from "@services/authService";
 
@@ -77,6 +78,34 @@ const Register = () => {
     if (error) setError(null);
   };
 
+  // Validation du mot de passe en temps réel
+  const passwordChecks = useMemo(() => {
+    const pwd = formData.motDePasse;
+    return {
+      length: pwd.length >= 12,
+      uppercase: /[A-Z]/.test(pwd),
+      lowercase: /[a-z]/.test(pwd),
+      number: /[0-9]/.test(pwd),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(pwd),
+    };
+  }, [formData.motDePasse]);
+
+  const passwordScore = useMemo(() => {
+    const checks = Object.values(passwordChecks);
+    return checks.filter(Boolean).length;
+  }, [passwordChecks]);
+
+  const isPasswordValid = passwordScore === 5;
+  const passwordsMatch = formData.motDePasse === formData.confirmMotDePasse && formData.confirmMotDePasse.length > 0;
+
+  const canProceedStep1 =
+    formData.prenom &&
+    formData.nom &&
+    formData.pseudo &&
+    formData.email &&
+    isPasswordValid &&
+    passwordsMatch;
+
   const handleNext = () => {
     if (step === 1) {
       if (
@@ -96,7 +125,11 @@ const Register = () => {
         );
         return;
       }
-      if (formData.motDePasse !== formData.confirmMotDePasse) {
+      if (!isPasswordValid) {
+        setError("Le mot de passe ne remplit pas tous les critères de sécurité");
+        return;
+      }
+      if (!passwordsMatch) {
         setError("Les mots de passe ne correspondent pas");
         return;
       }
@@ -137,6 +170,11 @@ const Register = () => {
     setStep((prev) => prev + 1);
   };
 
+  const handleBack = () => {
+    setError(null);
+    setStep((prev) => prev - 1);
+  };
+
   const handleSubmit = async () => {
     if (!formData.accepteCGU || !formData.accepteReglement) {
       setError(
@@ -166,7 +204,13 @@ const Register = () => {
       setStep(4);
     } catch (err) {
       console.error("Erreur inscription:", err);
-      setError(err.response?.data?.message || "Erreur lors de l'inscription");
+      const msg = err.response?.data?.message || "Erreur lors de l'inscription";
+      setError(msg);
+      // Ramener à l'étape 1 si l'erreur concerne email/pseudo/mot de passe
+      const msgLower = msg.toLowerCase();
+      if (msgLower.includes("email") || msgLower.includes("pseudo") || msgLower.includes("mot de passe")) {
+        setStep(1);
+      }
     } finally {
       setLoading(false);
     }
@@ -238,6 +282,7 @@ const Register = () => {
                 value={formData.prenom}
                 onChange={handleChange}
                 variant="outlined"
+                InputLabelProps={{ shrink: !!formData.prenom }}
                 sx={textFieldWhite}
               />
 
@@ -248,6 +293,7 @@ const Register = () => {
                 value={formData.nom}
                 onChange={handleChange}
                 variant="outlined"
+                InputLabelProps={{ shrink: !!formData.nom }}
                 sx={textFieldWhite}
               />
 
@@ -259,6 +305,7 @@ const Register = () => {
                 onChange={handleChange}
                 variant="outlined"
                 helperText="3 à 20 caractères (lettres, chiffres, . _ -)"
+                InputLabelProps={{ shrink: !!formData.pseudo }}
                 sx={textFieldWhiteHelper}
               />
 
@@ -271,6 +318,7 @@ const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
                 variant="outlined"
+                InputLabelProps={{ shrink: !!formData.email }}
                 sx={textFieldWhite}
               />
 
@@ -282,8 +330,48 @@ const Register = () => {
                 value={formData.motDePasse}
                 onChange={handleChange}
                 variant="outlined"
+                InputLabelProps={{ shrink: !!formData.motDePasse }}
                 sx={textFieldWhite}
               />
+
+              {formData.motDePasse && (
+                <Box sx={{ mb: 2, mt: -2 }}>
+                  <LinearProgress
+                    variant="determinate"
+                    value={(passwordScore / 5) * 100}
+                    sx={{
+                      height: 6,
+                      borderRadius: 3,
+                      mb: 1,
+                      backgroundColor: 'rgba(255,255,255,0.2)',
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: passwordScore <= 2 ? '#f44336' : passwordScore <= 4 ? '#ff9800' : '#4caf50',
+                        borderRadius: 3,
+                      },
+                    }}
+                  />
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {[
+                      { check: passwordChecks.length, label: '12+ caractères' },
+                      { check: passwordChecks.uppercase, label: 'Majuscule' },
+                      { check: passwordChecks.lowercase, label: 'Minuscule' },
+                      { check: passwordChecks.number, label: 'Chiffre' },
+                      { check: passwordChecks.special, label: 'Spécial (!@#...)' },
+                    ].map(({ check, label }) => (
+                      <Typography
+                        key={label}
+                        sx={{
+                          fontSize: '0.7rem',
+                          color: check ? '#4caf50' : 'rgba(255,255,255,0.5)',
+                          mr: 1,
+                        }}
+                      >
+                        {check ? '✓' : '○'} {label}
+                      </Typography>
+                    ))}
+                  </Box>
+                </Box>
+              )}
 
               <TextField
                 fullWidth
@@ -293,7 +381,13 @@ const Register = () => {
                 value={formData.confirmMotDePasse}
                 onChange={handleChange}
                 variant="outlined"
-                helperText="minimum de 12 caractères"
+                InputLabelProps={{ shrink: !!formData.confirmMotDePasse }}
+                error={formData.confirmMotDePasse.length > 0 && !passwordsMatch}
+                helperText={
+                  formData.confirmMotDePasse.length > 0 && !passwordsMatch
+                    ? "Les mots de passe ne correspondent pas"
+                    : ""
+                }
                 sx={textFieldWhiteHelper}
               />
 
@@ -301,7 +395,16 @@ const Register = () => {
                 Vos données restent confidentielles
               </Typography>
 
-              <Button onClick={handleNext} fullWidth sx={primaryButton}>
+              <Button
+                onClick={handleNext}
+                fullWidth
+                disabled={!canProceedStep1}
+                sx={{
+                  ...primaryButton,
+                  ...(!canProceedStep1 ? primaryButtonDisabled : {}),
+                  opacity: !canProceedStep1 ? 0.5 : 1,
+                }}
+              >
                 Étape suivante
               </Button>
             </Box>
@@ -323,6 +426,7 @@ const Register = () => {
                 value={formData.telephone}
                 onChange={handleChange}
                 variant="outlined"
+                InputLabelProps={{ shrink: !!formData.telephone }}
                 sx={textFieldWhite}
               />
 
@@ -371,6 +475,7 @@ const Register = () => {
                 value={formData.niveauPole}
                 onChange={handleChange}
                 variant="outlined"
+                InputLabelProps={{ shrink: !!formData.niveauPole }}
                 sx={textFieldWhiteHelper}
               >
                 <MenuItem value="jamais">Jamais pratiqué</MenuItem>
@@ -379,9 +484,14 @@ const Register = () => {
                 <MenuItem value="avance">Avancé</MenuItem>
               </TextField>
 
-              <Button onClick={handleNext} fullWidth sx={primaryButton}>
-                Étape suivante
-              </Button>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <Button onClick={handleBack} fullWidth sx={{ ...primaryButton, flex: '0 0 35%' }}>
+                  Retour
+                </Button>
+                <Button onClick={handleNext} fullWidth sx={primaryButton}>
+                  Étape suivante
+                </Button>
+              </Box>
             </Box>
           )}
 
@@ -477,14 +587,19 @@ const Register = () => {
                 Voir le règlement du studio
               </Typography>
 
-              <Button
-                onClick={handleSubmit}
-                fullWidth
-                disabled={loading || !formData.accepteCGU || !formData.accepteReglement}
-                sx={{ ...primaryButton, opacity: !formData.accepteCGU || !formData.accepteReglement ? 0.5 : 1, ...primaryButtonDisabled }}
-              >
-                {loading ? <CircularProgress size={24} /> : "Finaliser"}
-              </Button>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <Button onClick={handleBack} fullWidth sx={{ ...primaryButton, flex: '0 0 35%' }}>
+                  Retour
+                </Button>
+                <Button
+                  onClick={handleSubmit}
+                  fullWidth
+                  disabled={loading || !formData.accepteCGU || !formData.accepteReglement}
+                  sx={{ ...primaryButton, opacity: !formData.accepteCGU || !formData.accepteReglement ? 0.5 : 1, ...primaryButtonDisabled }}
+                >
+                  {loading ? <CircularProgress size={24} /> : "Finaliser"}
+                </Button>
+              </Box>
             </Box>
           )}
 

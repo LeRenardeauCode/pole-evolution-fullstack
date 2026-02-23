@@ -36,33 +36,25 @@ export const envoyerMessage = asyncHandler(async (req, res) => {
     lienAction: `/admin/messages/${messageContact._id}`
   });
 
-  // Envoyer emails (non bloquant - ne pas faire échouer la requête si erreur email)
-  try {
-    // Notification à l'admin
-    await sendContactNotificationToAdmin({
-      nom,
-      prenom,
-      email,
-      telephone,
-      sujet,
-      message
-    });
-  } catch (emailError) {
+  // Envoyer emails (non bloquant - fire-and-forget)
+  sendContactNotificationToAdmin({
+    nom,
+    prenom,
+    email,
+    telephone,
+    sujet,
+    message
+  }).catch(emailError => {
     console.error('Erreur envoi email admin:', emailError.message);
-    // Continue sans bloquer
-  }
+  });
 
-  try {
-    // Confirmation à l'utilisateur
-    await sendContactConfirmationToUser({
-      email,
-      prenom,
-      nom
-    });
-  } catch (emailError) {
+  sendContactConfirmationToUser({
+    email,
+    prenom,
+    nom
+  }).catch(emailError => {
     console.error('Erreur envoi email confirmation:', emailError.message);
-    // Continue sans bloquer
-  }
+  });
 
   res.status(201).json({
     success: true,

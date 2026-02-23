@@ -1,6 +1,7 @@
 import { Box, Container, Typography, CircularProgress, Alert } from '@mui/material';
 import { useAbout } from '@hooks/useAbout';
 import heroApropos from '@assets/images/img_hero.jpg';
+import profImage from '@assets/images/ENSEIGNE.jpg';
 
 const APropos = () => {
   const { aboutText, loading, error } = useAbout();
@@ -121,7 +122,7 @@ const APropos = () => {
               <Box
                 component="img"
                 loading="lazy"
-                src="/images/professeure.jpg"
+                src={profImage}
                 alt="Coraline - Professeure de Pole Dance"
                 sx={{
                   width: '100%',

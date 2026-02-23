@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import { useForfaits } from "@/hooks/useForfaits";
 import { useAuth } from "@/hooks/useAuth";
@@ -12,6 +13,7 @@ import ForfaitRequestDialog from "../components/Tarifs/ForfaitRequestDialog";
 import { tarifsRoot } from "@/styles/pageStyles";
 
 const Tarifs = () => {
+  const navigate = useNavigate();
   const [typeEngagement, setTypeEngagement] = useState("sansengagement");
   const { forfaits, loading, error } = useForfaits(typeEngagement);
   const allForfaits = Object.values(forfaits).flat();
@@ -23,6 +25,11 @@ const Tarifs = () => {
   const [loadingAchat, setLoadingAchat] = useState(false);
 
   const handleClickAcheter = (forfait) => {
+    if (!user) {
+      toast.info("Connectez-vous pour demander un forfait");
+      navigate("/connexion");
+      return;
+    }
     setSelectedForfait(forfait);
     setOpenDialog(true);
   };

@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Header from "@components/layout/Header";
 import Footer from "@components/layout/Footer";
+import ScrollToTop from "@components/common/ScrollToTop";
 import ProtectedRoute from "@components/common/ProtectedRoute";
 
 // Pages légères (chargement immédiat)
@@ -43,6 +44,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <ScrollToTop />
       <Routes>
         {/* Routes publiques avec Header/Footer */}
         <Route

@@ -375,35 +375,32 @@ export const createReservationInvite = async (req, res) => {
 
     const lienValidation = `${process.env.FRONTEND_URL}/validation-reservation?token=${tokenValidation}&email=${encodeURIComponent(emailInvite)}`;
 
-    try {
-      await sendReservationNotificationToAdmin({
-        nomEleve: nomEleve,
-        prenomEleve: "",
-        emailEleve: emailInvite,
-        telephoneEleve: telephoneInvite,
-        niveauPole: niveauPoleInvite || "jamais",
-        nomCours: cours.nom,
-        typeCours: cours.type,
-        dateDebut: cours.dateDebut,
-        montant: cours.type === "decouverte" ? 15 : 25,
-        reservationId: reservation._id,
-      });
-    } catch (emailError) {
+    // Emails fire-and-forget (ne pas bloquer la réponse)
+    sendReservationNotificationToAdmin({
+      nomEleve: nomEleve,
+      prenomEleve: "",
+      emailEleve: emailInvite,
+      telephoneEleve: telephoneInvite,
+      niveauPole: niveauPoleInvite || "jamais",
+      nomCours: cours.nom,
+      typeCours: cours.type,
+      dateDebut: cours.dateDebut,
+      montant: cours.type === "decouverte" ? 15 : 25,
+      reservationId: reservation._id,
+    }).catch(emailError => {
       console.error("Erreur notification admin réservation:", emailError.message);
-    }
+    });
 
-    try {
-      await sendReservationConfirmationToUser({
-        nomEleve: nomEleve,
-        prenomEleve: "",
-        emailEleve: emailInvite,
-        nomCours: cours.nom,
-        dateDebut: cours.dateDebut,
-        lienValidation,
-      });
-    } catch (emailError) {
+    sendReservationConfirmationToUser({
+      nomEleve: nomEleve,
+      prenomEleve: "",
+      emailEleve: emailInvite,
+      nomCours: cours.nom,
+      dateDebut: cours.dateDebut,
+      lienValidation,
+    }).catch(emailError => {
       console.error("Erreur confirmation réservation invité:", emailError.message);
-    }
+    });
 
     const reservationComplete = await Reservation.findById(
       reservation._id,
