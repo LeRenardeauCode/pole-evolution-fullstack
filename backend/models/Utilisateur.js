@@ -86,7 +86,7 @@ const utilisateurSchema = new mongoose.Schema(
     motDePasse: {
       type: String,
       required: [true, "Le mot de passe est obligatoire"],
-      minlength: [8, "Le mot de passe doit contenir au moins 8 caractères"],
+      minlength: [12, "Le mot de passe doit contenir au moins 12 caractères"],
       select: false,
     },
 

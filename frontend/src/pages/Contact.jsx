@@ -12,6 +12,7 @@ import {
 import { useContact } from '@hooks/useContact';
 
 import logo from '@assets/images/thumbnail_LOGO_POLE_EVOLUTION-removebg-preview.png';
+import heroContact from '@assets/images/img_hero.jpg';
 
 const Contact = () => {
   const { loading, error, success, sendMessage, resetForm } = useContact();
@@ -68,7 +69,7 @@ const Contact = () => {
         sx={{
           position: 'relative',
           height: { xs: '40vh', md: '50vh' },
-          backgroundImage: 'url(/images/hero-contact.jpg)',
+          backgroundImage: `url(${heroContact})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           '&::before': {

@@ -27,13 +27,6 @@ export const creerDemandeForfait = async (req, res) => {
   try {
     const { forfaitId, forfaitNom, forfaitPrix, forfaitCategorie } = req.body; // ✅ RÉCUPÉRER
 
-    console.log("📦 Données reçues:", {
-      forfaitId,
-      forfaitNom,
-      forfaitPrix,
-      forfaitCategorie,
-    });
-
     if (!forfaitId || !forfaitNom || !forfaitPrix) {
       return res.status(400).json({
         success: false,
@@ -42,13 +35,6 @@ export const creerDemandeForfait = async (req, res) => {
     }
 
     const utilisateur = req.user;
-
-    console.log("👤 Utilisateur:", {
-      id: utilisateur._id,
-      nom: `${utilisateur.prenom} ${utilisateur.nom}`,
-      email: utilisateur.email,
-      tel: utilisateur.telephone,
-    });
 
     const notification = await Notification.creer({
       type: "demande_forfait",
@@ -66,8 +52,6 @@ export const creerDemandeForfait = async (req, res) => {
         forfaitCategorie,
       },
     });
-
-    console.log("✅ Notification créée:", notification.metadata);
 
     res.status(201).json({
       success: true,

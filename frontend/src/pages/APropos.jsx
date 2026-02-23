@@ -1,5 +1,6 @@
 import { Box, Container, Typography, CircularProgress, Alert } from '@mui/material';
 import { useAbout } from '@hooks/useAbout';
+import heroApropos from '@assets/images/img_hero.jpg';
 
 const APropos = () => {
   const { aboutText, loading, error } = useAbout();
@@ -26,7 +27,7 @@ const APropos = () => {
         sx={{
           position: 'relative',
           height: { xs: '70vh', md: '85vh' },
-          backgroundImage: 'url(/images/hero-apropos.jpg)',
+          backgroundImage: `url(${heroApropos})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           display: 'flex',

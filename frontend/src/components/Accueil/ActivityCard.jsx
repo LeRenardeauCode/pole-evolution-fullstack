@@ -13,7 +13,6 @@ const ActivityCard = memo(({ activity }) => {
         borderColor: 'navy.main',
         background: 'background.default',
         transition: 'transform 0.3s',
-        cursor: 'pointer',
         '&:hover': {
           transform: 'translateY(-8px)',
         },

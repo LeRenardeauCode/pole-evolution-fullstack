@@ -765,7 +765,6 @@ export const validerReservation = async (req, res) => {
       if (reservation.paiement.type === "forfait") {
         try {
           await utilisateur.deduireSeance(reservation.forfait);
-          console.log(`✅ Forfait décompté : ${utilisateur.nomComplet}`);
         } catch (error) {
           console.error("❌ Erreur décompte forfait:", error);
           return res.status(400).json({
@@ -779,7 +778,6 @@ export const validerReservation = async (req, res) => {
         if (utilisateur.abonnementActif.seancesRestantesMois > 0) {
           utilisateur.abonnementActif.seancesRestantesMois -= 1;
           await utilisateur.save();
-          console.log(`✅ Abonnement décompté : ${utilisateur.nomComplet}`);
         } else {
           return res.status(400).json({
             success: false,

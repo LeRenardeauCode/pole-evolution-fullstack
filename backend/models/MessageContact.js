@@ -48,7 +48,6 @@ const messageContactSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Le sujet est obligatoire'],
     trim: true,
-    minlength: [5, 'Le sujet doit contenir au moins 5 caractères'],
     maxlength: [200, 'Le sujet ne peut pas dépasser 200 caractères'],
     enum: {
       values: [

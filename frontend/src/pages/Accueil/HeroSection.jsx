@@ -26,7 +26,7 @@ const HeroSection = () => {
           left: 0,
           width: { xs: '100%', md: '50%' }, 
           height: '100%',
-          backgroundImage: 'url(/assets/images/hero-overlay-image.jpg)',
+          backgroundImage: `url(${heroBackground})`,
           backgroundSize: 'cover',
           backgroundPosition: 'right center',
           zIndex: 1,

@@ -10,6 +10,7 @@ import Utilisateur from '../models/Utilisateur.js';
 import Cours from '../models/Cours.js';
 import Forfait from '../models/Forfait.js';
 import Parametre from '../models/Parametre.js';
+import Avis from '../models/Avis.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,6 +31,7 @@ const seedAtlas = async () => {
     await Cours.deleteMany({});
     await Forfait.deleteMany({});
     await Parametre.deleteMany({});
+    await Avis.deleteMany({});
     console.log('✅ Données supprimées');
 
     // Import des nouvelles données
@@ -51,18 +53,58 @@ const seedAtlas = async () => {
     const createdParams = await Parametre.insertMany(parametres);
     console.log(`   ✅ ${createdParams.length} paramètres créés`);
 
+    // Avis
+    const avis = [
+      {
+        utilisateur: createdUsers[1]._id,
+        cours: createdCours[0]._id,
+        note: 5,
+        titre: 'Cours exceptionnel !',
+        commentaire: 'Instructrice très pédagogue, ambiance au top ! Je recommande à 100%.',
+        statut: 'approuve',
+        estVerifie: true,
+        estPublic: true,
+        datePublication: new Date()
+      },
+      {
+        utilisateur: createdUsers[2]._id,
+        cours: createdCours[0]._id,
+        note: 4,
+        titre: 'Très bon cours',
+        commentaire: 'Parfait pour les débutants, j\'ai adoré découvrir cette discipline.',
+        statut: 'approuve',
+        estVerifie: true,
+        estPublic: true,
+        datePublication: new Date()
+      },
+      {
+        utilisateur: createdUsers[3]._id,
+        cours: createdCours[1]._id,
+        note: 5,
+        titre: 'Super progression',
+        commentaire: 'Le niveau intermédiaire permet vraiment de progresser rapidement.',
+        statut: 'approuve',
+        estVerifie: true,
+        estPublic: true,
+        datePublication: new Date()
+      }
+    ];
+    const createdAvis = await Avis.insertMany(avis);
+    console.log(`   ✅ ${createdAvis.length} avis créés`);
+
     console.log('\n✨ SEED ATLAS TERMINÉ AVEC SUCCÈS !');
     console.log(`\n📊 Résumé:`);
     console.log(`Utilisateurs: ${createdUsers.length}`);
     console.log(`Cours: ${createdCours.length}`);
     console.log(`Forfaits: ${createdForfaits.length}`);
     console.log(`Paramètres: ${createdParams.length}`);
+    console.log(`Avis: ${createdAvis.length}`);
 
     console.log(`\n📝 Comptes de test créés:`);
-    console.log(`Admin:  admin@poleevolution.com / Admin123!`);
-    console.log(`User 1: marie.dupont@example.com / User123!`);
-    console.log(`User 2: sophie.martin@example.com / User123!`);
-    console.log(`User 3: julie.leroy@example.com / User123!`);
+    console.log(`Admin:  admin@poleevolution.com / AdminPole123!`);
+    console.log(`User 1: marie.dupont@example.com / UserPole1234!`);
+    console.log(`User 2: sophie.martin@example.com / UserPole1234!`);
+    console.log(`User 3: julie.leroy@example.com / UserPole1234!`);
 
     process.exit(0);
   } catch (error) {

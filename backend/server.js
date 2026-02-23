@@ -10,11 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.join(__dirname, '.env.local'), override: true });
 dotenv.config({ path: path.join(__dirname, '.env') });
 
-// DEBUG: Log les variables chargées
-console.log('🔍 DEBUG Variables chargées:');
-console.log('PORT:', process.env.PORT);
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('FRONTEND_URL:', process.env.FRONTEND_URL);
+
 
 import cors from 'cors';
 import morgan from 'morgan';
