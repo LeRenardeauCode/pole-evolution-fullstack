@@ -95,7 +95,7 @@ const TarifCard = memo(function TarifCard({
           </Box>
 
           <Box sx={{ textAlign: "center", mb: 2 }}>
-            {forfait.dureeEngagementMois && (
+            {forfait.categorie === "abonnement" && forfait.dureeEngagementMois && (
               <Typography
                 variant="body2"
                 color="text.secondary"
@@ -105,7 +105,7 @@ const TarifCard = memo(function TarifCard({
               </Typography>
             )}
 
-            {forfait.validiteMois && (
+            {forfait.validiteMois && forfait.categorie !== "decouverte" && forfait.nombreSeances !== 1 && (
               <Typography
                 variant="body2"
                 color="text.secondary"

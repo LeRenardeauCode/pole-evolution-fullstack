@@ -200,14 +200,17 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
                   >
                     {forfaitsActifs.length > 0 && (
                       <MenuItem value="forfait">
-                        Utiliser un forfait
+                        Utiliser mon forfait
                       </MenuItem>
                     )}
                     <MenuItem value="abonnement">
                       Utiliser mon abonnement
                     </MenuItem>
-                    <MenuItem value="sur_place">
-                      Payer sur place le jour du cours
+                    <MenuItem value="virement">
+                      Virement bancaire (24H avant le cours)
+                    </MenuItem>
+                    <MenuItem value="surplace">
+                      Espèces ou chèques (Sur place)
                     </MenuItem>
                   </Select>
                 </FormControl>

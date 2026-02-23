@@ -70,7 +70,7 @@ export default function ForfaitRequestDialog({
             <Alert severity="warning">
               <Typography variant="body2">
                 <strong>Moyens de paiement acceptés :</strong> Espèces,
-                Chèque, Carte bancaire, Virement
+                Chèque, Virement bancaire
               </Typography>
             </Alert>
           </Box>

@@ -156,7 +156,6 @@ const CourseDetailsModal = ({ open, onClose, cours, onReservationSuccess }) => {
                 </Typography>
                 <Typography variant="body2">• Espèces</Typography>
                 <Typography variant="body2">• Chèque</Typography>
-                <Typography variant="body2">• Carte bancaire</Typography>
                 <Typography variant="body2">• Virement bancaire</Typography>
               </Box>
               <Typography

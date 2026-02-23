@@ -251,8 +251,15 @@ const Contact = () => {
                   fullWidth
                   label="Téléphone"
                   name="telephone"
+                  type="tel"
                   value={formData.telephone}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/[^0-9+\s.-]/g, '');
+                    setFormData((prev) => ({ ...prev, telephone: val }));
+                    if (error || success) resetForm();
+                  }}
+                  inputProps={{ maxLength: 15, pattern: '^(\\+33|0)[1-9](\\s?\\d{2}){4}$' }}
+                  helperText="Format : 06 12 34 56 78 ou +33 6 12 34 56 78"
                   variant="outlined"
                   sx={{
                     mb: 3,

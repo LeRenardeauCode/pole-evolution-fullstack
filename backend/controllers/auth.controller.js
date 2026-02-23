@@ -95,15 +95,11 @@ export const register = async (req, res) => {
 
     const validationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${emailVerificationToken}&email=${encodeURIComponent(email)}`;
 
-    try {
-      await sendWelcomeEmail({
-        email: user.email,
-        prenom: user.prenom,
-        validationUrl,
-      });
-    } catch (emailError) {
-      console.error("Erreur envoi email de bienvenue:", emailError.message);
-    }
+    sendWelcomeEmail({
+      email: user.email,
+      prenom: user.prenom,
+      validationUrl,
+    }).catch(emailError => console.error("Erreur envoi email de bienvenue:", emailError.message));
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE || "30d",

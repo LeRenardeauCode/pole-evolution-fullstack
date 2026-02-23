@@ -16,7 +16,7 @@ export default function TarifsInfoAlerts({ user }) {
           <Typography variant="body1">
             <strong>Cours découverte et cours à l'unité :</strong> Accessibles sans compte. Cliquez sur "Essayer maintenant" pour réserver.
             <br />
-            <strong>Cartes de cours et abonnements :</strong> Connectez-vous ou inscrivez-vous pour acheter.
+            <strong>Forfaits et abonnements :</strong> Connectez-vous ou inscrivez-vous pour acheter.
           </Typography>
         </Alert>
       )}
@@ -32,7 +32,7 @@ export default function TarifsInfoAlerts({ user }) {
           }}
         >
           <Typography variant="body1">
-            <strong>Compte en attente de validation</strong> : Vous pouvez réserver des cours découverte et à l'unité. Les cartes de cours et abonnements nécessitent la validation de votre compte.
+            <strong>Compte en attente de validation</strong> : Vous pouvez réserver des cours découverte et à l'unité. Les forfaits et abonnements nécessitent la validation de votre compte.
           </Typography>
         </Alert>
       )}

@@ -66,8 +66,7 @@ export default function PaiementValidationDialog({
             >
               <MenuItem value="especes">Espèces</MenuItem>
               <MenuItem value="cheque">Chèque</MenuItem>
-              <MenuItem value="carte">Carte bancaire</MenuItem>
-              <MenuItem value="virement">Virement</MenuItem>
+              <MenuItem value="virement">Virement bancaire</MenuItem>
             </TextField>
           </Box>
         )}

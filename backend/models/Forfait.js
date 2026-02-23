@@ -96,7 +96,6 @@ const forfaitSchema = new mongoose.Schema(
     dureeEngagementMois: {
       type: Number,
       required: false,
-      default: 12,
     },
 
     validiteMois: {

@@ -10,7 +10,6 @@ const forfaits = [
     typeEngagement: "sansengagement",
     nombreSeances: 1,
     prix: 15,
-    validiteMois: 1,
     estActif: true,
     estVisible: true,
   },
@@ -27,7 +26,7 @@ const forfaits = [
     estVisible: true,
   },
   {
-    nom: "Carte 5 Cours",
+    nom: "Forfait 5 Cours",
     description: "Forfait de 5 cours valable 2 mois. Soit 23€ par cours.",
     categorie: "collectif",
     typeEngagement: "sansengagement",
@@ -38,7 +37,7 @@ const forfaits = [
     estVisible: true,
   },
   {
-    nom: "Carte 10 Cours",
+    nom: "Forfait 10 Cours",
     description: "Forfait de 10 cours valable 4 mois. Soit 22€ par cours.",
     categorie: "collectif",
     typeEngagement: "sansengagement",
@@ -50,7 +49,7 @@ const forfaits = [
     estPopulaire: true,
   },
   {
-    nom: "Carte 20 Cours",
+    nom: "Forfait 20 Cours",
     description: "Forfait de 20 cours valable 6 mois. Soit 20,50€ par cours.",
     categorie: "collectif",
     typeEngagement: "sansengagement",
