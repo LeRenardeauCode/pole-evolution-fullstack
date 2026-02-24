@@ -7,6 +7,10 @@ yarn.lock
 .env.local
 .env.*.local
 
+# Seeds de développement (données sensibles - test accounts)
+seeds/data/users.js
+seeds/data/cours.js
+
 # Logs
 logs/
 *.log
