@@ -5,7 +5,7 @@ Une plateforme Full-Stack moderne pour la gestion de cours d'activités de danse
 **Titre RNCP:** Développeur Web et Web Mobile (DWWM) 2026
 
 ![React](https://img.shields.io/badge/React-19-blue)
-![Node.js](https://img.shields.io/badge/Node.js-18+-green)
+![Node.js](https://img.shields.io/badge/Node.js-20+-green)
 ![MongoDB](https://img.shields.io/badge/MongoDB-8-green)
 ![Vite](https://img.shields.io/badge/Vite-7.3-purple)
 ![Docker](https://img.shields.io/badge/Docker-Compose-blue)
@@ -31,7 +31,7 @@ Une plateforme Full-Stack moderne pour la gestion de cours d'activités de danse
 ## 🚀 Démarrage Rapide
 
 ### Prérequis
-- **Node.js** 18+
+- **Node.js** 20+
 - **npm** 9.0+
 - **MongoDB** 8.0+ (local ou Atlas)
 - **Docker** (optionnel)
@@ -177,7 +177,7 @@ pole-evolution-fullstack/
 ### Backend Stack
 | Technologie | Version | Utilisation |
 |------------|---------|------------|
-| **Node.js** | 18+ | Runtime JavaScript server-side |
+| **Node.js** | 20+ | Runtime JavaScript server-side |
 | **Express** | 4 | Framework web minimaliste |
 | **MongoDB** | 8 | Base de données NoSQL |
 | **Mongoose** | 8 | ODM/Mapping |

@@ -1,6 +1,8 @@
 # 📋 SESSION REFACTORING ARCHIVE - ELEMENTS COMPLETES
 
-OBSOLETE: archive interne, ne pas utiliser comme guide de prod.
+⚠️ **ARCHIVE HISTORIQUE** - Document de référence interne uniquement  
+Ne pas utiliser comme guide de déploiement ou développement actuel.  
+Pour les infos actuelles, consulte: [README.md](../README.md), [AUDIT_V1_COMPLET.md](../AUDIT_V1_COMPLET.md), [DEPLOIEMENT_RENDER_GRATUIT.md](./DEPLOIEMENT_RENDER_GRATUIT.md)
 
 **Dernière mise à jour:** 12 février 2026  
 **Status:** ✅ Session complétée - Éléments refactorisés archivés
