@@ -7,7 +7,10 @@ import {
   Typography,
   Alert,
   CircularProgress,
+  IconButton,
+  InputAdornment,
 } from '@mui/material';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useAuth } from '@hooks/useAuth';
 
 import logo from '@assets/images/thumbnail_LOGO_POLE_EVOLUTION-removebg-preview.png';
@@ -18,6 +21,7 @@ const Login = () => {
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -28,6 +32,10 @@ const Login = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (error) setError(null);
+  };
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleSubmit = async (e) => {
@@ -155,7 +163,7 @@ const Login = () => {
                 fullWidth
                 label="Mot de passe"
                 name="motDePasse"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={formData.motDePasse}
                 onChange={handleChange}
                 required
@@ -172,6 +180,24 @@ const Login = () => {
                   '& .MuiInputBase-input': {
                     color: 'white',
                   },
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleTogglePassword}
+                        edge="end"
+                        sx={{
+                          color: 'primary.main',
+                          '&:hover': {
+                            color: '#FF1966',
+                          },
+                        }}
+                      >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                 }}
               />
 

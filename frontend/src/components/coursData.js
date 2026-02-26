@@ -33,11 +33,11 @@ export const coursInfos = {
     titre: "Besoin d'un PRÉ-REQUIS ?",
     soustitre: "Aucun pré-requis n'est nécessaire pour commencer la pôle dance.",
     description: "Les cours sont accessibles à tous les niveaux, même sans force, souplesse ou expérience en danse. Chacun évolue à son rythme, dans un cadre bienveillant et progressif.",
-    image: ''
+    image: poleSportIllustration
   },
   apport: {
     titre: "L'apport de la Pole Dance ?",
     description: "La pôle dance est une discipline complète qui renforce le corps et l'esprit. Elle améliore la force, la souplesse, la coordination et la confiance en soi, tout en permettant une vraie expression corporelle et un dépassement personnel.",
-    image: ''
+    image: poleChoreographieeIllustration
   }
 };
