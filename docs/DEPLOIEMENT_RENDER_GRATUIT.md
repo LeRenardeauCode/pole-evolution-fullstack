@@ -114,19 +114,21 @@
 
 Scroll jusqu'à **"Environment"** et ajoute les variables :
 
+⚠️ **NOTE:** Tous les exemples ci-dessous sont des **PLACEHOLDERS** - remplace par tes vraies valeurs !
+
 ```env
 NODE_ENV=production
 PORT=10000
-MONGO_URI=mongodb+srv://poleevolution-app:YOUR_PASSWORD@cluster0.xxxxx.mongodb.net/poleevolution?retryWrites=true&w=majority
-JWT_SECRET=your-secret-key-here-min-32-chars
+MONGO_URI=mongodb+srv://poleevolution-app:[TON_PASSWORD_ATLAS]@cluster0.xxxxx.mongodb.net/poleevolution?retryWrites=true&w=majority
+JWT_SECRET=[GENERE_UNE_CLEF_ALEATOIRE_MIN_32_CHARS]
 JWT_EXPIRE=7d
 FRONTEND_URL=https://pole-evolution-frontend.vercel.app
-CLOUDINARY_CLOUD_NAME=your-cloudinary-name
-CLOUDINARY_API_KEY=your-cloudinary-key
-CLOUDINARY_API_SECRET=your-cloudinary-secret
+CLOUDINARY_CLOUD_NAME=[TON_CLOUDINARY_NAME]
+CLOUDINARY_API_KEY=[TON_CLOUDINARY_KEY]
+CLOUDINARY_API_SECRET=[TON_CLOUDINARY_SECRET]
 EMAIL_SERVICE=gmail
 EMAIL_USER=votre.email@gmail.com
-EMAIL_PASSWORD=app-password-from-gmail
+EMAIL_PASSWORD=[APP_PASSWORD_GMAIL_2FA]
 EMAIL_FROM=Pole Evolution <votre.email@gmail.com>
 ADRESSE_STUDIO=123 Rue du Studio, Rumaucourt
 TELEPHONE_CONTACT=07 67 26 94 71
@@ -134,8 +136,8 @@ TELEPHONE_CONTACT=07 67 26 94 71
 
 ⚠️ **IMPORTANT:**
 - **PORT = 10000** (Render standard, ne change pas)
-- **MONGO_URI** = copié de l'étape 1.5 avec password
-- **JWT_SECRET** = une clé longue et aléatoire
+- **[PLACEHOLDERS]** = à remplacer par tes vraies valeurs (jamais commit en dur!)
+- **JWT_SECRET** = générer via: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
 - On mettra à jour **FRONTEND_URL** après Vercel
 
 ### Où trouver les clés ?
