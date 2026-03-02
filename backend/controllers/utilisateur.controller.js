@@ -453,7 +453,17 @@ export const activerForfait = async (req, res) => {
 
     const dateAchat = new Date();
     const dateExpiration = new Date(dateAchat);
-    dateExpiration.setMonth(dateExpiration.getMonth() + forfait.validiteMois);
+    
+    // Gérer la validité du forfait selon le type
+    if (forfait.validiteMois && forfait.validiteMois > 0) {
+      dateExpiration.setMonth(dateExpiration.getMonth() + forfait.validiteMois);
+    } else if (forfait.dureeEngagementMois && forfait.dureeEngagementMois > 0) {
+      // Pour les abonnements avec engagement
+      dateExpiration.setMonth(dateExpiration.getMonth() + forfait.dureeEngagementMois);
+    } else {
+      // Par défaut 1 mois si rien n'est spécifié
+      dateExpiration.setMonth(dateExpiration.getMonth() + 1);
+    }
 
     utilisateur.forfaitsActifs.push({
       forfaitId: forfait._id,
