@@ -105,7 +105,7 @@ export const register = async (req, res) => {
       expiresIn: process.env.JWT_EXPIRE || "30d",
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message:
         "Inscription réussie. Votre compte est en attente de validation par un administrateur.",
@@ -129,7 +129,7 @@ export const register = async (req, res) => {
       });
     }
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -333,7 +333,7 @@ export const uploadPhoto = async (req, res) => {
     user.photoUrl = photoUrl;
     await user.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Photo de profil mise à jour avec succès",
       user: {
@@ -341,7 +341,7 @@ export const uploadPhoto = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -377,13 +377,13 @@ export const updatePassword = async (req, res) => {
       expiresIn: process.env.JWT_EXPIRE || "30d",
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Mot de passe modifié avec succès.",
       token,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -391,7 +391,7 @@ export const updatePassword = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Déconnexion réussie. Veuillez supprimer le token côté client.",
   });
