@@ -182,7 +182,7 @@ export const login = async (req, res) => {
       expiresIn: process.env.JWT_EXPIRE || "30d",
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Connexion réussie.",
       token,
@@ -191,7 +191,7 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -212,7 +212,7 @@ export const getMe = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       user: {
         ...buildAuthUserPayload(user),
@@ -229,7 +229,7 @@ export const getMe = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -262,7 +262,7 @@ export const updateProfile = async (req, res) => {
       },
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Profil mis à jour avec succès.",
       user: {
@@ -289,7 +289,7 @@ export const updateProfile = async (req, res) => {
       });
     }
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -439,7 +439,7 @@ export const forgotPassword = async (req, res) => {
         resetUrl,
       });
 
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message:
           "Un email de réinitialisation a été envoyé à votre adresse. Veuillez vérifier votre boîte mail.",
@@ -456,7 +456,7 @@ export const forgotPassword = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -513,7 +513,7 @@ export const resetPassword = async (req, res) => {
       expiresIn: process.env.JWT_EXPIRE || "30d",
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Mot de passe réinitialisé avec succès.",
       token: newToken,
@@ -526,7 +526,7 @@ export const resetPassword = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
