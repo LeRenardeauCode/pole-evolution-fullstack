@@ -32,7 +32,7 @@ export const getGaleriePublique = asyncHandler(async (req, res) => {
 
   const medias = await Media.getGaleriePublique(categorie, Number(limit));
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     count: medias.length,
     data: medias,
@@ -44,7 +44,7 @@ export const getMediasALaUne = asyncHandler(async (req, res) => {
 
   const medias = await Media.getMediasALaUne(Number(limit));
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     count: medias.length,
     data: medias,
@@ -54,7 +54,7 @@ export const getMediasALaUne = asyncHandler(async (req, res) => {
 export const getMediasByCours = asyncHandler(async (req, res) => {
   const medias = await Media.getMediasCours(req.params.coursId);
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     count: medias.length,
     data: medias,
@@ -87,7 +87,7 @@ export const getMedias = asyncHandler(async (req, res) => {
 
   const count = await Media.countDocuments(query);
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     count,
     page: Number(page),
@@ -103,14 +103,14 @@ export const getMedia = asyncHandler(async (req, res) => {
     .populate("avis", "note titre");
 
   if (!media) {
-    res.status(404);
+    return res.status(404);
     throw new Error("Média introuvable");
   }
 
   media.nombreVues += 1;
   await media.save();
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     data: media,
   });
@@ -118,7 +118,7 @@ export const getMedia = asyncHandler(async (req, res) => {
 
 export const createMedia = asyncHandler(async (req, res) => {
   if (!req.file) {
-    res.status(400);
+    return res.status(400);
     throw new Error("Aucun fichier fourni");
   }
 
@@ -173,7 +173,7 @@ export const createMedia = asyncHandler(async (req, res) => {
 
   const media = await Media.create(mediaData);
 
-  res.status(201).json({
+  return res.status(201).json({
     success: true,
     message: "Média créé avec succès",
     data: media,
@@ -184,7 +184,7 @@ export const updateMedia = asyncHandler(async (req, res) => {
   let media = await Media.findById(req.params.id);
 
   if (!media) {
-    res.status(404);
+    return res.status(404);
     throw new Error("Média introuvable");
   }
 
@@ -232,7 +232,7 @@ export const updateMedia = asyncHandler(async (req, res) => {
     runValidators: true,
   }).populate("uploadePar", "prenom nom email");
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Média modifié avec succès",
     data: media,
@@ -243,7 +243,7 @@ export const deleteMedia = asyncHandler(async (req, res) => {
   const media = await Media.findById(req.params.id);
 
   if (!media) {
-    res.status(404);
+    return res.status(404);
     throw new Error("Média introuvable");
   }
 
@@ -255,7 +255,7 @@ export const deleteMedia = asyncHandler(async (req, res) => {
 
   await media.deleteOne();
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Média supprimé avec succès",
   });
@@ -265,13 +265,13 @@ export const mettreALaUne = asyncHandler(async (req, res) => {
   const media = await Media.findById(req.params.id);
 
   if (!media) {
-    res.status(404);
+    return res.status(404);
     throw new Error("Média introuvable");
   }
 
   await media.mettreALaUne();
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Média mis à la une",
     data: media,
@@ -282,13 +282,13 @@ export const retirerDeLaUne = asyncHandler(async (req, res) => {
   const media = await Media.findById(req.params.id);
 
   if (!media) {
-    res.status(404);
+    return res.status(404);
     throw new Error("Média introuvable");
   }
 
   await media.retirerDeLaUne();
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Média retiré de la une",
     data: media,
@@ -299,13 +299,13 @@ export const validerMedia = asyncHandler(async (req, res) => {
   const media = await Media.findById(req.params.id);
 
   if (!media) {
-    res.status(404);
+    return res.status(404);
     throw new Error("Média introuvable");
   }
 
   await media.valider();
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Média validé",
     data: media,
@@ -316,13 +316,13 @@ export const reordonnerMedias = asyncHandler(async (req, res) => {
   const { listeIds } = req.body;
 
   if (!Array.isArray(listeIds) || listeIds.length === 0) {
-    res.status(400);
+    return res.status(400);
     throw new Error("Liste d'IDs invalide");
   }
 
   await Media.reordonner(listeIds);
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Médias réordonnés avec succès",
   });
@@ -331,7 +331,7 @@ export const reordonnerMedias = asyncHandler(async (req, res) => {
 export const getStatsMedias = asyncHandler(async (req, res) => {
   const stats = await Media.getStatistiques();
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     data: stats,
   });

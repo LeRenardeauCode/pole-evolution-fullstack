@@ -20,7 +20,7 @@ export const getAvisPublics = async (req, res) => {
 
     const total = await Avis.countDocuments(query);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: avis.length,
       total,
@@ -29,7 +29,7 @@ export const getAvisPublics = async (req, res) => {
       data: avis,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -51,14 +51,14 @@ export const getAvisCours = async (req, res) => {
         ? (avis.reduce((sum, a) => sum + a.note, 0) / avis.length).toFixed(1)
         : 0;
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: avis.length,
       noteMoyenne: parseFloat(noteMoyenne),
       data: avis,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -71,13 +71,13 @@ export const getMesAvis = async (req, res) => {
       .populate("cours", "nom type niveau dateDebut")
       .sort({ createdAt: -1 });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: avis.length,
       data: avis,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -157,14 +157,14 @@ export const createAvis = async (req, res) => {
       .populate("utilisateur", "pseudo photoUrl")
       .populate("cours", "nom type");
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message:
         "Avis créé avec succès. Il sera visible après validation par un administrateur.",
       data: avisComplet,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -218,14 +218,14 @@ export const createAvisGeneral = async (req, res) => {
       .populate("utilisateur", "pseudo photoUrl")
       .populate("cours", "nom type");
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message:
         "Avis créé avec succès. Il sera visible après validation par un administrateur.",
       data: avisComplet,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -272,14 +272,14 @@ export const updateAvis = async (req, res) => {
       .populate("utilisateur", "pseudo photoUrl")
       .populate("cours", "nom type");
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message:
         "Avis modifié avec succès. Il sera revalidé par un administrateur.",
       data: avisUpdated,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -309,12 +309,12 @@ export const deleteAvis = async (req, res) => {
 
     await avis.deleteOne();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Avis supprimé avec succès",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -361,14 +361,14 @@ export const validerAvis = async (req, res) => {
       .populate("utilisateur", "prenom nom")
       .populate("cours", "nom type");
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Avis validé avec succès",
       data: avisComplet,
     });
   } catch (error) {
     console.error("Erreur validerAvis:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -407,13 +407,13 @@ export const rejeterAvis = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Avis rejeté avec succès",
       data: avis,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -440,7 +440,7 @@ export const getAllAvis = async (req, res) => {
 
     const total = await Avis.countDocuments(query);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: avis.length,
       total,
@@ -449,7 +449,7 @@ export const getAllAvis = async (req, res) => {
       data: avis,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -497,7 +497,7 @@ export const getStatsAvis = async (req, res) => {
       }),
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: {
         total,
@@ -511,7 +511,7 @@ export const getStatsAvis = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });

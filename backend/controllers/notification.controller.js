@@ -16,7 +16,7 @@ export const getNotifications = asyncHandler(async (req, res) => {
     .populate("coursId", "nom dateDebut")
     .populate("reservationId", "statut");
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     count: notifications.length,
     data: notifications,
@@ -53,14 +53,14 @@ export const creerDemandeForfait = async (req, res) => {
       },
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Demande envoyée",
       data: notification,
     });
   } catch (error) {
     console.error("Erreur:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -70,7 +70,7 @@ export const creerDemandeForfait = async (req, res) => {
 export const countNonLues = asyncHandler(async (req, res) => {
   const compteurs = await Notification.compterNonLues();
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     data: compteurs,
   });
@@ -80,13 +80,13 @@ export const marquerCommeLue = asyncHandler(async (req, res) => {
   const notification = await Notification.findById(req.params.id);
 
   if (!notification) {
-    res.status(404);
+    return res.status(404);
     throw new Error("Notification introuvable");
   }
 
   await notification.marquerCommeLue();
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Notification marquée comme lue",
     data: notification,
@@ -96,7 +96,7 @@ export const marquerCommeLue = asyncHandler(async (req, res) => {
 export const marquerToutesLues = asyncHandler(async (req, res) => {
   const result = await Notification.marquerToutesCommeLues();
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: `${result.modifiedCount} notification(s) marquée(s) comme lue(s)`,
   });
@@ -106,13 +106,13 @@ export const archiverNotification = asyncHandler(async (req, res) => {
   const notification = await Notification.findById(req.params.id);
 
   if (!notification) {
-    res.status(404);
+    return res.status(404);
     throw new Error("Notification introuvable");
   }
 
   await notification.archiver();
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Notification archivée",
     data: notification,
@@ -124,7 +124,7 @@ export const supprimerArchivees = asyncHandler(async (req, res) => {
 
   const result = await Notification.supprimerArchivees(Number(joursAvant));
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: `${result.deletedCount} notification(s) supprimée(s)`,
   });
