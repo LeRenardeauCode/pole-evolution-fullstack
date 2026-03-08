@@ -16,6 +16,7 @@ import APropos from '@pages/APropos';
 import Contact from '@pages/Contact';
 import Login from '@pages/Login';
 import ResetPassword from '@pages/ResetPassword';
+import VerifyEmail from '@pages/VerifyEmail';
 import PolitiqueConfidentialite from '@pages/PolitiqueConfidentialite';
 import MentionsLegales from '@pages/MentionsLegales';
 import PolitiqueCookies from '@pages/PolitiqueCookies';
@@ -64,6 +65,7 @@ function App() {
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/connexion" element={<Login />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="/verify-email" element={<VerifyEmail />} />
                   <Route path="/register" element={<Suspense fallback={<div />}><Register /></Suspense>} />
                   <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
                   <Route path="/mentions-legales" element={<MentionsLegales />} />

@@ -80,6 +80,11 @@ const authService = {
     }
     return response.data;
   },
+
+  verifyEmail: async (data) => {
+    const response = await api.post("/auth/verify-email", data);
+    return response.data;
+  },
 };
 
 export default authService;

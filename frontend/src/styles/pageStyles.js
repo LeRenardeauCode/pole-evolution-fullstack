@@ -40,7 +40,7 @@ export const leftPanel = {
 export const logoImg = { width: { xs: 220, sm: 260, md: 300 }, height: 'auto', mb: 3 };
 export const titleH3 = { fontSize: { xs: '2rem', sm: '2.3rem', md: '2.5rem' }, fontWeight: 800, color: 'white', textAlign: 'center' };
 export const subtitlePrimary = { fontSize: '1.2rem', fontWeight: 600, color: 'primary.main', textAlign: 'center', mt: 2 };
-export const rightPanel = { flex: 1, backgroundColor: '#100249', display: 'flex', alignItems: 'center', justifyContent: 'center', p: { xs: 3, md: 6 } };
+export const rightPanel = { flex: 1, backgroundColor: '#100249', display: 'flex', alignItems: 'center', justifyContent: 'center', p: { xs: 3, md: 6 }, position: 'relative', zIndex: 1 };
 
 export const textFieldWhite = { mb: 3, '& .MuiOutlinedInput-root': { borderRadius: 0, backgroundColor: 'white' } };
 export const textFieldWhiteHelper = { mb: 4, '& .MuiOutlinedInput-root': { borderRadius: 0, backgroundColor: 'white' }, '& .MuiFormHelperText-root': { color: 'white' } };

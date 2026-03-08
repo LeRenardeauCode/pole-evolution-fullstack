@@ -532,3 +532,55 @@ export const resetPassword = async (req, res) => {
     });
   }
 };
+
+export const verifyEmail = async (req, res) => {
+  try {
+    const { token, email } = req.body;
+
+    if (!token || !email) {
+      return res.status(400).json({
+        success: false,
+        message: "Token et email requis.",
+      });
+    }
+
+    const user = await Utilisateur.findOne({
+      email: email.toLowerCase(),
+      tokenVerificationEmail: token,
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Email ou token invalide.",
+      });
+    }
+
+    // Vérifier si le token a expiré (7 jours)
+    if (
+      user.tokenVerificationEmailExpire &&
+      new Date() > user.tokenVerificationEmailExpire
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Le lien de vérification a expiré. Veuillez vous réinscrire.",
+      });
+    }
+
+    user.emailVerifie = true;
+    user.tokenVerificationEmail = undefined;
+    user.tokenVerificationEmailExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return res.status(200).json({
+      success: true,
+      message: "Email vérifié avec succès!",
+      user: buildAuthUserPayload(user),
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

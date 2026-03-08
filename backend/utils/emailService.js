@@ -54,8 +54,8 @@ export const sendWelcomeEmail = async ({ email, prenom, validationUrl }) => {
           </p>
 
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${validationUrl}" style="background-color: #FF1966; color: white !important; padding: 14px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; font-size: 16px; mso-padding-alt: 0; text-align: center;">
-              <span style="color: white; text-decoration: none;">Valider mon email</span>
+            <a href="${validationUrl}" style="background-color: #FF1966 !important; background: #FF1966 !important; color: white !important; padding: 14px 40px; text-decoration: none !important; border-radius: 5px; font-weight: bold; display: inline-block; font-size: 16px; border: 2px solid #FF1966; font-family: Arial, sans-serif;">
+              Valider mon email
             </a>
           </div>
 
