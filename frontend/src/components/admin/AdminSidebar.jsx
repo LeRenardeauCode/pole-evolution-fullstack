@@ -19,7 +19,8 @@ import {
   AttachMoney as MoneyIcon,
   Notifications as NotificationsIcon,
   Settings as SettingsIcon,
-  Build as BuildIcon
+  Build as BuildIcon,
+  PhotoLibrary as GalleryIcon
 } from '@mui/icons-material';
 import { toast } from 'react-toastify';
 import { getParametreByKey, updateParametre } from '@services/adminService';
@@ -47,6 +48,11 @@ const menuItems = [
     title: 'Notifications',
     path: '/admin/notifications',
     icon: <NotificationsIcon />
+  },
+  {
+    title: 'Galerie',
+    path: '/admin/galerie',
+    icon: <GalleryIcon />
   },
   {
     title: 'Paramètres',

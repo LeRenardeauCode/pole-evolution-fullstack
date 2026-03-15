@@ -1,7 +1,7 @@
 import { Box, Container, Typography, CircularProgress, Alert } from '@mui/material';
 import { useAbout } from '@hooks/useAbout';
 import heroApropos from '@assets/images/img_hero.jpg';
-import profImage from '@assets/images/ENSEIGNE.jpg';
+import profImage from '@assets/images/img_hero_coraline_propos.jpg';
 
 const APropos = () => {
   const { aboutText, loading, error } = useAbout();

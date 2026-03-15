@@ -2,6 +2,7 @@ import { Box, Container, Typography, Stack, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import heroBackground from '@assets/images/img_hero.jpg';
+import heroCoraline from '@assets/images/img_hero_coraline.jpg';
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -26,9 +27,9 @@ const HeroSection = () => {
           left: 0,
           width: { xs: '100%', md: '50%' }, 
           height: '100%',
-          backgroundImage: `url(${heroBackground})`,
+          backgroundImage: `url(${heroCoraline})`,
           backgroundSize: 'cover',
-          backgroundPosition: 'right center',
+          backgroundPosition: 'center',
           zIndex: 1,
         }}
       />

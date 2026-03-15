@@ -38,6 +38,7 @@ const Eleves = lazy(() => import('@pages/admin/Eleves'));
 const TarifsContenu = lazy(() => import('@pages/admin/TarifsContenu'));
 const NotificationsPage = lazy(() => import('@pages/admin/Notifications'));
 const Parametres = lazy(() => import('@pages/admin/Parametres'));
+const GalerieAdmin = lazy(() => import('@pages/admin/GalerieAdmin'));
 
 import theme from '@utils/theme';
 
@@ -114,6 +115,7 @@ function App() {
           <Route path="tarifs" element={<Suspense fallback={<div />}><TarifsContenu /></Suspense>} />
           <Route path="notifications" element={<Suspense fallback={<div />}><NotificationsPage /></Suspense>} />
           <Route path="parametres" element={<Suspense fallback={<div />}><Parametres /></Suspense>} />
+          <Route path="galerie" element={<Suspense fallback={<div />}><GalerieAdmin /></Suspense>} />
         </Route>
       </Routes>
 
