@@ -231,7 +231,7 @@ export default function GalerieAdmin() {
             component="label"
             startIcon={<UploadIcon />}
             fullWidth
-            sx={{ mt: 1, mb: 2, py: 2, borderStyle: 'dashed' }}
+            sx={{ mt: 1, mb: 2, py: 2, borderStyle: 'dashed', color: 'text.primary', borderColor: 'rgba(0,0,0,0.23)' }}
           >
             {uploadForm.fichier ? uploadForm.fichier.name : 'Sélectionner un fichier (image ou vidéo)'}
             <input
