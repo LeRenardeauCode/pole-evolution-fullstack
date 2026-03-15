@@ -164,7 +164,7 @@ const Galerie = () => {
             variant="h1"
             sx={{
               position: 'absolute',
-              bottom: { xs: 40, md: 80 },
+              bottom: { xs: 10, md: 80 },
               left: '50%',
               transform: 'translateX(-50%)',
               fontSize: { xs: '2.5rem', md: '4rem', lg: '5rem' },

@@ -25,12 +25,13 @@ const HeroSection = () => {
           position: 'absolute',
           top: 0,
           left: 0,
-          width: { xs: '100%', md: '50%' }, 
+          width: { xs: '0%', md: '50%' }, 
           height: '100%',
           backgroundImage: `url(${heroCoraline})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           zIndex: 1,
+          display: { xs: 'none', md: 'block' },
         }}
       />
 
@@ -51,7 +52,10 @@ const HeroSection = () => {
             maxWidth: '600px',
             color: 'white',
             textAlign: { xs: 'center', md: 'left' },
-            px: { xs: 2, md: 4 },
+            px: { xs: 3, md: 4 },
+            py: { xs: 3, md: 0 },
+            borderRadius: { xs: 3, md: 0 },
+            backgroundColor: { xs: 'rgba(255, 255, 255, 0.85)', md: 'transparent' },
           }}
         >
           <Typography
@@ -76,6 +80,7 @@ const HeroSection = () => {
               letterSpacing: '2px',
               fontSize: { xs: '2.2rem', sm: '3rem', md: '3.8rem' },
               lineHeight: { xs: 1.1, sm: 1.05 },
+              color: { xs: '#1a1a2e', md: 'white' },
             }}
           >
             PÔLE ÉVOLUTION
@@ -89,6 +94,7 @@ const HeroSection = () => {
               mb: 4,
               opacity: 0.95,
               fontSize: { xs: '1rem', sm: '1.1rem' },
+              color: { xs: '#333', md: 'white' },
             }}
           >
             Dépassez vos limites. Apprenez la Pole Dance à votre rythme

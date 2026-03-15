@@ -21,7 +21,15 @@ export default function Parametres() {
   const [delaiReservation, setDelaiReservation] = useState('2');
 
   const [nomEtablissement, setNomEtablissement] = useState('');
-  const [mentionsLegales, setMentionsLegales] = useState('');
+  const [formeJuridique, setFormeJuridique] = useState('');
+  const [siren, setSiren] = useState('');
+  const [siret, setSiret] = useState('');
+  const [adresseSiege, setAdresseSiege] = useState('');
+  const [representantLegal, setRepresentantLegal] = useState('');
+  const [telephoneLegal, setTelephoneLegal] = useState('');
+  const [emailLegal, setEmailLegal] = useState('');
+  const [hebergeurNom, setHebergeurNom] = useState('');
+  const [hebergeurAdresse, setHebergeurAdresse] = useState('');
 
   const [emailContact, setEmailContact] = useState('');
   const [telephoneContact, setTelephoneContact] = useState('');
@@ -54,7 +62,15 @@ export default function Parametres() {
           setDelaiReservation(findParam('delaireservationminimum'));
 
           setNomEtablissement(findParam('nometablissement'));
-          setMentionsLegales(findParam('mentionslegales'));
+          setFormeJuridique(findParam('formejuridique'));
+          setSiren(findParam('siren'));
+          setSiret(findParam('siret'));
+          setAdresseSiege(findParam('adressesiege'));
+          setRepresentantLegal(findParam('representantlegal'));
+          setTelephoneLegal(findParam('telephonelegal'));
+          setEmailLegal(findParam('emaillegal'));
+          setHebergeurNom(findParam('hebergeurnom'));
+          setHebergeurAdresse(findParam('hebergeuradresse'));
 
           setEmailContact(findParam('emailcontact'));
           setTelephoneContact(findParam('telephonecontact'));
@@ -146,7 +162,15 @@ export default function Parametres() {
     try {
       await Promise.all([
         updateParametre('nometablissement', nomEtablissement),
-        updateParametre('mentionslegales', mentionsLegales)
+        updateParametre('formejuridique', formeJuridique),
+        updateParametre('siren', siren),
+        updateParametre('siret', siret),
+        updateParametre('adressesiege', adresseSiege),
+        updateParametre('representantlegal', representantLegal),
+        updateParametre('telephonelegal', telephoneLegal),
+        updateParametre('emaillegal', emailLegal),
+        updateParametre('hebergeurnom', hebergeurNom),
+        updateParametre('hebergeuradresse', hebergeurAdresse)
       ]);
       toast.success('Informations légales modifiées avec succès');
     } catch (err) {
@@ -252,12 +276,83 @@ export default function Parametres() {
               />
               <TextField
                 fullWidth
-                label="Mentions légales"
-                value={mentionsLegales}
-                onChange={(e) => setMentionsLegales(e.target.value)}
-                helperText="SIRET, TVA, etc."
+                label="Forme juridique"
+                value={formeJuridique}
+                onChange={(e) => setFormeJuridique(e.target.value)}
+                helperText="Auto-entrepreneur, SARL, EIRL, etc."
                 sx={{ mb: 2 }}
               />
+              <Grid container spacing={2} sx={{ mb: 2 }}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Numéro SIREN"
+                    value={siren}
+                    onChange={(e) => setSiren(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Numéro SIRET"
+                    value={siret}
+                    onChange={(e) => setSiret(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
+              <TextField
+                fullWidth
+                label="Adresse du siège social"
+                value={adresseSiege}
+                onChange={(e) => setAdresseSiege(e.target.value)}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                fullWidth
+                label="Représentant légal"
+                value={representantLegal}
+                onChange={(e) => setRepresentantLegal(e.target.value)}
+                helperText="Nom et prénom du responsable"
+                sx={{ mb: 2 }}
+              />
+              <Grid container spacing={2} sx={{ mb: 2 }}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Téléphone (mentions légales)"
+                    value={telephoneLegal}
+                    onChange={(e) => setTelephoneLegal(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Email (mentions légales)"
+                    value={emailLegal}
+                    onChange={(e) => setEmailLegal(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="subtitle2" sx={{ mb: 1, color: '#6B7280' }}>Hébergeur du site</Typography>
+              <Grid container spacing={2} sx={{ mb: 2 }}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Nom de l'hébergeur"
+                    value={hebergeurNom}
+                    onChange={(e) => setHebergeurNom(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Adresse de l'hébergeur"
+                    value={hebergeurAdresse}
+                    onChange={(e) => setHebergeurAdresse(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
               <Button
                 variant="contained"
                 onClick={handleSaveLegal}

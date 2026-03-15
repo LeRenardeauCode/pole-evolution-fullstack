@@ -1,6 +1,38 @@
-import { Box, Container, Typography } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Box, Container, Typography, CircularProgress } from '@mui/material';
+import parametreService from '@services/parametreService';
 
 const MentionsLegales = () => {
+  const [legal, setLegal] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLegal = async () => {
+      try {
+        const response = await parametreService.getParametresByCategorie('interface');
+        const params = response.data || response;
+        if (Array.isArray(params)) {
+          const map = {};
+          params.forEach(p => { map[p.cle] = p.valeur; });
+          setLegal(map);
+        }
+      } catch (err) {
+        console.error('Erreur chargement mentions légales:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLegal();
+  }, []);
+
+  if (loading) {
+    return (
+      <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ py: { xs: 4, md: 6 }, backgroundColor: '#f5f5f5', pt: { xs: 14, md: 16 } }}>
       <Container maxWidth="md">
@@ -22,16 +54,16 @@ const MentionsLegales = () => {
             1. Identification du Professionnel
           </Typography>
           <Typography variant="body1" sx={{ lineHeight: 1.8, mb: 3 }}>
-            <strong>Nom de l'entreprise :</strong> Pole Evolution<br />
-            <strong>Forme juridique :</strong> [À compléter - Auto-entrepreneur / SARL / EIRL / etc.]<br />
-            <strong>Numéro SIREN :</strong> [À compléter]<br />
-            <strong>Numéro SIRET :</strong> [À compléter]<br />
-            <strong>Adresse du siège social :</strong> [À compléter]<br />
-            <strong>Représentant légal :</strong> [Nom et prénom du responsable]<br />
-            <strong>Téléphone :</strong> [Votre numéro]<br />
-            <strong>Email :</strong> contact@pole-evolution.fr<br />
-            <strong>Hébergeur du site :</strong> [Nom de l'hébergeur - À compléter]<br />
-            <strong>Adresse de l'hébergeur :</strong> [Adresse - À compléter]
+            <strong>Nom de l'entreprise :</strong> {legal.nometablissement || 'Pole Evolution'}<br />
+            <strong>Forme juridique :</strong> {legal.formejuridique || 'À compléter'}<br />
+            <strong>Numéro SIREN :</strong> {legal.siren || 'À compléter'}<br />
+            <strong>Numéro SIRET :</strong> {legal.siret || 'À compléter'}<br />
+            <strong>Adresse du siège social :</strong> {legal.adressesiege || 'À compléter'}<br />
+            <strong>Représentant légal :</strong> {legal.representantlegal || 'À compléter'}<br />
+            <strong>Téléphone :</strong> {legal.telephonelegal || '07.67.26.94.71'}<br />
+            <strong>Email :</strong> {legal.emaillegal || 'contact@pole-evolution.fr'}<br />
+            <strong>Hébergeur du site :</strong> {legal.hebergeurnom || 'À compléter'}<br />
+            <strong>Adresse de l'hébergeur :</strong> {legal.hebergeuradresse || 'À compléter'}
           </Typography>
 
           <Typography variant="h5" sx={{ fontWeight: 600, mt: 4, mb: 2 }}>
