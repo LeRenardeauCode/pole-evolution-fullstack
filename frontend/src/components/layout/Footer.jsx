@@ -341,6 +341,7 @@ const Footer = () => {
               justifyContent={{ xs: "center", md: "flex-end" }}
               alignItems="center"
               flexWrap="wrap"
+              sx={{ width: '100%' }}
             >
               <MuiLink
                 component={Link}
