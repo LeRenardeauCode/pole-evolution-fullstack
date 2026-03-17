@@ -66,4 +66,20 @@ export const uploadProfile = multer({
   }
 });
 
+const fileFilterDocument = (req, file, cb) => {
+  if (file.mimetype === 'application/pdf') {
+    cb(null, true);
+  } else {
+    cb(new Error('Seuls les fichiers PDF sont autorisés'));
+  }
+};
+
+export const uploadDocument = multer({
+  storage: storageMemory,
+  fileFilter: fileFilterDocument,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  }
+});
+
 export default uploadMedia;

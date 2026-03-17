@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Grid,
@@ -7,10 +7,13 @@ import {
   Typography,
   TextField,
   Button,
-  Divider
+  Divider,
+  Stack,
+  Chip
 } from '@mui/material';
+import { Upload, CheckCircle, PictureAsPdf } from '@mui/icons-material';
 import { toast } from 'react-toastify';
-import { getParametres, updateParametre } from '@services/adminService';
+import { getParametres, updateParametre, uploadDocumentPDF } from '@services/adminService';
 
 export default function Parametres() {
   const [loading, setLoading] = useState(false);
@@ -44,6 +47,14 @@ export default function Parametres() {
   const [footerDistanceCambrai, setFooterDistanceCambrai] = useState('');
   const [footerDistanceDouai, setFooterDistanceDouai] = useState('');
   const [footerDistanceArras, setFooterDistanceArras] = useState('');
+
+  const [docReglement1, setDocReglement1] = useState('');
+  const [docReglement2, setDocReglement2] = useState('');
+  const [docPlaquetteEVJF, setDocPlaquetteEVJF] = useState('');
+  const [uploadingDoc, setUploadingDoc] = useState(null);
+  const fileInputRef1 = useRef(null);
+  const fileInputRef2 = useRef(null);
+  const fileInputRef3 = useRef(null);
 
   useEffect(() => {
     let mounted = true;
@@ -85,6 +96,10 @@ export default function Parametres() {
           setFooterDistanceCambrai(findParam('footerdistancecambrai'));
           setFooterDistanceDouai(findParam('footerdistancedouai'));
           setFooterDistanceArras(findParam('footerdistancearras'));
+
+          setDocReglement1(findParam('documentreglementinterieur1'));
+          setDocReglement2(findParam('documentreglementinterieur2'));
+          setDocPlaquetteEVJF(findParam('documentplaquetteevjf'));
         }
       } catch (err) {
         console.error('Erreur chargement paramètres:', err);
@@ -178,6 +193,24 @@ export default function Parametres() {
       toast.error(err.response?.data?.message || 'Erreur lors de la modification');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUploadDocument = async (cle, file, setter) => {
+    if (!file || file.type !== 'application/pdf') {
+      toast.error('Veuillez sélectionner un fichier PDF');
+      return;
+    }
+    setUploadingDoc(cle);
+    try {
+      const response = await uploadDocumentPDF(cle, file);
+      setter(response.data?.url || '');
+      toast.success('Document uploadé avec succès');
+    } catch (err) {
+      console.error('Erreur upload:', err);
+      toast.error(err.response?.data?.message || 'Erreur lors de l\'upload');
+    } finally {
+      setUploadingDoc(null);
     }
   };
 
@@ -541,6 +574,70 @@ export default function Parametres() {
               >
                 Enregistrer les informations
               </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12}>
+          <Card elevation={0} sx={{ border: '1px solid #e0e0e0' }}>
+            <CardContent>
+              <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                Documents téléchargeables
+              </Typography>
+              <Typography variant="body2" sx={{ mb: 3, color: '#6B7280' }}>
+                Uploadez les PDF du règlement intérieur et de la plaquette EVJF. Ils remplaceront les fichiers actuels sur le site.
+              </Typography>
+
+              <Stack spacing={3}>
+                {[
+                  { label: 'Règlement intérieur - Partie 1', cle: 'documentreglementinterieur1', url: docReglement1, ref: fileInputRef1, setter: setDocReglement1 },
+                  { label: 'Règlement intérieur - Partie 2', cle: 'documentreglementinterieur2', url: docReglement2, ref: fileInputRef2, setter: setDocReglement2 },
+                  { label: 'Plaquette EVJF', cle: 'documentplaquetteevjf', url: docPlaquetteEVJF, ref: fileInputRef3, setter: setDocPlaquetteEVJF },
+                ].map((doc) => (
+                  <Box key={doc.cle} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                    <PictureAsPdf sx={{ color: '#D32F2F', fontSize: 32 }} />
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                        {doc.label}
+                      </Typography>
+                      {doc.url ? (
+                        <Chip
+                          icon={<CheckCircle />}
+                          label="Document personnalisé uploadé"
+                          size="small"
+                          color="success"
+                          variant="outlined"
+                          sx={{ mt: 0.5 }}
+                        />
+                      ) : (
+                        <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                          Document par défaut (fichier statique)
+                        </Typography>
+                      )}
+                    </Box>
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      hidden
+                      ref={doc.ref}
+                      onChange={(e) => {
+                        if (e.target.files[0]) {
+                          handleUploadDocument(doc.cle, e.target.files[0], doc.setter);
+                        }
+                      }}
+                    />
+                    <Button
+                      variant="outlined"
+                      startIcon={<Upload />}
+                      onClick={() => doc.ref.current?.click()}
+                      disabled={uploadingDoc === doc.cle}
+                      size="small"
+                    >
+                      {uploadingDoc === doc.cle ? 'Upload...' : 'Remplacer'}
+                    </Button>
+                  </Box>
+                ))}
+              </Stack>
             </CardContent>
           </Card>
         </Grid>

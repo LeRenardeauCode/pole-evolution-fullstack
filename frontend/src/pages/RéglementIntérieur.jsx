@@ -1,11 +1,34 @@
+import { useState, useEffect } from "react";
 import { Box, Container, Typography, Button, Stack, Paper } from "@mui/material";
 import { Download } from "@mui/icons-material";
+import parametreService from "@services/parametreService";
 
 const RéglementIntérieur = () => {
-  const handleDownloadPDF = (filename, displayName) => {
+  const [docUrls, setDocUrls] = useState({});
+
+  useEffect(() => {
+    const fetchDocs = async () => {
+      try {
+        const response = await parametreService.getParametresByCategorie('documents');
+        const params = response.data || response;
+        if (Array.isArray(params)) {
+          const map = {};
+          params.forEach((p) => { map[p.cle] = p.valeur; });
+          setDocUrls(map);
+        }
+      } catch {
+        // fallback to static files
+      }
+    };
+    fetchDocs();
+  }, []);
+
+  const handleDownloadPDF = (cle, staticFilename, displayName) => {
+    const url = docUrls[cle] || `/documents/${staticFilename}`;
     const link = document.createElement("a");
-    link.href = `/documents/${filename}`;
+    link.href = url;
     link.download = displayName;
+    if (docUrls[cle]) link.target = "_blank";
     link.click();
   };
 
@@ -79,6 +102,7 @@ const RéglementIntérieur = () => {
               startIcon={<Download />}
               onClick={() =>
                 handleDownloadPDF(
+                  "documentreglementinterieur1",
                   "reglement-interieur-1.pdf",
                   "Règlement-Intérieur-Partie-1-Pole-Evolution.pdf"
                 )
@@ -138,6 +162,7 @@ const RéglementIntérieur = () => {
               startIcon={<Download />}
               onClick={() =>
                 handleDownloadPDF(
+                  "documentreglementinterieur2",
                   "reglement-interieur-2.pdf",
                   "Règlement-Intérieur-Partie-2-Pole-Evolution.pdf"
                 )

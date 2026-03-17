@@ -378,14 +378,27 @@ export const getStatsMensuelles = async (req, res) => {
       });
     }
 
+    const parsedAnnee = parseInt(annee);
+    const parsedMois = parseInt(mois);
+
+    const debutMois = new Date(parsedAnnee, parsedMois - 1, 1);
+    const finMois = new Date(parsedAnnee, parsedMois, 0, 23, 59, 59);
+
+    const nouveauxUtilisateurs = await Utilisateur.countDocuments({
+      dateInscription: { $gte: debutMois, $lte: finMois },
+    });
+
     const stats = await Utilisateur.getStatistiquesMois(
-      parseInt(annee),
-      parseInt(mois),
+      parsedAnnee,
+      parsedMois,
     );
 
     return res.status(200).json({
       success: true,
-      data: stats,
+      data: {
+        nouveauxUtilisateurs,
+        details: stats,
+      },
     });
   } catch (error) {
     return res.status(500).json({
