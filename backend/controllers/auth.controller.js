@@ -627,11 +627,11 @@ export const resendVerificationEmail = async (req, res) => {
 
     const validationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${emailVerificationToken}&email=${encodeURIComponent(email)}`;
 
-    await sendWelcomeEmail({
+    sendWelcomeEmail({
       email: user.email,
       prenom: user.prenom,
       validationUrl,
-    });
+    }).catch(err => console.error("Erreur renvoi email vérification:", err.message));
 
     return res.status(200).json({
       success: true,
