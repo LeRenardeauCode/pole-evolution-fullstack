@@ -525,3 +525,69 @@ export const isEmailServiceConfigured = () => {
     process.env.FRONTEND_URL
   );
 };
+
+export const sendNewUserNotificationToAdmin = async ({ prenom, nom, email, telephone, niveauPole }) => {
+  const adminEmail = process.env.EMAIL_USER;
+
+  const mailOptions = {
+    from: `"Notifications Pôle Evolution" <${process.env.EMAIL_USER}>`,
+    to: adminEmail,
+    subject: `[NOUVELLE INSCRIPTION] ${prenom} ${nom}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: #100249; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
+          <h1 style="margin: 0;">👤 Nouvelle Inscription</h1>
+        </div>
+
+        <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px;">
+          <p style="font-size: 16px; color: #333;">Un nouvel utilisateur vient de s'inscrire sur Pôle Evolution :</p>
+
+          <div style="border-left: 4px solid #FF1966; padding-left: 15px; margin-bottom: 20px;">
+            <p style="margin: 5px 0;"><strong>Prénom :</strong> ${prenom}</p>
+            <p style="margin: 5px 0;"><strong>Nom :</strong> ${nom}</p>
+            <p style="margin: 5px 0;"><strong>Email :</strong> <a href="mailto:${email}" style="color: #FF1966;">${email}</a></p>
+            <p style="margin: 5px 0;"><strong>Téléphone :</strong> ${telephone || 'Non renseigné'}</p>
+            <p style="margin: 5px 0;"><strong>Niveau :</strong> ${niveauPole || 'Non précisé'}</p>
+          </div>
+
+          <div style="background: #d1ecf1; border-left: 4px solid #0c5460; padding: 15px; border-radius: 5px;">
+            <p style="margin: 0; color: #0c5460; font-size: 14px;">
+              ℹ️ Ce compte est en attente de validation. Rendez-vous dans le back-office pour l'approuver ou le rejeter.
+            </p>
+          </div>
+
+          <div style="margin-top: 20px; text-align: center;">
+            <a href="${process.env.FRONTEND_URL}/admin/eleves" style="background-color: #FF1966; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+              <span style="color: white; text-decoration: none;">Voir les élèves</span>
+            </a>
+          </div>
+        </div>
+
+        <div style="background: #100249; color: white; padding: 15px; text-align: center; border-radius: 0 0 10px 10px; font-size: 12px;">
+          <p style="margin: 0;">© ${new Date().getFullYear()} Pôle Evolution</p>
+        </div>
+      </div>
+    `,
+    text: `
+      Nouvelle inscription sur Pôle Evolution
+
+      Prénom : ${prenom}
+      Nom : ${nom}
+      Email : ${email}
+      Téléphone : ${telephone || 'Non renseigné'}
+      Niveau : ${niveauPole || 'Non précisé'}
+
+      Ce compte est en attente de validation admin.
+
+      © ${new Date().getFullYear()} Pôle Evolution
+    `,
+  };
+
+  try {
+    await getTransporter().sendMail(mailOptions);
+    return { success: true, message: "Notification nouvel utilisateur envoyée" };
+  } catch (error) {
+    console.error("Erreur notification nouvel utilisateur:", error);
+    throw new Error(`Erreur notification nouvel utilisateur: ${error.message}`);
+  }
+};

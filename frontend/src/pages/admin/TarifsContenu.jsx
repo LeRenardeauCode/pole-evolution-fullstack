@@ -291,8 +291,8 @@ export default function TarifsContenu() {
       </Tabs>
 
       {currentTab === 0 && (
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
+        <Grid container spacing={3} sx={{ alignItems: 'stretch' }}>
+          <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
             <TarifsForm
               editingForfait={editingForfait}
               formData={formData}
@@ -303,7 +303,7 @@ export default function TarifsContenu() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
             <TarifsTable
               forfaits={forfaits}
               onEdit={handleEditForfait}

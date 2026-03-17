@@ -45,6 +45,8 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isMinor, setIsMinor] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
 
   const [formData, setFormData] = useState({
     prenom: "",
@@ -213,6 +215,18 @@ const Register = () => {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResendEmail = async () => {
+    setResendLoading(true);
+    try {
+      await authService.resendVerificationEmail(formData.email);
+      setResendSuccess(true);
+    } catch {
+      setError("Erreur lors du renvoi de l'email. Veuillez réessayer.");
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -615,13 +629,36 @@ const Register = () => {
                 dans le mail.
               </Typography>
 
-              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, justifyContent: 'center', alignItems: 'center' }}>
-                <Button onClick={() => navigate('/connexion')} sx={{ ...primaryButton, px: 4, width: { xs: '100%', sm: 'auto' } }}>
-                  Se connecter
-                </Button>
+              {resendSuccess && (
+                <Alert severity="success" sx={{ mb: 3, width: '100%' }}>
+                  Un nouveau lien de vérification a été envoyé à votre adresse email.
+                </Alert>
+              )}
 
-                <Button onClick={() => navigate('/')} sx={{ ...primaryButton, px: 4, width: { xs: '100%', sm: 'auto' } }}>
-                  Aller sur la page d'accueil
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', width: '100%' }}>
+                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, justifyContent: 'center', alignItems: 'center' }}>
+                  <Button onClick={() => navigate('/connexion')} sx={{ ...primaryButton, px: 4, width: { xs: '100%', sm: 'auto' } }}>
+                    Se connecter
+                  </Button>
+
+                  <Button onClick={() => navigate('/')} sx={{ ...primaryButton, px: 4, width: { xs: '100%', sm: 'auto' } }}>
+                    Aller sur la page d'accueil
+                  </Button>
+                </Box>
+
+                <Button
+                  onClick={handleResendEmail}
+                  disabled={resendLoading || resendSuccess}
+                  sx={{
+                    color: 'white',
+                    textTransform: 'none',
+                    fontSize: '0.85rem',
+                    textDecoration: 'underline',
+                    '&:hover': { textDecoration: 'underline', backgroundColor: 'transparent' },
+                    '&.Mui-disabled': { color: 'rgba(255,255,255,0.5)' },
+                  }}
+                >
+                  {resendLoading ? <CircularProgress size={18} sx={{ color: 'white' }} /> : resendSuccess ? 'Email renvoyé ✓' : "Vous n'avez pas reçu l'email ? Renvoyer"}
                 </Button>
               </Box>
             </Box>

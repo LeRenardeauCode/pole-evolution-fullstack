@@ -85,6 +85,11 @@ const authService = {
     const response = await api.post("/auth/verify-email", data);
     return response.data;
   },
+
+  resendVerificationEmail: async (email) => {
+    const response = await api.post("/auth/resend-verification-email", { email });
+    return response.data;
+  },
 };
 
 export default authService;

@@ -227,9 +227,9 @@ export default function NotificationsPage() {
         Notifications
       </Typography>
 
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <Card>
+      <Grid container spacing={3} sx={{ alignItems: 'stretch' }}>
+        <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
+          <Card sx={{ width: '100%' }}>
             <CardContent>
               <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                 Modifier / Voir les avis sur le site
@@ -334,8 +334,8 @@ export default function NotificationsPage() {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={6}>
-          <Card>
+        <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
+          <Card sx={{ width: '100%' }}>
             <CardContent>
               <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                 Activer / Désactiver les notifications

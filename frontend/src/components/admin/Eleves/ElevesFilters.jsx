@@ -4,7 +4,7 @@ import { fieldMb, sectionTitle } from "@/styles/pageStyles";
 
 export default function ElevesFilters({ searchTerm, onSearchChange }) {
   return (
-    <Card>
+    <Card sx={{ width: '100%' }}>
       <CardContent>
         <Typography variant="h6" sx={sectionTitle}>
           Modifier un nom

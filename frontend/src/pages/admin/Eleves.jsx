@@ -264,16 +264,16 @@ export default function Eleves() {
         Élèves
       </Typography>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{ alignItems: 'stretch' }}>
         {/* Filtres et recherche */}
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
           <ElevesFilters
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6} sx={{ display: 'flex' }}>
           <ElevesInfoCard />
         </Grid>
 

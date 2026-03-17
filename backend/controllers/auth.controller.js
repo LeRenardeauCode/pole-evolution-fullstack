@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 import crypto from "crypto";
-import { sendResetPasswordEmail, sendWelcomeEmail } from "../utils/emailService.js";
+import { sendResetPasswordEmail, sendWelcomeEmail, sendNewUserNotificationToAdmin } from "../utils/emailService.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -100,6 +100,14 @@ export const register = async (req, res) => {
       prenom: user.prenom,
       validationUrl,
     }).catch(emailError => console.error("Erreur envoi email de bienvenue:", emailError.message));
+
+    sendNewUserNotificationToAdmin({
+      prenom: user.prenom,
+      nom: user.nom,
+      email: user.email,
+      telephone: user.telephone,
+      niveauPole: user.niveauPole,
+    }).catch(err => console.error("Erreur notification admin nouvelle inscription:", err.message));
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE || "30d",
@@ -581,6 +589,58 @@ export const verifyEmail = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: error.message,
+    });
+  }
+};
+
+export const resendVerificationEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email requis.",
+      });
+    }
+
+    const user = await Utilisateur.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      return res.status(200).json({
+        success: true,
+        message: "Si un compte existe avec cet email, un nouveau lien de vérification a été envoyé.",
+      });
+    }
+
+    if (user.emailVerifie) {
+      return res.status(200).json({
+        success: true,
+        message: "Votre email est déjà vérifié.",
+      });
+    }
+
+    const emailVerificationToken = crypto.randomBytes(32).toString("hex");
+    user.tokenVerificationEmail = emailVerificationToken;
+    user.tokenVerificationEmailExpire = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    await user.save({ validateBeforeSave: false });
+
+    const validationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${emailVerificationToken}&email=${encodeURIComponent(email)}`;
+
+    await sendWelcomeEmail({
+      email: user.email,
+      prenom: user.prenom,
+      validationUrl,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Si un compte existe avec cet email, un nouveau lien de vérification a été envoyé.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Erreur lors du renvoi de l'email de vérification.",
     });
   }
 };
