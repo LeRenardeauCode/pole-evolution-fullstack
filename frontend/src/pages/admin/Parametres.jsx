@@ -627,11 +627,12 @@ export default function Parametres() {
                       }}
                     />
                     <Button
-                      variant="outlined"
+                      variant="contained"
                       startIcon={<Upload />}
                       onClick={() => doc.ref.current?.click()}
                       disabled={uploadingDoc === doc.cle}
                       size="small"
+                      sx={{ bgcolor: 'navy.main', '&:hover': { bgcolor: 'navy.dark' } }}
                     >
                       {uploadingDoc === doc.cle ? 'Upload...' : 'Remplacer'}
                     </Button>
