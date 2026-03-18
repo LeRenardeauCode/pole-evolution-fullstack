@@ -6,6 +6,7 @@ yarn.lock
 .env
 .env.local
 .env.*.local
+.env.production
 
 # Seeds de développement (données sensibles - test accounts)
 seeds/data/users.js
