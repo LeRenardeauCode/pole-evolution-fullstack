@@ -4,12 +4,8 @@ yarn.lock
 
 # Variables environnement (SENSIBLE - ne JAMAIS commit)
 .env
-.env.local
-.env.*.local
-
-# Seeds de développement (données sensibles - test accounts)
-seeds/data/users.js
-seeds/data/cours.js
+.env.*
+!.env.example
 
 # Logs
 logs/
