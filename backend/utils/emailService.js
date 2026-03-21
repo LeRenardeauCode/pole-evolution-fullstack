@@ -186,7 +186,7 @@ export const sendResetPasswordEmail = async ({ email, prenom, resetUrl }) => {
 };
 
 export const sendContactNotificationToAdmin = async ({ nom, prenom, email, telephone, sujet, message }) => {
-  const adminEmail = process.env.EMAIL_USER;
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
   
   const mailOptions = {
     from: `"Notifications Pôle Evolution" <${process.env.EMAIL_USER}>`,
@@ -527,7 +527,7 @@ export const isEmailServiceConfigured = () => {
 };
 
 export const sendNewUserNotificationToAdmin = async ({ prenom, nom, email, telephone, niveauPole }) => {
-  const adminEmail = process.env.EMAIL_USER;
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
 
   const mailOptions = {
     from: `"Notifications Pôle Evolution" <${process.env.EMAIL_USER}>`,
