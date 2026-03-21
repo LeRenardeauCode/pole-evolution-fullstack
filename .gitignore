@@ -3,6 +3,8 @@ node_modules/
 
 # Variables environnement (SENSIBLE - ne JAMAIS commit)
 .env
+.env.*
+!.env.example
 CREDENTIALS_DEPLOIEMENT.txt
 
 # Logs
