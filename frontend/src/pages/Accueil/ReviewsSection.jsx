@@ -21,7 +21,7 @@ import { FaStar } from "react-icons/fa";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import avisService from "@services/avisService";
 import { useAuth } from "@hooks/useAuth";
-import profImage from "@assets/images/ENSEIGNE.jpg";
+import profImage from "@assets/images/show-animations-hero.jpg";
 
 const ReviewsSection = () => {
   const { user } = useAuth();

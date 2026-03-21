@@ -27,13 +27,13 @@ export const getMesReservations = async (req, res) => {
       .sort({ dateReservation: -1 })
       .limit(parseInt(limit));
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: reservations.length,
       data: reservations,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -68,12 +68,12 @@ export const getReservation = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: reservation,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -266,14 +266,14 @@ export const createReservation = async (req, res) => {
       .populate("cours", "nom type niveau dateDebut dateFin")
       .populate("forfait", "nom prix");
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Réservation créée avec succès",
       data: reservationComplete,
     });
   } catch (error) {
     console.error("Erreur createReservation:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -397,14 +397,14 @@ export const createReservationInvite = async (req, res) => {
       reservation._id,
     ).populate("cours", "nom type niveau dateDebut dateFin");
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Réservation créée. Un email de validation a été envoyé.",
       data: reservationComplete,
       note: "Veuillez valider votre email pour confirmer la réservation",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -511,14 +511,14 @@ export const annulerReservation = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Réservation annulée avec succès",
       seanceRecreditee: heuresRestantes >= delaiAnnulation,
       data: reservation,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -573,13 +573,13 @@ export const validerPresence = async (req, res) => {
       }
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: present ? "Présence validée" : "Marqué comme absent",
       data: reservation,
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -608,13 +608,13 @@ export const marquerPaye = async (req, res) => {
     reservation.paiement.moyenPaiement = moyenPaiement || "especes";
     await reservation.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Paiement marqué comme payé",
       data: reservation,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -628,13 +628,13 @@ export const getReservationsCours = async (req, res) => {
       .populate("forfait", "nom prix")
       .sort({ dateReservation: 1 });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: reservations.length,
       data: reservations,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -661,7 +661,7 @@ export const getAllReservations = async (req, res) => {
 
     const total = await Reservation.countDocuments(query);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: reservations.length,
       total,
@@ -670,7 +670,7 @@ export const getAllReservations = async (req, res) => {
       data: reservations,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -698,7 +698,7 @@ export const getStatsReservations = async (req, res) => {
       statut: { $in: ["confirmee", "en_attente"] },
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: {
         total,
@@ -709,7 +709,7 @@ export const getStatsReservations = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -790,13 +790,13 @@ export const validerReservation = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Réservation validée avec succès",
       data: reservation,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -852,13 +852,13 @@ export const refuserReservation = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Réservation refusée avec succès",
       data: reservation,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -894,12 +894,12 @@ export const validerEmailInvite = async (req, res) => {
       coursId: reservation.cours._id,
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message:
         "Email validé avec succès. Votre réservation est en attente de validation par l'administrateur.",
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };

@@ -4,16 +4,8 @@ yarn.lock
 
 # Variables environnement (SENSIBLE - ne JAMAIS commit)
 .env
-.env.local
-.env.*.local
-
-# IMPORTANT: Seeds strategy
-# - main branch: users.js & cours.js are IGNORED (production security)
-# - develop branch: users.js & cours.js are TRACKED with env variables
-# This prevents exposing test credentials in production while keeping dev flexibility
-# If you see users.js/cours.js in develop, it's expected and safe (uses env vars)
-seeds/data/users.js
-seeds/data/cours.js
+.env.*
+!.env.example
 
 # Logs
 logs/

@@ -60,11 +60,13 @@ Pole-Evolution/
 │   │   └── utilisateur.routes.js
 │   ├── seeds/
 │   │   ├── index.js
+│   │   ├── insert-admin-atlas.js
 │   │   └── data/
-│   │       ├── cours.js
+│   │       ├── avis.js
 │   │       ├── forfaits.js
 │   │       ├── parametres.js
-│   │       └── users.js
+│   │       ├── courses.js          ⚠️ .gitignore sur main (prod), tracked sur develop
+│   │       └── users.js            ⚠️ .gitignore sur main (prod), tracked sur develop
 │   ├── uploads/
 │   │   ├── media/
 │   │   └── profiles/

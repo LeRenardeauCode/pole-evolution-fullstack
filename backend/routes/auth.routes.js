@@ -9,6 +9,8 @@ import {
   uploadPhoto,
   forgotPassword,
   resetPassword,
+  verifyEmail,
+  resendVerificationEmail,
 } from '../controllers/auth.controller.js';
 import { protect } from '../middleware/auth.middleware.js';
 import { uploadProfile } from '../middleware/upload.middleware.js';
@@ -20,6 +22,8 @@ router.post('/register', register);
 router.post('/login', login);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
+router.post('/verify-email', verifyEmail);
+router.post('/resend-verification-email', resendVerificationEmail);
 
 // Routes protégées
 router.get('/me', protect, getMe);

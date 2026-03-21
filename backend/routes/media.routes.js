@@ -27,8 +27,8 @@ router.get('/', protect, admin, getMedias);
 router.get('/admin/stats', protect, admin, getStatsMedias);
 router.get('/:id', protect, admin, getMedia);
 
-router.post('/', uploadMedia.single('fichier'), createMedia);
-router.put('/:id', uploadMedia.single('fichier'), updateMedia);
+router.post('/', protect, admin, uploadMedia.single('fichier'), createMedia);
+router.put('/:id', protect, admin, uploadMedia.single('fichier'), updateMedia);
 router.delete('/:id', protect, admin, deleteMedia);
 
 router.put('/:id/une/ajouter', protect, admin, mettreALaUne);

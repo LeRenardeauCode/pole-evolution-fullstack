@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Grid,
@@ -7,10 +7,13 @@ import {
   Typography,
   TextField,
   Button,
-  Divider
+  Divider,
+  Stack,
+  Chip
 } from '@mui/material';
+import { Upload, CheckCircle, PictureAsPdf } from '@mui/icons-material';
 import { toast } from 'react-toastify';
-import { getParametres, updateParametre } from '@services/adminService';
+import { getParametres, updateParametre, uploadDocumentPDF } from '@services/adminService';
 
 export default function Parametres() {
   const [loading, setLoading] = useState(false);
@@ -21,7 +24,15 @@ export default function Parametres() {
   const [delaiReservation, setDelaiReservation] = useState('2');
 
   const [nomEtablissement, setNomEtablissement] = useState('');
-  const [mentionsLegales, setMentionsLegales] = useState('');
+  const [formeJuridique, setFormeJuridique] = useState('');
+  const [siren, setSiren] = useState('');
+  const [siret, setSiret] = useState('');
+  const [adresseSiege, setAdresseSiege] = useState('');
+  const [representantLegal, setRepresentantLegal] = useState('');
+  const [telephoneLegal, setTelephoneLegal] = useState('');
+  const [emailLegal, setEmailLegal] = useState('');
+  const [hebergeurNom, setHebergeurNom] = useState('');
+  const [hebergeurAdresse, setHebergeurAdresse] = useState('');
 
   const [emailContact, setEmailContact] = useState('');
   const [telephoneContact, setTelephoneContact] = useState('');
@@ -36,6 +47,14 @@ export default function Parametres() {
   const [footerDistanceCambrai, setFooterDistanceCambrai] = useState('');
   const [footerDistanceDouai, setFooterDistanceDouai] = useState('');
   const [footerDistanceArras, setFooterDistanceArras] = useState('');
+
+  const [docReglement1, setDocReglement1] = useState('');
+  const [docReglement2, setDocReglement2] = useState('');
+  const [docPlaquetteEVJF, setDocPlaquetteEVJF] = useState('');
+  const [uploadingDoc, setUploadingDoc] = useState(null);
+  const fileInputRef1 = useRef(null);
+  const fileInputRef2 = useRef(null);
+  const fileInputRef3 = useRef(null);
 
   useEffect(() => {
     let mounted = true;
@@ -54,7 +73,15 @@ export default function Parametres() {
           setDelaiReservation(findParam('delaireservationminimum'));
 
           setNomEtablissement(findParam('nometablissement'));
-          setMentionsLegales(findParam('mentionslegales'));
+          setFormeJuridique(findParam('formejuridique'));
+          setSiren(findParam('siren'));
+          setSiret(findParam('siret'));
+          setAdresseSiege(findParam('adressesiege'));
+          setRepresentantLegal(findParam('representantlegal'));
+          setTelephoneLegal(findParam('telephonelegal'));
+          setEmailLegal(findParam('emaillegal'));
+          setHebergeurNom(findParam('hebergeurnom'));
+          setHebergeurAdresse(findParam('hebergeuradresse'));
 
           setEmailContact(findParam('emailcontact'));
           setTelephoneContact(findParam('telephonecontact'));
@@ -69,6 +96,10 @@ export default function Parametres() {
           setFooterDistanceCambrai(findParam('footerdistancecambrai'));
           setFooterDistanceDouai(findParam('footerdistancedouai'));
           setFooterDistanceArras(findParam('footerdistancearras'));
+
+          setDocReglement1(findParam('documentreglementinterieur1'));
+          setDocReglement2(findParam('documentreglementinterieur2'));
+          setDocPlaquetteEVJF(findParam('documentplaquetteevjf'));
         }
       } catch (err) {
         console.error('Erreur chargement paramètres:', err);
@@ -146,7 +177,15 @@ export default function Parametres() {
     try {
       await Promise.all([
         updateParametre('nometablissement', nomEtablissement),
-        updateParametre('mentionslegales', mentionsLegales)
+        updateParametre('formejuridique', formeJuridique),
+        updateParametre('siren', siren),
+        updateParametre('siret', siret),
+        updateParametre('adressesiege', adresseSiege),
+        updateParametre('representantlegal', representantLegal),
+        updateParametre('telephonelegal', telephoneLegal),
+        updateParametre('emaillegal', emailLegal),
+        updateParametre('hebergeurnom', hebergeurNom),
+        updateParametre('hebergeuradresse', hebergeurAdresse)
       ]);
       toast.success('Informations légales modifiées avec succès');
     } catch (err) {
@@ -154,6 +193,24 @@ export default function Parametres() {
       toast.error(err.response?.data?.message || 'Erreur lors de la modification');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleUploadDocument = async (cle, file, setter) => {
+    if (!file || file.type !== 'application/pdf') {
+      toast.error('Veuillez sélectionner un fichier PDF');
+      return;
+    }
+    setUploadingDoc(cle);
+    try {
+      const response = await uploadDocumentPDF(cle, file);
+      setter(response.data?.url || '');
+      toast.success('Document uploadé avec succès');
+    } catch (err) {
+      console.error('Erreur upload:', err);
+      toast.error(err.response?.data?.message || 'Erreur lors de l\'upload');
+    } finally {
+      setUploadingDoc(null);
     }
   };
 
@@ -252,12 +309,83 @@ export default function Parametres() {
               />
               <TextField
                 fullWidth
-                label="Mentions légales"
-                value={mentionsLegales}
-                onChange={(e) => setMentionsLegales(e.target.value)}
-                helperText="SIRET, TVA, etc."
+                label="Forme juridique"
+                value={formeJuridique}
+                onChange={(e) => setFormeJuridique(e.target.value)}
+                helperText="Auto-entrepreneur, SARL, EIRL, etc."
                 sx={{ mb: 2 }}
               />
+              <Grid container spacing={2} sx={{ mb: 2 }}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Numéro SIREN"
+                    value={siren}
+                    onChange={(e) => setSiren(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Numéro SIRET"
+                    value={siret}
+                    onChange={(e) => setSiret(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
+              <TextField
+                fullWidth
+                label="Adresse du siège social"
+                value={adresseSiege}
+                onChange={(e) => setAdresseSiege(e.target.value)}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                fullWidth
+                label="Représentant légal"
+                value={representantLegal}
+                onChange={(e) => setRepresentantLegal(e.target.value)}
+                helperText="Nom et prénom du responsable"
+                sx={{ mb: 2 }}
+              />
+              <Grid container spacing={2} sx={{ mb: 2 }}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Téléphone (mentions légales)"
+                    value={telephoneLegal}
+                    onChange={(e) => setTelephoneLegal(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Email (mentions légales)"
+                    value={emailLegal}
+                    onChange={(e) => setEmailLegal(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="subtitle2" sx={{ mb: 1, color: '#6B7280' }}>Hébergeur du site</Typography>
+              <Grid container spacing={2} sx={{ mb: 2 }}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Nom de l'hébergeur"
+                    value={hebergeurNom}
+                    onChange={(e) => setHebergeurNom(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Adresse de l'hébergeur"
+                    value={hebergeurAdresse}
+                    onChange={(e) => setHebergeurAdresse(e.target.value)}
+                  />
+                </Grid>
+              </Grid>
               <Button
                 variant="contained"
                 onClick={handleSaveLegal}
@@ -446,6 +574,71 @@ export default function Parametres() {
               >
                 Enregistrer les informations
               </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12}>
+          <Card elevation={0} sx={{ border: '1px solid #e0e0e0' }}>
+            <CardContent>
+              <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                Documents téléchargeables
+              </Typography>
+              <Typography variant="body2" sx={{ mb: 3, color: '#6B7280' }}>
+                Uploadez les PDF du règlement intérieur et de la plaquette EVJF. Ils remplaceront les fichiers actuels sur le site.
+              </Typography>
+
+              <Stack spacing={3}>
+                {[
+                  { label: 'Règlement intérieur - Partie 1', cle: 'documentreglementinterieur1', url: docReglement1, ref: fileInputRef1, setter: setDocReglement1 },
+                  { label: 'Règlement intérieur - Partie 2', cle: 'documentreglementinterieur2', url: docReglement2, ref: fileInputRef2, setter: setDocReglement2 },
+                  { label: 'Plaquette EVJF', cle: 'documentplaquetteevjf', url: docPlaquetteEVJF, ref: fileInputRef3, setter: setDocPlaquetteEVJF },
+                ].map((doc) => (
+                  <Box key={doc.cle} sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                    <PictureAsPdf sx={{ color: '#D32F2F', fontSize: 32 }} />
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                        {doc.label}
+                      </Typography>
+                      {doc.url ? (
+                        <Chip
+                          icon={<CheckCircle />}
+                          label="Document personnalisé uploadé"
+                          size="small"
+                          color="success"
+                          variant="outlined"
+                          sx={{ mt: 0.5 }}
+                        />
+                      ) : (
+                        <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                          Document par défaut (fichier statique)
+                        </Typography>
+                      )}
+                    </Box>
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      hidden
+                      ref={doc.ref}
+                      onChange={(e) => {
+                        if (e.target.files[0]) {
+                          handleUploadDocument(doc.cle, e.target.files[0], doc.setter);
+                        }
+                      }}
+                    />
+                    <Button
+                      variant="contained"
+                      startIcon={<Upload />}
+                      onClick={() => doc.ref.current?.click()}
+                      disabled={uploadingDoc === doc.cle}
+                      size="small"
+                      sx={{ bgcolor: 'navy.main', '&:hover': { bgcolor: 'navy.dark' } }}
+                    >
+                      {uploadingDoc === doc.cle ? 'Upload...' : 'Remplacer'}
+                    </Button>
+                  </Box>
+                ))}
+              </Stack>
             </CardContent>
           </Card>
         </Grid>

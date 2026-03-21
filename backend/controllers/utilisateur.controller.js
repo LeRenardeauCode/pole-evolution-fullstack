@@ -37,7 +37,7 @@ export const getUtilisateurs = async (req, res) => {
 
     const total = await Utilisateur.countDocuments(query);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: utilisateurs.length,
       total,
@@ -46,7 +46,7 @@ export const getUtilisateurs = async (req, res) => {
       data: utilisateurs,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -67,12 +67,12 @@ export const getUtilisateur = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: utilisateur,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -117,13 +117,13 @@ export const updateUtilisateur = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Utilisateur mis à jour avec succès",
       data: utilisateur,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -163,12 +163,12 @@ export const deleteUtilisateur = async (req, res) => {
 
     await utilisateur.deleteOne();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Utilisateur supprimé avec succès",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -210,13 +210,13 @@ export const approveUtilisateur = async (req, res) => {
       utilisateurId: utilisateur._id,
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Utilisateur approuvé avec succès",
       data: utilisateur,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -259,13 +259,13 @@ export const rejectUtilisateur = async (req, res) => {
       utilisateurId: utilisateur._id,
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Utilisateur rejeté avec succès",
       data: utilisateur,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -303,13 +303,13 @@ export const ajouterForfait = async (req, res) => {
 
     await utilisateur.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Forfait ajouté avec succès",
       data: utilisateur,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -354,13 +354,13 @@ export const modifierAbonnement = async (req, res) => {
 
     await utilisateur.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Abonnement mis à jour avec succès",
       data: utilisateur,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -378,17 +378,30 @@ export const getStatsMensuelles = async (req, res) => {
       });
     }
 
+    const parsedAnnee = parseInt(annee);
+    const parsedMois = parseInt(mois);
+
+    const debutMois = new Date(parsedAnnee, parsedMois - 1, 1);
+    const finMois = new Date(parsedAnnee, parsedMois, 0, 23, 59, 59);
+
+    const nouveauxUtilisateurs = await Utilisateur.countDocuments({
+      dateInscription: { $gte: debutMois, $lte: finMois },
+    });
+
     const stats = await Utilisateur.getStatistiquesMois(
-      parseInt(annee),
-      parseInt(mois),
+      parsedAnnee,
+      parsedMois,
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      data: stats,
+      data: {
+        nouveauxUtilisateurs,
+        details: stats,
+      },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -416,7 +429,7 @@ export const getStats = async (req, res) => {
       "abonnementActif.statutPaiement": "actif",
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: {
         total,
@@ -430,7 +443,7 @@ export const getStats = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -453,7 +466,17 @@ export const activerForfait = async (req, res) => {
 
     const dateAchat = new Date();
     const dateExpiration = new Date(dateAchat);
-    dateExpiration.setMonth(dateExpiration.getMonth() + forfait.validiteMois);
+    
+    // Gérer la validité du forfait selon le type
+    if (forfait.validiteMois && forfait.validiteMois > 0) {
+      dateExpiration.setMonth(dateExpiration.getMonth() + forfait.validiteMois);
+    } else if (forfait.dureeEngagementMois && forfait.dureeEngagementMois > 0) {
+      // Pour les abonnements avec engagement
+      dateExpiration.setMonth(dateExpiration.getMonth() + forfait.dureeEngagementMois);
+    } else {
+      // Par défaut 1 mois si rien n'est spécifié
+      dateExpiration.setMonth(dateExpiration.getMonth() + 1);
+    }
 
     utilisateur.forfaitsActifs.push({
       forfaitId: forfait._id,
@@ -466,13 +489,13 @@ export const activerForfait = async (req, res) => {
 
     await utilisateur.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Forfait activé avec succès",
       data: utilisateur.forfaitsActifs[utilisateur.forfaitsActifs.length - 1],
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -510,13 +533,13 @@ export const utiliserSeanceForfait = async (req, res) => {
 
     await utilisateur.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Séance décomptée",
       seancesRestantes: utilisateur.forfaitsActifs[index].seancesRestantes,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -561,14 +584,14 @@ export const modifierSeancesForfait = async (req, res) => {
 
     await utilisateur.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Séances modifiées avec succès",
       data: utilisateur.forfaitsActifs[forfaitIndex],
     });
   } catch (error) {
     console.error("Erreur:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -607,13 +630,13 @@ export const activerAbonnement = async (req, res) => {
 
     await utilisateur.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Abonnement activé avec succès",
       data: utilisateur.abonnementActif,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -641,13 +664,13 @@ export const utiliserSeanceAbonnement = async (req, res) => {
     utilisateur.abonnementActif.seancesRestantesMois -= 1;
     await utilisateur.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Séance décomptée",
       seancesRestantes: utilisateur.abonnementActif.seancesRestantesMois,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });

@@ -293,6 +293,15 @@ export const updateParametre = async (cle, valeur) => {
   return response.data;
 };
 
+export const uploadDocumentPDF = async (cle, file) => {
+  const formData = new FormData();
+  formData.append('document', file);
+  const response = await api.post(`/parametres/document/${cle}`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return response.data;
+};
+
 export const activerForfaitUtilisateur = async (utilisateurId, forfaitId) => {
   const response = await api.post(`/utilisateurs/${utilisateurId}/forfait/activer`, { forfaitId });
   return response.data;
@@ -364,5 +373,6 @@ export default {
   getParametres,
   getParametreByKey,
   getParametresByCategorie,
-  updateParametre
+  updateParametre,
+  uploadDocumentPDF
 };

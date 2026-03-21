@@ -10,12 +10,15 @@ import {
   Alert,
   TextField,
   FormControl,
+  FormControlLabel,
+  Checkbox,
   InputLabel,
   Select,
   MenuItem,
   Divider,
   CircularProgress,
   IconButton,
+  Link as MuiLink,
 } from "@mui/material";
 import { Close, CheckCircle, Warning } from "@mui/icons-material";
 import { format } from "date-fns";
@@ -43,6 +46,7 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
     telephoneInvite: "",
     niveauPoleInvite: "jamais",
   });
+  const [reglementAccepte, setReglementAccepte] = useState(false);
 
   useEffect(() => {
     if (open && user) {
@@ -305,6 +309,29 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
                 <Alert severity="warning" icon={<Warning />}>
                   Paiement sur place le jour du cours
                 </Alert>
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={reglementAccepte}
+                      onChange={(e) => setReglementAccepte(e.target.checked)}
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <Typography variant="body2">
+                      J'ai lu et j'accepte le{" "}
+                      <MuiLink href="/documents/reglement-interieur-1.pdf" target="_blank" rel="noopener">
+                        règlement intérieur partie 1
+                      </MuiLink>{" "}
+                      et le{" "}
+                      <MuiLink href="/documents/reglement-interieur-2.pdf" target="_blank" rel="noopener">
+                        règlement intérieur partie 2
+                      </MuiLink>
+                    </Typography>
+                  }
+                  sx={{ mt: 2, alignItems: 'flex-start' }}
+                />
               </Box>
             )}
           </>
@@ -323,7 +350,8 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
               onClick={handleSubmit}
               disabled={
                 loading ||
-                (user && typePaiement === "forfait" && !forfaitSelectionne)
+                (user && typePaiement === "forfait" && !forfaitSelectionne) ||
+                (!user && !reglementAccepte)
               }
               startIcon={loading && <CircularProgress size={20} />}
               sx={{ px: 4 }}

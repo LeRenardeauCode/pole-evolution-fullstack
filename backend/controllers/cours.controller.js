@@ -18,13 +18,13 @@ export const getCoursFuturs = async (req, res) => {
       .sort({ dateDebut: 1 })
       .limit(50);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: cours.length,
       data: cours,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -51,7 +51,7 @@ export const getAllCours = async (req, res) => {
 
     const total = await Cours.countDocuments(query);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: cours.length,
       total,
@@ -60,7 +60,7 @@ export const getAllCours = async (req, res) => {
       data: cours,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -83,7 +83,7 @@ export const getCours = async (req, res) => {
 
     const placesDisponibles = cours.capaciteMax - cours.placesReservees;
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: {
         ...cours.toObject(),
@@ -91,7 +91,7 @@ export const getCours = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -146,7 +146,7 @@ export const getPlanningSemaine = async (req, res) => {
       planning[jour].push(c);
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       dateReference: dateRef,
       count: cours.length,
@@ -154,7 +154,7 @@ export const getPlanningSemaine = async (req, res) => {
       data: cours,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -180,14 +180,14 @@ export const getCoursJour = async (req, res) => {
       .populate("professeur", "prenom nom")
       .sort({ dateDebut: 1 });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       date: date.toISOString().split("T")[0],
       count: cours.length,
       data: cours,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -236,14 +236,14 @@ export const createCours = async (req, res) => {
       "prenom nom",
     );
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Cours créé avec succès",
       data: coursComplet,
     });
   } catch (error) {
     console.error("❌ Erreur createCours:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -286,13 +286,13 @@ export const updateCours = async (req, res) => {
       },
     ).populate("professeur", "prenom nom");
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Cours mis à jour avec succès",
       data: coursUpdated,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -325,12 +325,12 @@ export const deleteCours = async (req, res) => {
 
     await cours.deleteOne();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Cours supprimé avec succès",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -395,14 +395,14 @@ export const annulerCours = async (req, res) => {
       }
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: `Cours annulé avec succès. ${reservations.length} réservation(s) annulée(s) et notifications envoyées.`,
       data: cours,
       reservationsAnnulees: reservations.length,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -483,14 +483,14 @@ export const genererCoursRecurrents = async (req, res) => {
       dateActuelle.setDate(dateActuelle.getDate() + 1);
     }
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: `${coursGeneres.length} cours générés avec succès`,
       count: coursGeneres.length,
       data: coursGeneres,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -537,7 +537,7 @@ export const getStatsCours = async (req, res) => {
       },
     ]);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: {
         total,
@@ -549,7 +549,7 @@ export const getStatsCours = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });

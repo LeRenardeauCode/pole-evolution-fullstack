@@ -18,14 +18,14 @@ export const getForfaits = async (req, res) => {
 
     const forfaits = await Forfait.find(query).sort({ categorie: 1, prix: 1 });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: forfaits.length,
       data: forfaits
     });
 
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message
     });
@@ -41,7 +41,7 @@ export const getAbonnements = async (req, res) => {
     });
     res.json(abonnements);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -65,13 +65,13 @@ export const getForfait = async (req, res) => {
       }
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: forfait
     });
 
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message
     });
@@ -99,14 +99,14 @@ export const getForfaitsByCategorie = async (req, res) => {
 
     const forfaits = await Forfait.find(query).sort({ prix: 1 });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       count: forfaits.length,
       data: forfaits
     });
 
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message
     });
@@ -129,14 +129,14 @@ export const createForfait = async (req, res) => {
 
     const forfait = await Forfait.create(forfaitData);
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: 'Forfait créé avec succès',
       data: forfait
     });
 
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message
     });
@@ -180,14 +180,14 @@ export const updateForfait = async (req, res) => {
       }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Forfait mis à jour avec succès',
       data: forfaitUpdated
     });
 
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message
     });
@@ -228,13 +228,13 @@ export const deleteForfait = async (req, res) => {
 
     await forfait.deleteOne();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Forfait supprimé avec succès'
     });
 
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message
     });
@@ -256,14 +256,14 @@ export const desactiverForfait = async (req, res) => {
     forfait.estVisible = false;
     await forfait.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Forfait désactivé avec succès',
       data: forfait
     });
 
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message
     });
@@ -308,7 +308,7 @@ export const getStatsForfaits = async (req, res) => {
       })
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: {
         total,
@@ -320,7 +320,7 @@ export const getStatsForfaits = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message
     });

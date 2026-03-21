@@ -7,9 +7,11 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Download, Email, Assignment } from "@mui/icons-material";
 import { useEVJFForfaits } from "@/hooks/useEVJFForfaits";
+import parametreService from "@services/parametreService";
 import {
   showAnimationsRoot,
   showAnimationsLeftPanel,
@@ -33,11 +35,30 @@ import {
 const ShowAnimations = () => {
   const navigate = useNavigate();
   const { forfaitsEVJF, loading, error } = useEVJFForfaits();
+  const [plaquetteUrl, setPlaquetteUrl] = useState('');
+
+  useEffect(() => {
+    const fetchDocUrl = async () => {
+      try {
+        const response = await parametreService.getParametresByCategorie('documents');
+        const params = response.data || response;
+        if (Array.isArray(params)) {
+          const found = params.find((p) => p.cle === 'documentplaquetteevjf');
+          if (found?.valeur) setPlaquetteUrl(found.valeur);
+        }
+      } catch {
+        // fallback to static
+      }
+    };
+    fetchDocUrl();
+  }, []);
 
   const handleDownloadPlaquette = () => {
+    const url = plaquetteUrl || "/documents/Enterrement de vie de jeune fille.pdf";
     const link = document.createElement("a");
-    link.href = "/documents/Enterrement de vie de jeune fille.pdf";
+    link.href = url;
     link.download = "Plaquette-EVJF-Pole-Evolution.pdf";
+    if (plaquetteUrl) link.target = "_blank";
     link.click();
   };
 

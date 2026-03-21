@@ -16,6 +16,7 @@ import APropos from '@pages/APropos';
 import Contact from '@pages/Contact';
 import Login from '@pages/Login';
 import ResetPassword from '@pages/ResetPassword';
+import VerifyEmail from '@pages/VerifyEmail';
 import PolitiqueConfidentialite from '@pages/PolitiqueConfidentialite';
 import MentionsLegales from '@pages/MentionsLegales';
 import PolitiqueCookies from '@pages/PolitiqueCookies';
@@ -37,6 +38,7 @@ const Eleves = lazy(() => import('@pages/admin/Eleves'));
 const TarifsContenu = lazy(() => import('@pages/admin/TarifsContenu'));
 const NotificationsPage = lazy(() => import('@pages/admin/Notifications'));
 const Parametres = lazy(() => import('@pages/admin/Parametres'));
+const GalerieAdmin = lazy(() => import('@pages/admin/GalerieAdmin'));
 
 import theme from '@utils/theme';
 
@@ -64,6 +66,7 @@ function App() {
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/connexion" element={<Login />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="/verify-email" element={<VerifyEmail />} />
                   <Route path="/register" element={<Suspense fallback={<div />}><Register /></Suspense>} />
                   <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
                   <Route path="/mentions-legales" element={<MentionsLegales />} />
@@ -112,6 +115,7 @@ function App() {
           <Route path="tarifs" element={<Suspense fallback={<div />}><TarifsContenu /></Suspense>} />
           <Route path="notifications" element={<Suspense fallback={<div />}><NotificationsPage /></Suspense>} />
           <Route path="parametres" element={<Suspense fallback={<div />}><Parametres /></Suspense>} />
+          <Route path="galerie" element={<Suspense fallback={<div />}><GalerieAdmin /></Suspense>} />
         </Route>
       </Routes>
 

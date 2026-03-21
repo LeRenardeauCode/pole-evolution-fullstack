@@ -3,7 +3,7 @@ import { fieldMb, sectionTitle } from "@/styles/pageStyles";
 
 export default function ElevesInfoCard() {
   return (
-    <Card>
+    <Card sx={{ width: '100%' }}>
       <CardContent>
         <Typography variant="h6" sx={sectionTitle}>
           Suspendre / Supprimer un utilisateur

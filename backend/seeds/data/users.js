@@ -1,13 +1,17 @@
 import bcrypt from 'bcryptjs';
 
+// Mots de passe de test — JAMAIS utilisés en production
+const devPassword = process.env.SEED_ADMIN_PASSWORD || 'DevTest123!';
+const userPassword = 'UserTest123!';
+
 const users = [
   {
     prenom: 'Admin',
-    nom: 'Pole Evolution',
-    pseudo: 'admin',
-    email: 'admin@poleevolution.com',
-    motDePasse: bcrypt.hashSync(process.env.SEED_ADMIN_PASSWORD || 'AdminPole123!', 10),
-    telephone: '0612345678',
+    nom: 'Test',
+    pseudo: 'admin_test',
+    email: 'admin@test.local',
+    motDePasse: bcrypt.hashSync(devPassword, 10),
+    telephone: '0600000001',
     role: 'admin',
     statutValidationAdmin: 'approved',
     estActif: true,
@@ -17,9 +21,9 @@ const users = [
     dateInscription: new Date(),
     inscriptionComplete: true,
     adresse: {
-      rue: '123 Rue de la Danse',
-      ville: 'Lestrem',
-      codePostal: '62136',
+      rue: '1 Rue de Test',
+      ville: 'Testville',
+      codePostal: '00000',
       pays: 'France'
     }
   },
@@ -28,8 +32,8 @@ const users = [
     nom: 'Dupont',
     pseudo: 'marie.dupont',
     email: 'marie.dupont@example.com',
-    motDePasse: bcrypt.hashSync(process.env.SEED_USER_PASSWORD || 'UserPole1234!', 10),
-    telephone: '0623456789',
+    motDePasse: bcrypt.hashSync(userPassword, 10),
+    telephone: '0600000002',
     role: 'client',
     statutValidationAdmin: 'approved',
     estActif: true,
@@ -41,7 +45,7 @@ const users = [
     niveauPole: 'debutant',
     dateNaissance: new Date('1995-06-15'),
     adresse: {
-      rue: '45 Avenue des Sports',
+      rue: '10 Rue Exemple',
       ville: 'Lille',
       codePostal: '59000',
       pays: 'France'
@@ -52,8 +56,8 @@ const users = [
     nom: 'Martin',
     pseudo: 'sophie.martin',
     email: 'sophie.martin@example.com',
-    motDePasse: bcrypt.hashSync(process.env.SEED_USER_PASSWORD || 'UserPole1234!', 10),
-    telephone: '0634567890',
+    motDePasse: bcrypt.hashSync(userPassword, 10),
+    telephone: '0600000003',
     role: 'client',
     statutValidationAdmin: 'approved',
     estActif: true,
@@ -65,7 +69,7 @@ const users = [
     niveauPole: 'intermediaire',
     dateNaissance: new Date('1992-03-22'),
     adresse: {
-      rue: '78 Rue du Centre',
+      rue: '20 Rue Exemple',
       ville: 'Béthune',
       codePostal: '62400',
       pays: 'France'
@@ -76,8 +80,8 @@ const users = [
     nom: 'Leroy',
     pseudo: 'julie.leroy',
     email: 'julie.leroy@example.com',
-    motDePasse: bcrypt.hashSync(process.env.SEED_USER_PASSWORD || 'UserPole1234!', 10),
-    telephone: '0645678901',
+    motDePasse: bcrypt.hashSync(userPassword, 10),
+    telephone: '0600000004',
     role: 'client',
     statutValidationAdmin: 'approved',
     estActif: true,
@@ -87,13 +91,7 @@ const users = [
     dateInscription: new Date(),
     inscriptionComplete: true,
     niveauPole: 'avance',
-    dateNaissance: new Date('1998-11-08'),
-    adresse: {
-      rue: '12 Rue des Fleurs',
-      ville: 'Arras',
-      codePostal: '62000',
-      pays: 'France'
-    }
+    dateNaissance: new Date('1998-11-08')
   }
 ];
 

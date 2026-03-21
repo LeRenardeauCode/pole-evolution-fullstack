@@ -5,9 +5,11 @@ import {
   getParametresByCategorie,
   createParametre,
   updateParametre,
-  deleteParametre
+  deleteParametre,
+  uploadDocumentPDF
 } from '../controllers/parametre.controller.js';
 import { protect, admin } from '../middleware/auth.middleware.js';
+import { uploadDocument } from '../middleware/upload.middleware.js';
 
 const router = express.Router();
 
@@ -16,6 +18,7 @@ router.get('/categorie/:categorie', getParametresByCategorie);
 router.get('/:cle', getParametre);
 
 router.post('/', protect, admin, createParametre);
+router.post('/document/:cle', protect, admin, uploadDocument.single('document'), uploadDocumentPDF);
 router.put('/:cle', protect, admin, updateParametre);
 router.delete('/:cle', protect, admin, deleteParametre);
 

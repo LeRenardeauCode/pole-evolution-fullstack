@@ -56,10 +56,10 @@ const Galerie = () => {
       <Box
         sx={{
           position: 'relative',
-          minHeight: '100vh',
+          minHeight: { xs: 'auto', md: '100vh' },
           background: 'linear-gradient(180deg, #574A78 0%, #AB326F 36%, #574A78 63%, #5E1A5C 100%)',
-          pt: { xs: 12, md: 14 },
-          pb: { xs: 8, md: 12 },
+          pt: { xs: 10, md: 14 },
+          pb: { xs: 12, md: 12 },
           overflow: 'hidden',
         }}
       >
@@ -71,7 +71,7 @@ const Galerie = () => {
                 width: '100%',
                 maxWidth: 1200,
                 mx: 'auto',
-                height: { xs: 420, sm: 520, md: 700 },
+                height: { xs: 300, sm: 520, md: 700 },
               }}
             >
               {featuredMedias[0] && (
@@ -124,10 +124,10 @@ const Galerie = () => {
                   alt={featuredMedias[2].titre || 'Photo 3'}
                   sx={{
                     position: 'absolute',
-                    bottom: { xs: 120, md: 150 },
+                    bottom: { xs: 30, md: 150 },
                     left: { xs: '15%', md: '20%' },
                     width: { xs: '40%', md: '32%' },
-                    height: { xs: 160, sm: 200, md: 260 },
+                    height: { xs: 140, sm: 200, md: 260 },
                     objectFit: 'cover',
                     borderRadius: 2,
                     border: '3px solid rgba(255, 255, 255, 0.15)',
@@ -145,10 +145,10 @@ const Galerie = () => {
                   alt={featuredMedias[3].titre || 'Photo 4'}
                   sx={{
                     position: 'absolute',
-                    bottom: { xs: 100, md: 120 },
+                    bottom: { xs: 10, md: 120 },
                     right: { xs: '5%', md: '12%' },
                     width: { xs: '45%', md: '38%' },
-                    height: { xs: 180, sm: 220, md: 300 },
+                    height: { xs: 150, sm: 220, md: 300 },
                     objectFit: 'cover',
                     borderRadius: 2,
                     border: '3px solid rgba(255, 255, 255, 0.15)',
@@ -163,10 +163,11 @@ const Galerie = () => {
           <Typography
             variant="h1"
             sx={{
-              position: 'absolute',
-              bottom: { xs: 40, md: 80 },
-              left: '50%',
-              transform: 'translateX(-50%)',
+              position: { xs: 'relative', md: 'absolute' },
+              mt: { xs: 3, md: 0 },
+              bottom: { xs: 'auto', md: 80 },
+              left: { xs: 'auto', md: '50%' },
+              transform: { xs: 'none', md: 'translateX(-50%)' },
               fontSize: { xs: '2.5rem', md: '4rem', lg: '5rem' },
               fontWeight: 800,
               color: 'white',
@@ -176,6 +177,7 @@ const Galerie = () => {
               whiteSpace: { xs: 'normal', md: 'nowrap' },
               lineHeight: { xs: 1.1, sm: 1.15 },
               maxWidth: { xs: '90%', md: 'none' },
+              mx: { xs: 'auto', md: 0 },
             }}
           >
             GALERIE{' '}
@@ -190,8 +192,11 @@ const Galerie = () => {
         sx={{
           minHeight: '100vh',
           background: 'linear-gradient(180deg, #141414 0%, #100249 100%)',
-          pt: { xs: 8, md: 12 },
-          pb: { xs: 8, md: 12 },
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          pt: { xs: 6, md: 12 },
+          pb: { xs: 6, md: 12 },
         }}
       >
         <Container maxWidth="xl">

@@ -14,8 +14,8 @@ docker compose up --build
 ```
 
 ## Acces
-- Backend: http://localhost:5000
-- Frontend (Vite preview): http://localhost:4173
+- Backend API: http://localhost:5000
+- Frontend (Vite preview): http://localhost:5173
 - MongoDB: mongodb://localhost:27017/poleevolution
 
 ## Compass

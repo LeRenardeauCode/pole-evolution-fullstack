@@ -24,7 +24,7 @@ export default function TarifsForm({
   loading,
 }) {
   return (
-    <Card>
+    <Card sx={{ width: '100%' }}>
       <CardContent>
         <Typography variant="h6" sx={sectionTitle}>
           {editingForfait ? "Modifier un tarif" : "Ajouter un tarif"}

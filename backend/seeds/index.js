@@ -18,15 +18,25 @@ import forfaits from './data/forfaits.js';
 import parametres from './data/parametres.js';
 import avis from './data/avis.js';
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 dotenv.config();
 
+const isProduction = process.env.NODE_ENV === 'production';
+const mongoUri = process.env.MONGO_URI || '';
+const isAtlas = mongoUri.includes('mongodb+srv') || mongoUri.includes('mongodb.net');
 
 const connectDB = async () => {
+  // Sécurité : bloquer le seed complet sur une BDD Atlas (prod)
+  if (isAtlas && !isProduction) {
+    console.error('\n⛔ SÉCURITÉ : Vous êtes connecté à MongoDB Atlas !'.red.bold);
+    console.error('Le seed dev ne peut pas tourner sur la BDD de production.'.red);
+    console.error('Utilisez une BDD locale : MONGO_URI=mongodb://localhost:27017/poleevolution'.yellow);
+    console.error('Ou lancez avec NODE_ENV=production pour ne seeder que forfaits + paramètres.\n'.yellow);
+    process.exit(1);
+  }
+
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('MongoDB connecté'.green);
+    await mongoose.connect(mongoUri);
+    console.log(`MongoDB connecté (${isAtlas ? 'Atlas' : 'local'})`.green);
   } catch (error) {
     console.error(`Erreur connexion: ${error.message}`.red);
     process.exit(1);
@@ -104,7 +114,7 @@ const importData = async () => {
       console.log(`   ✅ ${createdReservations.length} réservations créées`.green);
 
       const avisData = avis.map(a => {
-        const user = users.find(u => u.email === a.userEmail);
+        const user = createdUsers.find(u => u.email === a.userEmail);
         const userCours = createdCours[a.coursIndex];
         const { userEmail, coursIndex, ...rest } = a;
         return {
@@ -127,10 +137,11 @@ const importData = async () => {
       console.log(`Paramètres: ${createdParametres.length}`.white);
       
       console.log('\n📝 Comptes de test créés:'.cyan.bold);
-      console.log('Admin:  admin@poleevolution.com / AdminPole123!'.yellow);
-      console.log('User 1: marie.dupont@example.com / UserPole1234!'.yellow);
-      console.log('User 2: sophie.martin@example.com / UserPole1234!'.yellow);
-      console.log('User 3: julie.leroy@example.com / UserPole1234!'.yellow);
+      const adminPwd = process.env.SEED_ADMIN_PASSWORD || 'DevTest123!';
+      console.log(`Admin:  admin@test.local / ${adminPwd}`.yellow);
+      console.log('User 1: marie.dupont@example.com / UserTest123!'.yellow);
+      console.log('User 2: sophie.martin@example.com / UserTest123!'.yellow);
+      console.log('User 3: julie.leroy@example.com / UserTest123!'.yellow);
     } else {
       console.log('\n✅ SEED PRODUCTION TERMINÉ AVEC SUCCÈS !\n'.green.bold);
       console.log('Résumé:'.cyan.bold);

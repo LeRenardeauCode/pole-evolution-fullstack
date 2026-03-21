@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 import crypto from "crypto";
-import { sendResetPasswordEmail, sendWelcomeEmail } from "../utils/emailService.js";
+import { sendResetPasswordEmail, sendWelcomeEmail, sendNewUserNotificationToAdmin } from "../utils/emailService.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -101,11 +101,19 @@ export const register = async (req, res) => {
       validationUrl,
     }).catch(emailError => console.error("Erreur envoi email de bienvenue:", emailError.message));
 
+    sendNewUserNotificationToAdmin({
+      prenom: user.prenom,
+      nom: user.nom,
+      email: user.email,
+      telephone: user.telephone,
+      niveauPole: user.niveauPole,
+    }).catch(err => console.error("Erreur notification admin nouvelle inscription:", err.message));
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE || "30d",
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message:
         "Inscription réussie. Votre compte est en attente de validation par un administrateur.",
@@ -129,7 +137,7 @@ export const register = async (req, res) => {
       });
     }
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -182,7 +190,7 @@ export const login = async (req, res) => {
       expiresIn: process.env.JWT_EXPIRE || "30d",
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Connexion réussie.",
       token,
@@ -191,7 +199,7 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -212,7 +220,7 @@ export const getMe = async (req, res) => {
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       user: {
         ...buildAuthUserPayload(user),
@@ -229,7 +237,7 @@ export const getMe = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -262,7 +270,7 @@ export const updateProfile = async (req, res) => {
       },
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Profil mis à jour avec succès.",
       user: {
@@ -289,7 +297,7 @@ export const updateProfile = async (req, res) => {
       });
     }
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -333,7 +341,7 @@ export const uploadPhoto = async (req, res) => {
     user.photoUrl = photoUrl;
     await user.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Photo de profil mise à jour avec succès",
       user: {
@@ -341,7 +349,7 @@ export const uploadPhoto = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -377,13 +385,13 @@ export const updatePassword = async (req, res) => {
       expiresIn: process.env.JWT_EXPIRE || "30d",
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Mot de passe modifié avec succès.",
       token,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -391,7 +399,7 @@ export const updatePassword = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: "Déconnexion réussie. Veuillez supprimer le token côté client.",
   });
@@ -439,7 +447,7 @@ export const forgotPassword = async (req, res) => {
         resetUrl,
       });
 
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message:
           "Un email de réinitialisation a été envoyé à votre adresse. Veuillez vérifier votre boîte mail.",
@@ -456,7 +464,7 @@ export const forgotPassword = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -513,7 +521,7 @@ export const resetPassword = async (req, res) => {
       expiresIn: process.env.JWT_EXPIRE || "30d",
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Mot de passe réinitialisé avec succès.",
       token: newToken,
@@ -526,9 +534,113 @@ export const resetPassword = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
+    });
+  }
+};
+
+export const verifyEmail = async (req, res) => {
+  try {
+    const { token, email } = req.body;
+
+    if (!token || !email) {
+      return res.status(400).json({
+        success: false,
+        message: "Token et email requis.",
+      });
+    }
+
+    const user = await Utilisateur.findOne({
+      email: email.toLowerCase(),
+      tokenVerificationEmail: token,
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Email ou token invalide.",
+      });
+    }
+
+    // Vérifier si le token a expiré (7 jours)
+    if (
+      user.tokenVerificationEmailExpire &&
+      new Date() > user.tokenVerificationEmailExpire
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Le lien de vérification a expiré. Veuillez vous réinscrire.",
+      });
+    }
+
+    user.emailVerifie = true;
+    user.tokenVerificationEmail = undefined;
+    user.tokenVerificationEmailExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return res.status(200).json({
+      success: true,
+      message: "Email vérifié avec succès!",
+      user: buildAuthUserPayload(user),
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const resendVerificationEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email requis.",
+      });
+    }
+
+    const user = await Utilisateur.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      return res.status(200).json({
+        success: true,
+        message: "Si un compte existe avec cet email, un nouveau lien de vérification a été envoyé.",
+      });
+    }
+
+    if (user.emailVerifie) {
+      return res.status(200).json({
+        success: true,
+        message: "Votre email est déjà vérifié.",
+      });
+    }
+
+    const emailVerificationToken = crypto.randomBytes(32).toString("hex");
+    user.tokenVerificationEmail = emailVerificationToken;
+    user.tokenVerificationEmailExpire = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    await user.save({ validateBeforeSave: false });
+
+    const validationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${emailVerificationToken}&email=${encodeURIComponent(email)}`;
+
+    sendWelcomeEmail({
+      email: user.email,
+      prenom: user.prenom,
+      validationUrl,
+    }).catch(err => console.error("Erreur renvoi email vérification:", err.message));
+
+    return res.status(200).json({
+      success: true,
+      message: "Si un compte existe avec cet email, un nouveau lien de vérification a été envoyé.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Erreur lors du renvoi de l'email de vérification.",
     });
   }
 };

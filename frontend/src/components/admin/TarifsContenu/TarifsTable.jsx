@@ -17,7 +17,7 @@ import { tableHeaderRow } from "@/styles/pageStyles";
 
 export default function TarifsTable({ forfaits, onEdit, onDelete }) {
   return (
-    <Card>
+    <Card sx={{ width: '100%' }}>
       <CardContent>
         <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
           Forfaits existants

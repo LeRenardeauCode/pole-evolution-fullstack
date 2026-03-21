@@ -11,7 +11,7 @@ export const envoyerMessage = asyncHandler(async (req, res) => {
   const peutEnvoyer = await MessageContact.verifierLimiteIP(ipAddress);
   
   if (!peutEnvoyer) {
-    res.status(429);
+    return res.status(429);
     throw new Error('Limite de 3 messages par jour atteinte. Réessayez demain.');
   }
 
@@ -56,7 +56,7 @@ export const envoyerMessage = asyncHandler(async (req, res) => {
     console.error('Erreur envoi email confirmation:', emailError.message);
   });
 
-  res.status(201).json({
+  return res.status(201).json({
     success: true,
     message: 'Message envoyé avec succès. Nous vous répondrons dans les plus brefs délais.',
     data: {
@@ -81,7 +81,7 @@ export const getMessages = asyncHandler(async (req, res) => {
 
   const count = await MessageContact.countDocuments(query);
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     count,
     page: Number(page),
@@ -94,11 +94,11 @@ export const getMessage = asyncHandler(async (req, res) => {
   const message = await MessageContact.findById(req.params.id);
 
   if (!message) {
-    res.status(404);
+    return res.status(404);
     throw new Error('Message introuvable');
   }
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     data: message
   });
@@ -108,7 +108,7 @@ export const marquerTraite = asyncHandler(async (req, res) => {
   const message = await MessageContact.findById(req.params.id);
 
   if (!message) {
-    res.status(404);
+    return res.status(404);
     throw new Error('Message introuvable');
   }
 
@@ -116,7 +116,7 @@ export const marquerTraite = asyncHandler(async (req, res) => {
 
   await message.marquerCommeTraite(reponse);
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: 'Message marqué comme traité',
     data: message
@@ -127,13 +127,13 @@ export const marquerSpam = asyncHandler(async (req, res) => {
   const message = await MessageContact.findById(req.params.id);
 
   if (!message) {
-    res.status(404);
+    return res.status(404);
     throw new Error('Message introuvable');
   }
 
   await message.marquerCommeSpam();
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: 'Message marqué comme spam',
     data: message
@@ -143,7 +143,7 @@ export const marquerSpam = asyncHandler(async (req, res) => {
 export const getStatsMessages = asyncHandler(async (req, res) => {
   const stats = await MessageContact.getStatistiques();
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     data: stats
   });
