@@ -104,7 +104,14 @@ export const sendWelcomeEmail = async ({ email, prenom, validationUrl }) => {
   };
 
   try {
-    await getTransporter().sendMail(mailOptions);
+    // Fire-and-forget
+    getTransporter().sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("❌ Erreur bienvenue email:", error.message);
+      } else {
+        console.log('✅ Email de bienvenue envoyé!', info.messageId);
+      }
+    });
     return { success: true, message: "Email de bienvenue envoyé avec succès" };
   } catch (error) {
     console.error("Erreur lors de l'envoi de l'email de bienvenue:", error);
@@ -186,8 +193,16 @@ export const sendResetPasswordEmail = async ({ email, prenom, resetUrl }) => {
   try {
     console.log('📧 Envoi email reset-password à:', email);
     console.log('🔗 URL de reset:', resetUrl.substring(0, 50) + '...');
-    const result = await getTransporter().sendMail(mailOptions);
-    console.log('✅ Email envoyé avec succès!', result);
+    
+    // Fire-and-forget: envoyer sans attendre
+    getTransporter().sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("❌ Erreur envoi email reset:", error.message);
+      } else {
+        console.log('✅ Email reset envoyé avec succès!', info.messageId);
+      }
+    });
+    
     return { success: true, message: "Email envoyé avec succès" };
   } catch (error) {
     console.error("❌ Erreur lors de l'envoi de l'email reset-password:", error);
@@ -249,7 +264,14 @@ export const sendContactNotificationToAdmin = async ({ nom, prenom, email, telep
   };
 
   try {
-    await getTransporter().sendMail(mailOptions);
+    // Fire-and-forget
+    getTransporter().sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("❌ Erreur notification admin contact:", error.message);
+      } else {
+        console.log('✅ Notification admin contact envoyée!', info.messageId);
+      }
+    });
     return { success: true, message: "Notification admin envoyée" };
   } catch (error) {
     console.error("Erreur notification admin:", error);
@@ -319,7 +341,14 @@ export const sendContactConfirmationToUser = async ({ email, prenom, nom }) => {
   };
 
   try {
-    await getTransporter().sendMail(mailOptions);
+    // Fire-and-forget
+    getTransporter().sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("❌ Erreur confirmation contact user:", error.message);
+      } else {
+        console.log('✅ Email confirmation contact envoyé!', info.messageId);
+      }
+    });
     return { success: true, message: "Email de confirmation envoyé" };
   } catch (error) {
     console.error("Erreur confirmation utilisateur:", error);
@@ -408,7 +437,14 @@ export const sendReservationNotificationToAdmin = async ({
   };
 
   try {
-    await getTransporter().sendMail(mailOptions);
+    // Fire-and-forget
+    getTransporter().sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("❌ Erreur notification réservation admin:", error.message);
+      } else {
+        console.log('✅ Notification réservation admin envoyée!', info.messageId);
+      }
+    });
     return { success: true, message: "Notification admin envoyée" };
   } catch (error) {
     console.error("Erreur notification réservation admin:", error);
@@ -521,7 +557,14 @@ export const sendReservationConfirmationToUser = async ({
   };
 
   try {
-    await getTransporter().sendMail(mailOptions);
+    // Fire-and-forget
+    getTransporter().sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("❌ Erreur confirmation réservation:", error.message);
+      } else {
+        console.log('✅ Confirmation réservation envoyée!', info.messageId);
+      }
+    });
     return { success: true, message: "Confirmation réservation envoyée" };
   } catch (error) {
     console.error("Erreur confirmation réservation:", error);
@@ -595,7 +638,14 @@ export const sendNewUserNotificationToAdmin = async ({ prenom, nom, email, telep
   };
 
   try {
-    await getTransporter().sendMail(mailOptions);
+    // Fire-and-forget
+    getTransporter().sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("❌ Erreur notification nouvel utilisateur:", error.message);
+      } else {
+        console.log('✅ Notification nouvel utilisateur envoyée!', info.messageId);
+      }
+    });
     return { success: true, message: "Notification nouvel utilisateur envoyée" };
   } catch (error) {
     console.error("Erreur notification nouvel utilisateur:", error);
