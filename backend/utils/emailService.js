@@ -4,6 +4,12 @@ let transporter = null;
 
 function getTransporter() {
   if (!transporter) {
+    console.log('🔧 Configuration du transporter email...');
+    console.log('EMAIL_HOST:', process.env.EMAIL_HOST);
+    console.log('EMAIL_PORT:', process.env.EMAIL_PORT);
+    console.log('EMAIL_USER:', process.env.EMAIL_USER);
+    console.log('NODE_ENV:', process.env.NODE_ENV);
+
     const transportConfig = process.env.EMAIL_HOST && process.env.EMAIL_PORT
       ? {
           host: process.env.EMAIL_HOST,
@@ -25,6 +31,7 @@ function getTransporter() {
           },
         };
 
+    console.log('📧 Transporter config mode:', process.env.EMAIL_HOST ? 'SMTP' : 'SERVICE');
     transporter = nodemailer.createTransport(transportConfig);
   }
   return transporter;
@@ -177,10 +184,14 @@ export const sendResetPasswordEmail = async ({ email, prenom, resetUrl }) => {
   };
 
   try {
-    await getTransporter().sendMail(mailOptions);
+    console.log('📧 Envoi email reset-password à:', email);
+    console.log('🔗 URL de reset:', resetUrl.substring(0, 50) + '...');
+    const result = await getTransporter().sendMail(mailOptions);
+    console.log('✅ Email envoyé avec succès!', result);
     return { success: true, message: "Email envoyé avec succès" };
   } catch (error) {
-    console.error("Erreur lors de l'envoi de l'email:", error);
+    console.error("❌ Erreur lors de l'envoi de l'email reset-password:", error);
+    console.error("Erreur complète:", error.toString());
     throw new Error(`Erreur lors de l'envoi de l'email: ${error.message}`);
   }
 };

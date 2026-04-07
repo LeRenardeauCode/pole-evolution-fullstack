@@ -441,11 +441,13 @@ export const forgotPassword = async (req, res) => {
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&email=${email}`;
 
     try {
+      console.log('📨 Tentative d\'envoi email reset à:', user.email);
       await sendResetPasswordEmail({
         email: user.email,
         prenom: user.prenom,
         resetUrl,
       });
+      console.log('✅ Email reset envoyé avec succès pour:', user.email);
 
       return res.status(200).json({
         success: true,
@@ -453,6 +455,7 @@ export const forgotPassword = async (req, res) => {
           "Un email de réinitialisation a été envoyé à votre adresse. Veuillez vérifier votre boîte mail.",
       });
     } catch (emailError) {
+      console.error('❌ Erreur envoi email reset:', emailError.message);
       user.tokenResetPassword = undefined;
       user.tokenResetPasswordExpire = undefined;
       await user.save({ validateBeforeSave: false });
