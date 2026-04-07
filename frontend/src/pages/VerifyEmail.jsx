@@ -31,7 +31,7 @@ const VerifyEmail = () => {
       }
 
       try {
-        const response = await authService.verifyEmail({ token, email });
+        await authService.verifyEmail({ token, email });
         setSuccess(true);
         setError(null);
 
