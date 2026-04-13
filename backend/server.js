@@ -37,8 +37,33 @@ initMonitoring();
 
 const app = express();
 
+const normalizeOrigin = (origin) => origin?.trim().replace(/\/$/, '');
+
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  ...(process.env.CORS_ALLOWED_ORIGINS || '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean),
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+]
+  .map(normalizeOrigin)
+  .filter(Boolean);
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    const normalizedOrigin = normalizeOrigin(origin);
+    if (allowedOrigins.includes(normalizedOrigin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
