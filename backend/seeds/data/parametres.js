@@ -212,6 +212,22 @@ Alors si toi aussi, tu souhaites repousser tes limites, sortir de ta zone de con
     description: "Adresse email d'expédition pour les emails automatiques",
     estModifiable: true,
   },
+  {
+    cle: "emailsafemode",
+    valeur: false,
+    type: "booleen",
+    categorie: "emails",
+    description: "Active la redirection de tous les emails vers une adresse de test unique",
+    estModifiable: true,
+  },
+  {
+    cle: "emailsaferecipient",
+    valeur: "p.ewan@hotmail.fr",
+    type: "texte",
+    categorie: "emails",
+    description: "Adresse cible utilisée quand le safe-mode email est activé",
+    estModifiable: true,
+  },
 
   {
     cle: "modemaintenance",

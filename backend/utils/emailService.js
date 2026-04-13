@@ -1,6 +1,94 @@
 import nodemailer from "nodemailer";
+import Parametre from "../models/Parametre.js";
 
 let transporter = null;
+
+const getRuntimeParamValue = async (cle) => {
+  try {
+    const param = await Parametre.getParCle(cle);
+    return param?.valeur;
+  } catch (error) {
+    console.error(`Erreur lecture paramètre ${cle}:`, error.message);
+    return undefined;
+  }
+};
+
+const getEmailRuntimeConfig = async () => {
+  const safeModeValue = await getRuntimeParamValue("emailsafemode");
+  const safeRecipientValue = await getRuntimeParamValue("emailsaferecipient");
+
+  const safeMode =
+    typeof safeModeValue === "boolean"
+      ? safeModeValue
+      : String(process.env.EMAIL_SAFE_MODE || "false").toLowerCase() === "true";
+
+  const safeRecipient =
+    safeRecipientValue ||
+    process.env.EMAIL_SAFE_RECIPIENT ||
+    process.env.ADMIN_EMAIL ||
+    process.env.EMAIL_USER ||
+    "";
+
+  return {
+    safeMode,
+    safeRecipient,
+  };
+};
+
+const applyEmailSafeMode = (mailOptions, scenario = "email", runtimeConfig = { safeMode: false, safeRecipient: "" }) => {
+  if (!runtimeConfig.safeMode) {
+    return mailOptions;
+  }
+
+  const safeRecipient = runtimeConfig.safeRecipient;
+
+  if (!safeRecipient) {
+    return mailOptions;
+  }
+
+  const originalTo = mailOptions.to || "(non défini)";
+  const originalCc = mailOptions.cc || "";
+  const originalBcc = mailOptions.bcc || "";
+  const originalSubject = mailOptions.subject || "(sans sujet)";
+
+  const safePrefix = `[SAFE-MODE][${scenario}]`;
+  const safeTextHeader =
+    `${safePrefix}\n` +
+    `Destinataire original: ${originalTo}\n` +
+    (originalCc ? `Cc original: ${originalCc}\n` : "") +
+    (originalBcc ? `Bcc original: ${originalBcc}\n` : "") +
+    `\n`;
+
+  return {
+    ...mailOptions,
+    to: safeRecipient,
+    cc: undefined,
+    bcc: undefined,
+    subject: `${safePrefix} ${originalSubject}`,
+    text: `${safeTextHeader}${mailOptions.text || ""}`,
+    html: `
+      <div style="padding: 12px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 6px; margin-bottom: 16px; color: #856404; font-family: Arial, sans-serif; font-size: 13px;">
+        <strong>${safePrefix}</strong><br/>
+        Destinataire original: ${originalTo}
+        ${originalCc ? `<br/>Cc original: ${originalCc}` : ""}
+        ${originalBcc ? `<br/>Bcc original: ${originalBcc}` : ""}
+      </div>
+      ${mailOptions.html || ""}
+    `,
+  };
+};
+
+const sendMailWithPolicy = async ({ mailOptions, scenario }) => {
+  const runtimeConfig = await getEmailRuntimeConfig();
+  const finalOptions = applyEmailSafeMode(mailOptions, scenario, runtimeConfig);
+  const info = await getTransporter().sendMail(finalOptions);
+
+  if (runtimeConfig.safeMode) {
+    console.log(`🛡️ Email SAFE-MODE [${scenario}] routé vers:`, finalOptions.to);
+  }
+
+  return info;
+};
 
 function getTransporter() {
   if (!transporter) {
@@ -104,14 +192,11 @@ export const sendWelcomeEmail = async ({ email, prenom, validationUrl }) => {
   };
 
   try {
-    // Fire-and-forget
-    getTransporter().sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("❌ Erreur bienvenue email:", error.message);
-      } else {
-        console.log('✅ Email de bienvenue envoyé!', info.messageId);
-      }
+    const info = await sendMailWithPolicy({
+      mailOptions,
+      scenario: "welcome-user",
     });
+    console.log('✅ Email de bienvenue envoyé!', info.messageId);
     return { success: true, message: "Email de bienvenue envoyé avec succès" };
   } catch (error) {
     console.error("Erreur lors de l'envoi de l'email de bienvenue:", error);
@@ -193,16 +278,13 @@ export const sendResetPasswordEmail = async ({ email, prenom, resetUrl }) => {
   try {
     console.log('📧 Envoi email reset-password à:', email);
     console.log('🔗 URL de reset:', resetUrl.substring(0, 50) + '...');
-    
-    // Fire-and-forget: envoyer sans attendre
-    getTransporter().sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("❌ Erreur envoi email reset:", error.message);
-      } else {
-        console.log('✅ Email reset envoyé avec succès!', info.messageId);
-      }
+
+    const info = await sendMailWithPolicy({
+      mailOptions,
+      scenario: "reset-password-user",
     });
-    
+    console.log('✅ Email reset envoyé avec succès!', info.messageId);
+
     return { success: true, message: "Email envoyé avec succès" };
   } catch (error) {
     console.error("❌ Erreur lors de l'envoi de l'email reset-password:", error);
@@ -264,14 +346,11 @@ export const sendContactNotificationToAdmin = async ({ nom, prenom, email, telep
   };
 
   try {
-    // Fire-and-forget
-    getTransporter().sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("❌ Erreur notification admin contact:", error.message);
-      } else {
-        console.log('✅ Notification admin contact envoyée!', info.messageId);
-      }
+    const info = await sendMailWithPolicy({
+      mailOptions,
+      scenario: "contact-admin-notification",
     });
+    console.log('✅ Notification admin contact envoyée!', info.messageId);
     return { success: true, message: "Notification admin envoyée" };
   } catch (error) {
     console.error("Erreur notification admin:", error);
@@ -341,14 +420,11 @@ export const sendContactConfirmationToUser = async ({ email, prenom, nom }) => {
   };
 
   try {
-    // Fire-and-forget
-    getTransporter().sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("❌ Erreur confirmation contact user:", error.message);
-      } else {
-        console.log('✅ Email confirmation contact envoyé!', info.messageId);
-      }
+    const info = await sendMailWithPolicy({
+      mailOptions,
+      scenario: "contact-user-confirmation",
     });
+    console.log('✅ Email confirmation contact envoyé!', info.messageId);
     return { success: true, message: "Email de confirmation envoyé" };
   } catch (error) {
     console.error("Erreur confirmation utilisateur:", error);
@@ -437,14 +513,11 @@ export const sendReservationNotificationToAdmin = async ({
   };
 
   try {
-    // Fire-and-forget
-    getTransporter().sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("❌ Erreur notification réservation admin:", error.message);
-      } else {
-        console.log('✅ Notification réservation admin envoyée!', info.messageId);
-      }
+    const info = await sendMailWithPolicy({
+      mailOptions,
+      scenario: "reservation-admin-notification",
     });
+    console.log('✅ Notification réservation admin envoyée!', info.messageId);
     return { success: true, message: "Notification admin envoyée" };
   } catch (error) {
     console.error("Erreur notification réservation admin:", error);
@@ -557,14 +630,11 @@ export const sendReservationConfirmationToUser = async ({
   };
 
   try {
-    // Fire-and-forget
-    getTransporter().sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("❌ Erreur confirmation réservation:", error.message);
-      } else {
-        console.log('✅ Confirmation réservation envoyée!', info.messageId);
-      }
+    const info = await sendMailWithPolicy({
+      mailOptions,
+      scenario: "reservation-user-confirmation",
     });
+    console.log('✅ Confirmation réservation envoyée!', info.messageId);
     return { success: true, message: "Confirmation réservation envoyée" };
   } catch (error) {
     console.error("Erreur confirmation réservation:", error);
@@ -638,14 +708,11 @@ export const sendNewUserNotificationToAdmin = async ({ prenom, nom, email, telep
   };
 
   try {
-    // Fire-and-forget
-    getTransporter().sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("❌ Erreur notification nouvel utilisateur:", error.message);
-      } else {
-        console.log('✅ Notification nouvel utilisateur envoyée!', info.messageId);
-      }
+    const info = await sendMailWithPolicy({
+      mailOptions,
+      scenario: "new-user-admin-notification",
     });
+    console.log('✅ Notification nouvel utilisateur envoyée!', info.messageId);
     return { success: true, message: "Notification nouvel utilisateur envoyée" };
   } catch (error) {
     console.error("Erreur notification nouvel utilisateur:", error);

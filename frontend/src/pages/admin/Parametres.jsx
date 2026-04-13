@@ -9,11 +9,14 @@ import {
   Button,
   Divider,
   Stack,
-  Chip
+  Chip,
+  FormControlLabel,
+  Switch,
+  Alert
 } from '@mui/material';
 import { Upload, CheckCircle, PictureAsPdf } from '@mui/icons-material';
 import { toast } from 'react-toastify';
-import { getParametres, updateParametre, uploadDocumentPDF } from '@services/adminService';
+import { getParametres, createParametre, updateParametre, uploadDocumentPDF } from '@services/adminService';
 
 export default function Parametres() {
   const [loading, setLoading] = useState(false);
@@ -51,6 +54,8 @@ export default function Parametres() {
   const [docReglement1, setDocReglement1] = useState('');
   const [docReglement2, setDocReglement2] = useState('');
   const [docPlaquetteEVJF, setDocPlaquetteEVJF] = useState('');
+  const [emailSafeMode, setEmailSafeMode] = useState(false);
+  const [emailSafeRecipient, setEmailSafeRecipient] = useState('p.ewan@hotmail.fr');
   const [uploadingDoc, setUploadingDoc] = useState(null);
   const fileInputRef1 = useRef(null);
   const fileInputRef2 = useRef(null);
@@ -58,11 +63,27 @@ export default function Parametres() {
 
   useEffect(() => {
     let mounted = true;
+    let loadedParams = [];
+
+    const findParamValue = (cle, fallback = '') => loadedParams.find((p) => p.cle === cle)?.valeur ?? fallback;
+
+    const parseBoolean = (value, fallback = false) => {
+      if (typeof value === 'boolean') {
+        return value;
+      }
+
+      if (typeof value === 'string') {
+        return value.toLowerCase() === 'true';
+      }
+
+      return fallback;
+    };
 
     const fetchParams = async () => {
       try {
         const response = await getParametres();
         const params = response.data || [];
+        loadedParams = params;
 
         if (mounted) {
           const findParam = (cle) => params.find(p => p.cle === cle)?.valeur || '';
@@ -100,6 +121,8 @@ export default function Parametres() {
           setDocReglement1(findParam('documentreglementinterieur1'));
           setDocReglement2(findParam('documentreglementinterieur2'));
           setDocPlaquetteEVJF(findParam('documentplaquetteevjf'));
+          setEmailSafeMode(parseBoolean(findParamValue('emailsafemode', false), false));
+          setEmailSafeRecipient(findParamValue('emailsaferecipient', 'p.ewan@hotmail.fr'));
         }
       } catch (err) {
         console.error('Erreur chargement paramètres:', err);
@@ -115,6 +138,28 @@ export default function Parametres() {
       mounted = false;
     };
   }, []);
+
+  const upsertParametre = async ({ cle, valeur, type, categorie, description }) => {
+    try {
+      await updateParametre(cle, valeur);
+    } catch (err) {
+      const status = err?.response?.status;
+
+      if (status === 400 || status === 404) {
+        await createParametre({
+          cle,
+          valeur,
+          type,
+          categorie,
+          description,
+          estModifiable: true,
+        });
+        return;
+      }
+
+      throw err;
+    }
+  };
 
   const handleSaveMessageInscription = async () => {
     setLoading(true);
@@ -196,6 +241,34 @@ export default function Parametres() {
     }
   };
 
+  const handleSaveEmailSafeMode = async () => {
+    setLoading(true);
+    try {
+      await Promise.all([
+        upsertParametre({
+          cle: 'emailsafemode',
+          valeur: emailSafeMode,
+          type: 'booleen',
+          categorie: 'emails',
+          description: 'Active la redirection de tous les emails vers une adresse de test unique',
+        }),
+        upsertParametre({
+          cle: 'emailsaferecipient',
+          valeur: emailSafeRecipient,
+          type: 'texte',
+          categorie: 'emails',
+          description: 'Adresse cible utilisée quand le safe-mode email est activé',
+        }),
+      ]);
+      toast.success('Configuration du safe-mode email enregistrée');
+    } catch (err) {
+      console.error('Erreur safe-mode email:', err);
+      toast.error(err.response?.data?.message || 'Erreur lors de l\'enregistrement du safe-mode email');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleUploadDocument = async (cle, file, setter) => {
     if (!file || file.type !== 'application/pdf') {
       toast.error('Veuillez sélectionner un fichier PDF');
@@ -221,6 +294,54 @@ export default function Parametres() {
       </Typography>
 
       <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <Card elevation={0} sx={{ border: '1px solid #e0e0e0' }}>
+            <CardContent>
+              <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                Safe-mode emails
+              </Typography>
+              <Typography variant="body2" sx={{ mb: 2, color: '#6B7280' }}>
+                Activez ce mode pour rediriger tous les emails automatiques vers une seule adresse de test avant d'effectuer vos scénarios de validation.
+              </Typography>
+
+              <Alert severity="warning" sx={{ mb: 3 }}>
+                Quand le safe-mode est activé, tous les emails du projet partent vers l'adresse ci-dessous, quel que soit le destinataire réel.
+              </Alert>
+
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={emailSafeMode}
+                    onChange={(event) => setEmailSafeMode(event.target.checked)}
+                    color="warning"
+                  />
+                }
+                label={emailSafeMode ? 'Safe-mode activé' : 'Safe-mode désactivé'}
+                sx={{ mb: 2 }}
+              />
+
+              <TextField
+                fullWidth
+                type="email"
+                label="Email de redirection safe-mode"
+                value={emailSafeRecipient}
+                onChange={(e) => setEmailSafeRecipient(e.target.value)}
+                helperText="Exemple : p.ewan@hotmail.fr"
+                sx={{ mb: 2 }}
+              />
+
+              <Button
+                variant="contained"
+                onClick={handleSaveEmailSafeMode}
+                disabled={loading || !emailSafeRecipient.trim()}
+                sx={{ fontWeight: 600 }}
+              >
+                Enregistrer le safe-mode email
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+
         <Grid item xs={12}>
           <Card elevation={0} sx={{ border: '1px solid #e0e0e0' }}>
             <CardContent>

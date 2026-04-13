@@ -12,6 +12,7 @@ Application web full stack pour un studio de pole dance : vitrine, planning, ré
 - Emails transactionnels
 - Monitoring léger optionnel via Sentry
 - CAPTCHA contact optionnel via Google reCAPTCHA
+- Safe-mode email pilotable depuis le back-office admin
 - Ajustements visuels en cours (hover plus sobres, animations d'accueil réduites)
 - Paiement en ligne prévu mais non intégré à ce stade
 
@@ -80,9 +81,17 @@ Services exposés :
 - CLOUDINARY_API_SECRET
 - EMAIL_USER
 - EMAIL_PASSWORD
+- EMAIL_SAFE_MODE
+- EMAIL_SAFE_RECIPIENT
 - SENTRY_DSN
 - SENTRY_TRACES_SAMPLE_RATE
 - RECAPTCHA_SECRET_KEY
+
+Le safe-mode email peut être piloté de deux façons :
+- via les variables backend ci-dessus
+- via le back-office admin dans la page paramètres
+
+Quand il est activé, tous les emails sortants sont redirigés vers l'adresse de test configurée.
 
 ### Frontend
 - VITE_API_URL

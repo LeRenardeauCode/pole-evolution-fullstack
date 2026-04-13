@@ -37,7 +37,8 @@ const parametreSchema = new mongoose.Schema({
         'reservations',
         'interface',
         'emails',
-        'footer'
+        'footer',
+        'documents'
       ],
       message: 'Catégorie invalide'
     },
@@ -77,7 +78,6 @@ const parametreSchema = new mongoose.Schema({
   collection: 'parametres'
 });
 
-parametreSchema.index({ cle: 1 }, { unique: true });
 parametreSchema.index({ categorie: 1 });
 
 parametreSchema.methods.validerContraintes = function() {

@@ -293,6 +293,11 @@ export const updateParametre = async (cle, valeur) => {
   return response.data;
 };
 
+export const createParametre = async (data) => {
+  const response = await api.post('/parametres', data);
+  return response.data;
+};
+
 export const uploadDocumentPDF = async (cle, file) => {
   const formData = new FormData();
   formData.append('document', file);
@@ -373,6 +378,7 @@ export default {
   getParametres,
   getParametreByKey,
   getParametresByCategorie,
+  createParametre,
   updateParametre,
   uploadDocumentPDF
 };

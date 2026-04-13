@@ -26,8 +26,10 @@ export const getParametre = asyncHandler(async (req, res) => {
   const parametre = await Parametre.getParCle(req.params.cle);
 
   if (!parametre) {
-    return res.status(404);
-    throw new Error('Paramètre introuvable');
+    return res.status(404).json({
+      success: false,
+      message: 'Paramètre introuvable'
+    });
   }
 
   return res.status(200).json({
@@ -41,8 +43,10 @@ export const createParametre = asyncHandler(async (req, res) => {
 
   const existe = await Parametre.findOne({ cle: cle.toLowerCase() });
   if (existe) {
-    return res.status(400);
-    throw new Error('Un paramètre avec cette clé existe déjà');
+    return res.status(400).json({
+      success: false,
+      message: 'Un paramètre avec cette clé existe déjà'
+    });
   }
 
   const parametre = await Parametre.create({
@@ -68,8 +72,10 @@ export const updateParametre = asyncHandler(async (req, res) => {
   const { valeur } = req.body;
 
   if (valeur === undefined) {
-    return res.status(400);
-    throw new Error('La valeur est requise');
+    return res.status(400).json({
+      success: false,
+      message: 'La valeur est requise'
+    });
   }
 
   try {
@@ -81,8 +87,11 @@ export const updateParametre = asyncHandler(async (req, res) => {
       data: parametre
     });
   } catch (error) {
-    return res.status(400);
-    throw new Error(error.message);
+    const statusCode = error.message.includes('introuvable') ? 404 : 400;
+    return res.status(statusCode).json({
+      success: false,
+      message: error.message
+    });
   }
 });
 
@@ -90,13 +99,17 @@ export const deleteParametre = asyncHandler(async (req, res) => {
   const parametre = await Parametre.getParCle(req.params.cle);
 
   if (!parametre) {
-    return res.status(404);
-    throw new Error('Paramètre introuvable');
+    return res.status(404).json({
+      success: false,
+      message: 'Paramètre introuvable'
+    });
   }
 
   if (!parametre.estModifiable) {
-    return res.status(403);
-    throw new Error('Ce paramètre ne peut pas être supprimé');
+    return res.status(403).json({
+      success: false,
+      message: 'Ce paramètre ne peut pas être supprimé'
+    });
   }
 
   await parametre.deleteOne();
