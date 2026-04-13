@@ -3,13 +3,18 @@ import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '@/context/authProvider';
+import { initMonitoring, Sentry } from '@/utils/monitoring';
 import './index.css';
+
+initMonitoring();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <App />
+        <Sentry.ErrorBoundary fallback={<div />}> 
+          <App />
+        </Sentry.ErrorBoundary>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>

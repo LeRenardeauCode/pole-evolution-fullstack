@@ -15,6 +15,7 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 import cors from 'cors';
 import morgan from 'morgan';
 import connectDB from './config/database.js';
+import { initMonitoring, isMonitoringEnabled } from './config/monitoring.js';
 import { errorHandler } from './middleware/errorHandler.middleware.js';
 import fs from 'fs';
 
@@ -32,6 +33,7 @@ import parametreRoutes from './routes/parametre.routes.js';
 
 
 connectDB();
+initMonitoring();
 
 const app = express();
 
@@ -62,7 +64,8 @@ app.get('/health', (req, res) => {
     status: 'OK', 
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: process.env.NODE_ENV
+    environment: process.env.NODE_ENV,
+    monitoring: isMonitoringEnabled() ? 'enabled' : 'disabled'
   });
 });
 

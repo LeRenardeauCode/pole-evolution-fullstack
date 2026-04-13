@@ -8,13 +8,13 @@ const ActivityCard = memo(({ activity }) => {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        borderRadius: 3,
+        borderRadius: 1,
         border: '2px solid',
         borderColor: 'navy.main',
         background: 'background.default',
-        transition: 'transform 0.3s',
+        transition: 'box-shadow 0.3s ease',
         '&:hover': {
-          transform: 'translateY(-8px)',
+          boxShadow: '0 10px 22px rgba(0, 0, 0, 0.14)',
         },
       }}
     >

@@ -113,7 +113,7 @@ const RéglementIntérieur = () => {
                 color: "primary.main",
                 "&:hover": {
                   background: "rgba(255, 255, 255, 0.9)",
-                  transform: "translateY(-2px)",
+                  boxShadow: "0 6px 14px rgba(0, 0, 0, 0.14)",
                 },
                 transition: "all 0.3s ease",
               }}
@@ -173,7 +173,7 @@ const RéglementIntérieur = () => {
                 color: "secondary.main",
                 "&:hover": {
                   background: "rgba(255, 255, 255, 0.9)",
-                  transform: "translateY(-2px)",
+                  boxShadow: "0 6px 14px rgba(0, 0, 0, 0.14)",
                 },
                 transition: "all 0.3s ease",
               }}

@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
-import { Phone, Email } from "@mui/icons-material";
 import parametreService from "@services/parametreService";
 
 import mapImgDefault from "@/assets/images/google_map.png";
@@ -234,27 +233,6 @@ const Footer = () => {
               }}
             />
 
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={{ xs: 1, sm: 3 }} alignItems="center">
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Phone sx={{ fontSize: 20, color: "primary.main" }} />
-                <MuiLink
-                  href={`tel:${footerData.telephone.replace(/\s/g, '')}`}
-                  sx={{ color: "white", textDecoration: "none", fontSize: "0.95rem", "&:hover": { color: "primary.main" }, transition: "all 0.3s" }}
-                >
-                  {footerData.telephone}
-                </MuiLink>
-              </Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Email sx={{ fontSize: 20, color: "primary.main" }} />
-                <MuiLink
-                  href={`mailto:${footerData.email}`}
-                  sx={{ color: "white", textDecoration: "none", fontSize: "0.95rem", "&:hover": { color: "primary.main" }, transition: "all 0.3s" }}
-                >
-                  {footerData.email}
-                </MuiLink>
-              </Box>
-            </Stack>
-
             <Stack direction="row" spacing={2}>
               <IconButton
                 component="a"
@@ -266,7 +244,6 @@ const Footer = () => {
                   color: "white",
                   "&:hover": {
                     color: "primary.main",
-                    transform: "scale(1.1)",
                   },
                   transition: "all 0.3s",
                 }}
@@ -284,7 +261,6 @@ const Footer = () => {
                   color: "white",
                   "&:hover": {
                     color: "primary.main",
-                    transform: "scale(1.1)",
                   },
                   transition: "all 0.3s",
                 }}
@@ -302,7 +278,6 @@ const Footer = () => {
                   color: "white",
                   "&:hover": {
                     color: "primary.main",
-                    transform: "scale(1.1)",
                   },
                   transition: "all 0.3s",
                 }}

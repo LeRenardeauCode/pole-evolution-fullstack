@@ -172,7 +172,7 @@ export default function GalerieAdmin() {
         <Grid container spacing={2}>
           {filteredMedias.map((media) => (
             <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={media._id}>
-              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', transition: 'transform 0.2s', '&:hover': { transform: 'translateY(-4px)', boxShadow: 3 } }}>
+              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', transition: 'box-shadow 0.2s ease', '&:hover': { boxShadow: 3 } }}>
                 <CardMedia
                   component="img"
                   height="180"

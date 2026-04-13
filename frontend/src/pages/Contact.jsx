@@ -9,6 +9,7 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { useContact } from '@hooks/useContact';
 
 import logo from '@assets/images/thumbnail_LOGO_POLE_EVOLUTION-removebg-preview.png';
@@ -16,6 +17,7 @@ import heroContact from '@assets/images/img_hero.jpg';
 
 const Contact = () => {
   const { loading, error, success, sendMessage, resetForm } = useContact();
+  const captchaEnabled = Boolean(import.meta.env.VITE_RECAPTCHA_SITE_KEY);
 
   const [formData, setFormData] = useState({
     nom: '',
@@ -25,6 +27,8 @@ const Contact = () => {
     sujet: '',
     message: '',
   });
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaResetKey, setCaptchaResetKey] = useState(0);
 
   const sujets = [
     'Informations cours',
@@ -49,7 +53,14 @@ const Contact = () => {
       return;
     }
 
-    const success = await sendMessage(formData);
+    if (captchaEnabled && !captchaToken) {
+      return;
+    }
+
+    const success = await sendMessage({
+      ...formData,
+      captchaToken,
+    });
 
     if (success) {
       setFormData({
@@ -60,6 +71,8 @@ const Contact = () => {
         sujet: '',
         message: '',
       });
+      setCaptchaToken('');
+      setCaptchaResetKey((currentKey) => currentKey + 1);
     }
   };
 
@@ -337,23 +350,32 @@ const Contact = () => {
                   }}
                 />
 
+                {captchaEnabled && (
+                  <Box sx={{ mb: 4, display: 'flex', justifyContent: 'center' }}>
+                    <ReCAPTCHA
+                      key={captchaResetKey}
+                      sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                      onChange={(value) => setCaptchaToken(value || '')}
+                    />
+                  </Box>
+                )}
+
                 <Button
                   type="submit"
                   variant="contained"
                   fullWidth
-                  disabled={loading}
+                  disabled={loading || (captchaEnabled && !captchaToken)}
                   sx={{
                     backgroundColor: 'navy.main',
                     color: 'white',
                     py: 1.5,
                     fontSize: '1.1rem',
                     fontWeight: 600,
-                    textTransform: 'uppercase',
+                    textTransform: 'none',
                     transition: 'all 0.3s ease',
                     '&:hover': {
                       background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)',
-                      transform: 'translateY(-2px)',
-                      boxShadow: '0 8px 20px rgba(255, 25, 102, 0.4)',
+                      boxShadow: '0 6px 16px rgba(255, 25, 102, 0.22)',
                     },
                     '&:disabled': {
                       background: '#ccc',

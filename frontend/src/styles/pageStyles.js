@@ -50,7 +50,7 @@ export const whiteTextMb2 = { color: 'white', mb: 2 };
 export const whiteTextMb1 = { color: 'white', mb: 1 };
 export const linkPrimary = { color: 'primary.main', fontSize: '0.9rem', mb: 2, display: 'block', textDecoration: 'underline', cursor: 'pointer' };
 export const radioPrimary = { color: 'primary.main' };
-export const primaryButton = { backgroundColor: 'transparent', border: '2px solid', borderColor: 'primary.main', borderRadius: 3, color: 'primary.main', py: 1.5, fontSize: '1rem', fontWeight: 600, '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)', color: 'white' } };
+export const primaryButton = { backgroundColor: 'transparent', border: '2px solid', borderColor: 'primary.main', borderRadius: 2, color: 'primary.main', py: 1.5, fontSize: '1rem', fontWeight: 600, '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)', color: 'white' } };
 export const primaryButtonDisabled = { '&:disabled': { borderColor: 'grey.500', color: 'grey.500' } };
 export const fullWidthButtonPx = { px: 4, width: { xs: '100%', sm: 'auto' } };
 
@@ -130,7 +130,7 @@ export const forfaitCardRoot = {
   overflow: 'hidden',
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
   transition: 'all 0.3s',
-  '&:hover': { transform: 'translateY(-8px)', boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)' },
+  '&:hover': { boxShadow: '0 8px 24px rgba(0, 0, 0, 0.24)' },
 };
 
 export const forfaitCardHeader = {
@@ -172,7 +172,7 @@ export const showAnimationsBody = { fontSize: { xs: '1rem', md: '1.1rem' }, colo
 export const showAnimationsList = { color: 'white', fontSize: { xs: '0.95rem', md: '1rem' }, lineHeight: 2, pl: 3, '& li': { mb: 1 } };
 export const showAnimationsLoading = { display: 'flex', justifyContent: 'center', py: 4, mb: 5 };
 export const showAnimationsError = { mb: 5, maxWidth: '600px' };
-export const showAnimationsCard = { height: '100%', minHeight: '450px', display: 'flex', flexDirection: 'column', borderRadius: 0, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)', transition: 'all 0.3s', '&:hover': { transform: 'translateY(-8px)', boxShadow: '0 8px 30px rgba(0, 0, 0, 0.5)' } };
+export const showAnimationsCard = { height: '100%', minHeight: '450px', display: 'flex', flexDirection: 'column', borderRadius: 0, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)', transition: 'box-shadow 0.3s ease', '&:hover': { boxShadow: '0 8px 24px rgba(0, 0, 0, 0.24)' } };
 export const showAnimationsCardHeader = { backgroundColor: 'navy.main', color: 'white', py: 3, px: 2, textAlign: 'center', minHeight: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' };
 export const showAnimationsCardContent = { bgcolor: 'white', py: 3, px: 3, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' };
 export const showAnimationsPrice = { fontWeight: 700, color: 'navy.main', mb: 1, textAlign: 'center', fontSize: '2rem' };

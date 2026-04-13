@@ -20,10 +20,9 @@ const TarifCard = memo(function TarifCard({
           borderRadius: 0,
           overflow: "hidden",
           boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
-          transition: "all 0.3s",
+          transition: "box-shadow 0.3s ease",
           "&:hover": {
-            transform: "translateY(-8px)",
-            boxShadow: "0 8px 30px rgba(0, 0, 0, 0.5)",
+            boxShadow: "0 8px 24px rgba(0, 0, 0, 0.24)",
           },
         }}
       >

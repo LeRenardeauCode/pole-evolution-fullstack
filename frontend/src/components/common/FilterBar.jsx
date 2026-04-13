@@ -61,9 +61,9 @@ const FilterBar = ({ filters, onFilterChange }) => {
           height: 40,
           width: { xs: '100%', sm: 'auto' },
           cursor: 'pointer',
+          transition: 'background-color 0.2s ease, box-shadow 0.2s ease',
           '&:hover': {
-            transform: 'scale(1.05)',
-            transition: 'transform 0.2s'
+            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.12)'
           }
         }}
       />

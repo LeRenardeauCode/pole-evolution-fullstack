@@ -13,10 +13,9 @@ const CourseTypeCard = memo(({ cours }) => {
         borderRadius: '12px',
         overflow: 'hidden',
         boxShadow: '0 6px 20px rgba(0, 0, 0, 0.15)',
-        transition: 'all 0.3s ease',
+        transition: 'box-shadow 0.3s ease',
         '&:hover': {
-          transform: 'translateY(-5px)',
-          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.25)',
+          boxShadow: '0 10px 24px rgba(0, 0, 0, 0.2)',
         }
       }}
     >

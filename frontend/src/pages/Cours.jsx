@@ -114,10 +114,9 @@ const Cours = () => {
               borderRadius: "12px",
               background: (theme) => theme.palette.navy.main,
               width: { xs: "90vw", sm: "auto" },
-              transition: "all 0.3s ease",
+              transition: "box-shadow 0.3s ease",
               "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: "0 6px 20px rgba(139, 92, 246, 0.6)",
+                boxShadow: "0 8px 18px rgba(16, 2, 73, 0.26)",
               },
             }}
           >

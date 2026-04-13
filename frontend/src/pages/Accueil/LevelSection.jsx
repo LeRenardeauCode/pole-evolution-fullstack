@@ -76,10 +76,10 @@ const LevelsSection = () => {
                 alignItems="center"
                 sx={{
                   textAlign: 'center',
-                  transition: 'transform 0.3s',
+                  transition: 'opacity 0.2s ease',
                   '@media (hover: hover)': {
                     '&:hover': {
-                      transform: 'translateY(-8px)',
+                      opacity: 0.94,
                     },
                   },
                 }}

@@ -1,3 +1,5 @@
+import { captureException } from "../config/monitoring.js";
+
 export const errorHandler = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
@@ -33,6 +35,13 @@ export const errorHandler = (err, req, res, next) => {
       statusCode: 404,
     };
   }
+
+  captureException(err, {
+    method: req.method,
+    path: req.originalUrl,
+    userId: req.user?._id?.toString?.() || null,
+    statusCode: error.statusCode || 500,
+  });
 
   const debugInfo = process.env.NODE_ENV === "development" ? { stack: err.stack } : {};
 

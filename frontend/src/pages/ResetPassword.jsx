@@ -134,8 +134,8 @@ const ResetPassword = () => {
                 disabled={loading}
                 sx={{
                   backgroundColor: 'navy.main',
-                  '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)', transform: 'translateY(-2px)' },
-                  transition: 'all 0.3s ease',
+                  '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)', boxShadow: '0 6px 14px rgba(0, 0, 0, 0.14)' },
+                  transition: 'background 0.3s ease, box-shadow 0.3s ease',
                 }}
               >
                 {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Envoyer le lien'}
@@ -184,8 +184,8 @@ const ResetPassword = () => {
                 disabled={loading}
                 sx={{
                   backgroundColor: 'navy.main',
-                  '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)', transform: 'translateY(-2px)' },
-                  transition: 'all 0.3s ease',
+                  '&:hover': { background: 'linear-gradient(135deg, #FF1966 0%, #D41173 100%)', boxShadow: '0 6px 14px rgba(0, 0, 0, 0.14)' },
+                  transition: 'background 0.3s ease, box-shadow 0.3s ease',
                 }}
               >
                 {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Réinitialiser le mot de passe'}

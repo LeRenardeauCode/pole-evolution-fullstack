@@ -42,11 +42,10 @@ const CourseCard = memo(({ cours, onClick, compact = false }) => {
       onClick={onClick}
       sx={{
         cursor: 'pointer',
-        transition: 'all 0.3s ease',
+        transition: 'box-shadow 0.3s ease',
         border: `2px solid ${getTypeColor(cours.type)}`,
         '&:hover': {
-          transform: compact ? 'translateY(-2px)' : 'translateY(-5px)',
-          boxShadow: 6,
+          boxShadow: 4,
         },
         opacity: cours.statut === 'annule' ? 0.6 : 1
       }}
