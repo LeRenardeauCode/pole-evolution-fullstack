@@ -39,7 +39,6 @@ export const register = async (req, res) => {
       telephone,
       dateNaissance,
       niveauPole,
-      accepteContact,
     } = req.body;
 
     if (!prenom || !nom || !pseudo || !email || !motDePasse) {
@@ -79,7 +78,7 @@ export const register = async (req, res) => {
       telephone,
       dateNaissance,
       niveauPole: niveauPole || "jamais",
-      accepteContact: accepteContact || false,
+      accepteContact: true,
       accepteCGU: true,
       accepteReglement: true,
       statutValidationAdmin: "pending",
@@ -251,7 +250,6 @@ export const updateProfile = async (req, res) => {
       telephone: req.body.telephone,
       dateNaissance: req.body.dateNaissance,
       niveauPole: req.body.niveauPole,
-      accepteContact: req.body.accepteContact,
       adresse: req.body.adresse,
     };
 

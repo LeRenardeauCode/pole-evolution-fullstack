@@ -536,11 +536,11 @@ export const sendReservationConfirmationToUser = async ({
   const mailOptions = {
     from: `"Pôle Evolution" <${process.env.EMAIL_USER}>`,
     to: emailEleve,
-    subject: `Confirmation de réservation - ${nomCours}`,
+    subject: `Réservation reçue - ${nomCours}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background: linear-gradient(135deg, #FF1966 0%, #D41173 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-          <h1 style="margin: 0;">✅ Réservation Confirmée</h1>
+          <h1 style="margin: 0;">📩 Réservation reçue</h1>
           <p style="margin: 10px 0 0 0; opacity: 0.9;">Pôle Evolution</p>
         </div>
 
@@ -548,13 +548,14 @@ export const sendReservationConfirmationToUser = async ({
           <p style="font-size: 16px; color: #333;">Bonjour ${prenomEleve || nomEleve},</p>
           
           <p style="color: #666; line-height: 1.6;">
-            Nous confirmons votre réservation pour le cours <strong>${nomCours}</strong>.
+            Votre demande de réservation pour le cours <strong>${nomCours}</strong> a bien été prise en compte.
           </p>
 
           <div style="background: white; border-left: 4px solid #FF1966; padding: 20px; margin: 20px 0; border-radius: 5px;">
             <h3 style="margin: 0 0 10px 0; color: #FF1966;">📅 Détails du cours</h3>
             <p style="margin: 5px 0;"><strong>Cours :</strong> ${nomCours}</p>
             <p style="margin: 5px 0;"><strong>Date et heure :</strong> ${new Date(dateDebut).toLocaleString("fr-FR")}</p>
+            <p style="margin: 5px 0;"><strong>Statut :</strong> En attente de validation</p>
           </div>
 
           ${
@@ -577,6 +578,10 @@ export const sendReservationConfirmationToUser = async ({
           `
               : ""
           }
+
+          <p style="color: #666; line-height: 1.6;">
+            Un administrateur doit valider la réservation. Vous recevrez un nouvel email pour confirmer si elle est acceptée ou refusée.
+          </p>
 
           <div style="background: #d1ecf1; border-left: 4px solid #0c5460; padding: 15px; margin: 20px 0; border-radius: 5px;">
             <p style="margin: 0; color: #0c5460; font-size: 14px;">
@@ -603,19 +608,23 @@ export const sendReservationConfirmationToUser = async ({
       </div>
     `,
     text: `
-      Réservation Confirmée
+      Réservation reçue
 
       Bonjour ${prenomEleve || nomEleve},
 
-      Nous confirmons votre réservation pour le cours ${nomCours}.
+      Votre demande de réservation pour le cours ${nomCours} a bien été prise en compte.
 
       Date et heure : ${new Date(dateDebut).toLocaleString("fr-FR")}
+
+      Statut : En attente de validation admin
 
       ${
         lienValidation
           ? `Veuillez confirmer votre réservation : ${lienValidation}`
           : ""
       }
+
+      Vous recevrez un nouvel email lorsque la réservation sera validée, refusée, ou annulée.
 
       À retenir :
       • Arrivez 10-15 minutes avant le début du cours
@@ -640,6 +649,241 @@ export const sendReservationConfirmationToUser = async ({
     console.error("Erreur confirmation réservation:", error);
     throw new Error(`Erreur confirmation réservation: ${error.message}`);
   }
+};
+
+export const sendReservationStatusUpdateToUser = async ({
+  nomEleve,
+  prenomEleve,
+  emailEleve,
+  nomCours,
+  dateDebut,
+  statut,
+  raison = null,
+}) => {
+  const statusLabelMap = {
+    confirmee: "confirmée",
+    refusee: "refusée",
+    annulee: "annulée",
+  };
+
+  const statusTitleMap = {
+    confirmee: "✅ Réservation confirmée",
+    refusee: "❌ Réservation refusée",
+    annulee: "⚠️ Réservation annulée",
+  };
+
+  const label = statusLabelMap[statut] || statut;
+  const title = statusTitleMap[statut] || "Mise à jour de votre réservation";
+
+  const mailOptions = {
+    from: `"Pôle Evolution" <${process.env.EMAIL_USER}>`,
+    to: emailEleve,
+    subject: `Mise à jour réservation - ${nomCours} (${label})`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #FF1966 0%, #D41173 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+          <h1 style="margin: 0;">${title}</h1>
+          <p style="margin: 10px 0 0 0; opacity: 0.9;">Pôle Evolution</p>
+        </div>
+
+        <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px;">
+          <p style="font-size: 16px; color: #333;">Bonjour ${prenomEleve || nomEleve},</p>
+
+          <p style="color: #666; line-height: 1.6;">
+            Votre réservation a été <strong>${label}</strong>.
+          </p>
+
+          <div style="background: white; border-left: 4px solid #FF1966; padding: 20px; margin: 20px 0; border-radius: 5px;">
+            <p style="margin: 5px 0;"><strong>Cours :</strong> ${nomCours}</p>
+            <p style="margin: 5px 0;"><strong>Date :</strong> ${new Date(dateDebut).toLocaleString("fr-FR")}</p>
+            <p style="margin: 5px 0;"><strong>Statut :</strong> ${label}</p>
+            ${raison ? `<p style="margin: 5px 0;"><strong>Raison :</strong> ${raison}</p>` : ""}
+          </div>
+
+          <p style="color: #666; line-height: 1.6;">
+            Si vous avez des questions, contactez-nous directement.
+          </p>
+        </div>
+      </div>
+    `,
+    text: `
+      ${title}
+
+      Bonjour ${prenomEleve || nomEleve},
+
+      Votre réservation a été ${label}.
+
+      Cours : ${nomCours}
+      Date : ${new Date(dateDebut).toLocaleString("fr-FR")}
+      Statut : ${label}
+      ${raison ? `Raison : ${raison}` : ""}
+    `,
+  };
+
+  try {
+    const info = await sendMailWithPolicy({
+      mailOptions,
+      scenario: "reservation-user-status-update",
+    });
+    console.log("✅ Email statut réservation envoyé!", info.messageId);
+    return { success: true, message: "Email statut réservation envoyé" };
+  } catch (error) {
+    console.error("Erreur email statut réservation:", error);
+    throw new Error(`Erreur email statut réservation: ${error.message}`);
+  }
+};
+
+export const sendForfaitRequestNotificationToAdmin = async ({
+  utilisateurNom,
+  utilisateurEmail,
+  utilisateurTelephone,
+  forfaitNom,
+  forfaitPrix,
+  forfaitCategorie,
+}) => {
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
+  const typeLabel = forfaitCategorie === "abonnement" ? "abonnement" : "forfait";
+
+  const mailOptions = {
+    from: `"Notifications Pôle Evolution" <${process.env.EMAIL_USER}>`,
+    to: adminEmail,
+    replyTo: utilisateurEmail,
+    subject: `[DEMANDE ${typeLabel.toUpperCase()}] ${utilisateurNom} - ${forfaitNom}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>Nouvelle demande ${typeLabel}</h2>
+        <p><strong>Client :</strong> ${utilisateurNom}</p>
+        <p><strong>Email :</strong> ${utilisateurEmail}</p>
+        <p><strong>Téléphone :</strong> ${utilisateurTelephone || "Non renseigné"}</p>
+        <p><strong>${typeLabel} :</strong> ${forfaitNom}</p>
+        <p><strong>Prix :</strong> ${forfaitPrix}€</p>
+      </div>
+    `,
+    text: `
+      Nouvelle demande ${typeLabel}
+
+      Client: ${utilisateurNom}
+      Email: ${utilisateurEmail}
+      Téléphone: ${utilisateurTelephone || "Non renseigné"}
+      Offre: ${forfaitNom}
+      Prix: ${forfaitPrix}€
+    `,
+  };
+
+  return sendMailWithPolicy({
+    mailOptions,
+    scenario: "forfait-request-admin-notification",
+  });
+};
+
+export const sendForfaitRequestReceivedToUser = async ({
+  utilisateurPrenom,
+  utilisateurNom,
+  utilisateurEmail,
+  forfaitNom,
+  forfaitCategorie,
+}) => {
+  const typeLabel = forfaitCategorie === "abonnement" ? "abonnement" : "forfait";
+  const mailOptions = {
+    from: `"Pôle Evolution" <${process.env.EMAIL_USER}>`,
+    to: utilisateurEmail,
+    subject: `Demande ${typeLabel} reçue - ${forfaitNom}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>Demande bien reçue</h2>
+        <p>Bonjour ${utilisateurPrenom || utilisateurNom},</p>
+        <p>Nous avons bien reçu votre demande de ${typeLabel} <strong>${forfaitNom}</strong>.</p>
+        <p>Statut actuel: en attente de validation admin.</p>
+      </div>
+    `,
+    text: `
+      Bonjour ${utilisateurPrenom || utilisateurNom},
+
+      Nous avons bien reçu votre demande de ${typeLabel} ${forfaitNom}.
+      Statut actuel: en attente de validation admin.
+    `,
+  };
+
+  return sendMailWithPolicy({
+    mailOptions,
+    scenario: "forfait-request-user-pending",
+  });
+};
+
+export const sendForfaitRequestDecisionToUser = async ({
+  utilisateurPrenom,
+  utilisateurNom,
+  utilisateurEmail,
+  forfaitNom,
+  forfaitCategorie,
+  statut,
+  raison = null,
+}) => {
+  const typeLabel = forfaitCategorie === "abonnement" ? "abonnement" : "forfait";
+  const approved = statut === "approuvee";
+
+  const mailOptions = {
+    from: `"Pôle Evolution" <${process.env.EMAIL_USER}>`,
+    to: utilisateurEmail,
+    subject: approved
+      ? `${typeLabel === "abonnement" ? "Abonnement" : "Forfait"} activé - ${forfaitNom}`
+      : `Demande ${typeLabel} refusée - ${forfaitNom}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>${approved ? "✅ Demande acceptée" : "❌ Demande refusée"}</h2>
+        <p>Bonjour ${utilisateurPrenom || utilisateurNom},</p>
+        <p>Votre demande de ${typeLabel} <strong>${forfaitNom}</strong> a été ${approved ? "acceptée" : "refusée"}.</p>
+        ${raison ? `<p><strong>Raison :</strong> ${raison}</p>` : ""}
+      </div>
+    `,
+    text: `
+      Bonjour ${utilisateurPrenom || utilisateurNom},
+
+      Votre demande de ${typeLabel} ${forfaitNom} a été ${approved ? "acceptée" : "refusée"}.
+      ${raison ? `Raison: ${raison}` : ""}
+    `,
+  };
+
+  return sendMailWithPolicy({
+    mailOptions,
+    scenario: approved ? "forfait-request-user-approved" : "forfait-request-user-refused",
+  });
+};
+
+export const sendForfaitEndingToUser = async ({
+  utilisateurPrenom,
+  utilisateurNom,
+  utilisateurEmail,
+  forfaitNom,
+  forfaitCategorie,
+  dateFin,
+}) => {
+  const typeLabel = forfaitCategorie === "abonnement" ? "abonnement" : "forfait";
+
+  const mailOptions = {
+    from: `"Pôle Evolution" <${process.env.EMAIL_USER}>`,
+    to: utilisateurEmail,
+    subject: `Fin de votre ${typeLabel} - ${forfaitNom}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>Fin de votre ${typeLabel}</h2>
+        <p>Bonjour ${utilisateurPrenom || utilisateurNom},</p>
+        <p>Votre ${typeLabel} <strong>${forfaitNom}</strong> est arrivé à échéance le ${new Date(dateFin).toLocaleDateString("fr-FR")}.</p>
+        <p>Contactez-nous si vous souhaitez le renouveler.</p>
+      </div>
+    `,
+    text: `
+      Bonjour ${utilisateurPrenom || utilisateurNom},
+
+      Votre ${typeLabel} ${forfaitNom} est arrivé à échéance le ${new Date(dateFin).toLocaleDateString("fr-FR")}.
+      Contactez-nous pour le renouveler.
+    `,
+  };
+
+  return sendMailWithPolicy({
+    mailOptions,
+    scenario: "forfait-user-ended",
+  });
 };
 
 export const isEmailServiceConfigured = () => {

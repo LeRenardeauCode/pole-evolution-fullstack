@@ -1,4 +1,5 @@
 import { Utilisateur, Forfait } from "../models/index.js";
+import { sendForfaitRequestDecisionToUser } from "../utils/emailService.js";
 
 export const getUtilisateurs = async (req, res) => {
   try {
@@ -489,6 +490,15 @@ export const activerForfait = async (req, res) => {
 
     await utilisateur.save();
 
+    sendForfaitRequestDecisionToUser({
+      utilisateurPrenom: utilisateur.prenom,
+      utilisateurNom: utilisateur.nom,
+      utilisateurEmail: utilisateur.email,
+      forfaitNom: forfait.nom,
+      forfaitCategorie: forfait.categorie,
+      statut: "approuvee",
+    }).catch((e) => console.error("Erreur email validation forfait:", e.message));
+
     return res.status(200).json({
       success: true,
       message: "Forfait activé avec succès",
@@ -629,6 +639,15 @@ export const activerAbonnement = async (req, res) => {
     };
 
     await utilisateur.save();
+
+    sendForfaitRequestDecisionToUser({
+      utilisateurPrenom: utilisateur.prenom,
+      utilisateurNom: utilisateur.nom,
+      utilisateurEmail: utilisateur.email,
+      forfaitNom: forfait.nom,
+      forfaitCategorie: forfait.categorie,
+      statut: "approuvee",
+    }).catch((e) => console.error("Erreur email validation abonnement:", e.message));
 
     return res.status(200).json({
       success: true,

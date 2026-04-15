@@ -11,8 +11,6 @@ import {
   CircularProgress,
   Checkbox,
   FormControlLabel,
-  RadioGroup,
-  Radio,
   LinearProgress,
 } from "@mui/material";
 import authService from "@services/authService";
@@ -29,7 +27,6 @@ import {
   textFieldWhiteHelper,
   smallWhiteText,
   whiteTextMb1,
-  whiteTextMb2,
   linkPrimary,
   radioPrimary,
   primaryButton,
@@ -58,8 +55,6 @@ const Register = () => {
     telephone: "",
     dateNaissance: "",
     niveauPole: "",
-    commentStudio: "",
-    accepteContact: false,
     accepteCGU: false,
     accepteReglement: false,
   });
@@ -198,7 +193,6 @@ const Register = () => {
         telephone: formData.telephone,
         dateNaissance: formData.dateNaissance || null,
         niveauPole: formData.niveauPole,
-        accepteContact: formData.accepteContact,
         accepteCGU: formData.accepteCGU,
         accepteReglement: formData.accepteReglement,
       });
@@ -511,48 +505,6 @@ const Register = () => {
 
           {step === 3 && (
             <Box>
-              <Typography sx={whiteTextMb2}>
-                Comment avez-vous connu le studio ? (optionnel)
-              </Typography>
-
-              <RadioGroup
-                name="commentStudio"
-                value={formData.commentStudio}
-                onChange={handleChange}
-              >
-                <FormControlLabel
-                  value="reseaux-sociaux"
-                  control={<Radio sx={radioPrimary} />}
-                  label="Réseaux sociaux"
-                  sx={whiteTextMb1}
-                />
-                <FormControlLabel
-                  value="bouche-a-oreille"
-                  control={<Radio sx={radioPrimary} />}
-                  label="Bouche à oreille"
-                  sx={whiteTextMb1}
-                />
-                <FormControlLabel
-                  value="navigation-internet"
-                  control={<Radio sx={radioPrimary} />}
-                  label="Navigation internet"
-                  sx={{ color: 'white', mb: 3 }}
-                />
-              </RadioGroup>
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="accepteContact"
-                    checked={formData.accepteContact}
-                    onChange={handleChange}
-                    sx={radioPrimary}
-                  />
-                }
-                label="J'accepte de recevoir des communications par email (Optionnel)"
-                sx={whiteTextMb2}
-              />
-
               <FormControlLabel
                 control={
                   <Checkbox

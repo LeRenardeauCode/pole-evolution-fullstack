@@ -198,7 +198,7 @@ const utilisateurSchema = new mongoose.Schema(
     accepteContact: {
       type: Boolean,
       required: [true, "Vous devez indiquer votre préférence de contact"],
-      default: false,
+      default: true,
     },
 
     accepteCGU: {
@@ -344,6 +344,10 @@ const utilisateurSchema = new mongoose.Schema(
           type: Boolean,
           default: true,
         },
+        emailFinEnvoye: {
+          type: Boolean,
+          default: false,
+        },
       },
     ],
 
@@ -387,6 +391,10 @@ const utilisateurSchema = new mongoose.Schema(
       dateResiliation: {
         type: Date,
         required: false,
+      },
+      emailFinEnvoye: {
+        type: Boolean,
+        default: false,
       },
     },
 

@@ -5,10 +5,12 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Charge .env.local EN PRIORITÉ (dev), sinon .env (prod)
-// IMPORTANT: override: true pour écrase les valeurs déjà chargées
-dotenv.config({ path: path.join(__dirname, '.env.local'), override: true });
-dotenv.config({ path: path.join(__dirname, '.env') });
+// En production (Render), on utilise exclusivement les variables d'environnement de la plateforme.
+// En local, on autorise .env.local puis .env pour faciliter le développement.
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({ path: path.join(__dirname, '.env.local'), override: true });
+  dotenv.config({ path: path.join(__dirname, '.env') });
+}
 
 
 
@@ -16,6 +18,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import connectDB from './config/database.js';
 import { initMonitoring, isMonitoringEnabled } from './config/monitoring.js';
+import { startForfaitExpiryNotifier } from './services/forfaitExpiryNotifier.service.js';
 import { errorHandler } from './middleware/errorHandler.middleware.js';
 import fs from 'fs';
 
@@ -34,6 +37,7 @@ import parametreRoutes from './routes/parametre.routes.js';
 
 connectDB();
 initMonitoring();
+startForfaitExpiryNotifier();
 
 const app = express();
 

@@ -1,4 +1,5 @@
 import { Cours } from "../models/index.js";
+import { sendReservationStatusUpdateToUser } from "../utils/emailService.js";
 
 export const getCoursFuturs = async (req, res) => {
   try {
@@ -373,7 +374,7 @@ export const annulerCours = async (req, res) => {
     const reservations = await Reservation.find({
       cours: cours._id,
       statut: { $in: ["confirmee", "en_attente"] },
-    });
+    }).populate("utilisateur", "prenom nom email");
 
     for (const reservation of reservations) {
       reservation.statut = "annulee";
@@ -392,6 +393,28 @@ export const annulerCours = async (req, res) => {
           coursId: cours._id,
           reservationId: reservation._id,
         });
+
+        if (reservation.utilisateur.email) {
+          sendReservationStatusUpdateToUser({
+            nomEleve: reservation.utilisateur.nom,
+            prenomEleve: reservation.utilisateur.prenom,
+            emailEleve: reservation.utilisateur.email,
+            nomCours: cours.nom,
+            dateDebut: cours.dateDebut,
+            statut: "annulee",
+            raison,
+          }).catch((e) => console.error("Erreur email annulation cours:", e.message));
+        }
+      } else if (reservation.typeReservation === "invite" && reservation.emailInvite) {
+        sendReservationStatusUpdateToUser({
+          nomEleve: reservation.nomEleve,
+          prenomEleve: "",
+          emailEleve: reservation.emailInvite,
+          nomCours: cours.nom,
+          dateDebut: cours.dateDebut,
+          statut: "annulee",
+          raison,
+        }).catch((e) => console.error("Erreur email annulation cours invité:", e.message));
       }
     }
 

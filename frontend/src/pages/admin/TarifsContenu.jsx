@@ -243,11 +243,12 @@ export default function TarifsContenu() {
   };
 
   const handleRefuserDemande = async (notificationId) => {
-    if (!window.confirm("Refuser cette demande ?")) return;
+    const raison = window.prompt("Raison du refus (obligatoire):");
+    if (!raison || !raison.trim()) return;
 
     setLoading(true);
     try {
-      await notificationService.marquerCommeLue(notificationId);
+      await notificationService.refuserDemandeForfait(notificationId, raison.trim());
 
       toast.info("Demande refusée");
 

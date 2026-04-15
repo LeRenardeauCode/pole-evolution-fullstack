@@ -1,5 +1,10 @@
 import { Notification } from "../models/index.js";
 import asyncHandler from "express-async-handler";
+import {
+  sendForfaitRequestDecisionToUser,
+  sendForfaitRequestNotificationToAdmin,
+  sendForfaitRequestReceivedToUser,
+} from "../utils/emailService.js";
 
 export const getNotifications = asyncHandler(async (req, res) => {
   const { estLue, priorite, type, limite = 20 } = req.query;
@@ -53,6 +58,23 @@ export const creerDemandeForfait = async (req, res) => {
       },
     });
 
+    sendForfaitRequestNotificationToAdmin({
+      utilisateurNom: `${utilisateur.prenom} ${utilisateur.nom}`,
+      utilisateurEmail: utilisateur.email,
+      utilisateurTelephone: utilisateur.telephone || null,
+      forfaitNom,
+      forfaitPrix,
+      forfaitCategorie,
+    }).catch((e) => console.error("Erreur email demande forfait admin:", e.message));
+
+    sendForfaitRequestReceivedToUser({
+      utilisateurPrenom: utilisateur.prenom,
+      utilisateurNom: utilisateur.nom,
+      utilisateurEmail: utilisateur.email,
+      forfaitNom,
+      forfaitCategorie,
+    }).catch((e) => console.error("Erreur email demande forfait client:", e.message));
+
     return res.status(201).json({
       success: true,
       message: "Demande envoyée",
@@ -66,6 +88,43 @@ export const creerDemandeForfait = async (req, res) => {
     });
   }
 };
+
+export const refuserDemandeForfait = asyncHandler(async (req, res) => {
+  const { raison } = req.body;
+  const notification = await Notification.findById(req.params.id);
+
+  if (!notification || notification.type !== "demande_forfait") {
+    return res.status(404).json({
+      success: false,
+      message: "Demande de forfait introuvable",
+    });
+  }
+
+  const metadata = notification.metadata || {};
+  const utilisateurNom = metadata.utilisateurNom || "Client";
+  const [utilisateurPrenom = "", ...restNom] = utilisateurNom.split(" ");
+  const utilisateurNomSansPrenom = restNom.join(" ");
+
+  if (metadata.utilisateurEmail) {
+    sendForfaitRequestDecisionToUser({
+      utilisateurPrenom,
+      utilisateurNom: utilisateurNomSansPrenom || utilisateurNom,
+      utilisateurEmail: metadata.utilisateurEmail,
+      forfaitNom: metadata.forfaitNom,
+      forfaitCategorie: metadata.forfaitCategorie,
+      statut: "refusee",
+      raison: raison || "Demande refusée par l'administrateur",
+    }).catch((e) => console.error("Erreur email refus demande forfait:", e.message));
+  }
+
+  await notification.marquerCommeLue();
+
+  return res.status(200).json({
+    success: true,
+    message: "Demande refusée",
+    data: notification,
+  });
+});
 
 export const countNonLues = asyncHandler(async (req, res) => {
   const compteurs = await Notification.compterNonLues();

@@ -21,6 +21,13 @@ const notificationService = {
     return response.data;
   },
 
+  refuserDemandeForfait: async (id, raison) => {
+    const response = await api.put(`/notifications/demande-forfait/${id}/refuser`, {
+      raison,
+    });
+    return response.data;
+  },
+
   marquerToutesLues: async () => {
     const response = await api.put('/notifications/lire-tout');
     return response.data;

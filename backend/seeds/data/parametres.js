@@ -222,7 +222,7 @@ Alors si toi aussi, tu souhaites repousser tes limites, sortir de ta zone de con
   },
   {
     cle: "emailsaferecipient",
-    valeur: "p.ewan@hotmail.fr",
+    valeur: "",
     type: "texte",
     categorie: "emails",
     description: "Adresse cible utilisée quand le safe-mode email est activé",

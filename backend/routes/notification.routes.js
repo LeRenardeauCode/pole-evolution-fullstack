@@ -7,12 +7,14 @@ import {
   archiverNotification,
   supprimerArchivees,
   creerDemandeForfait,
+  refuserDemandeForfait,
 } from '../controllers/notification.controller.js';
 import { protect, admin } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
 router.post('/demande-forfait', protect, creerDemandeForfait);
+router.put('/demande-forfait/:id/refuser', protect, admin, refuserDemandeForfait);
 
 router.get('/', protect, admin, getNotifications);
 router.get('/count', protect, admin, countNonLues);

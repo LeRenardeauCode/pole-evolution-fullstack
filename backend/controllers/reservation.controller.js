@@ -9,6 +9,7 @@ import {
 import {
   sendReservationNotificationToAdmin,
   sendReservationConfirmationToUser,
+  sendReservationStatusUpdateToUser,
 } from "../utils/emailService.js";
 
 export const getMesReservations = async (req, res) => {
@@ -509,6 +510,31 @@ export const annulerReservation = async (req, res) => {
         coursId: cours._id,
         reservationId: reservation._id,
       });
+
+      const utilisateur = await Utilisateur.findById(reservation.utilisateur).select("prenom nom email");
+      if (utilisateur?.email) {
+        sendReservationStatusUpdateToUser({
+          nomEleve: utilisateur.nom,
+          prenomEleve: utilisateur.prenom,
+          emailEleve: utilisateur.email,
+          nomCours: cours.nom,
+          dateDebut: cours.dateDebut,
+          statut: "annulee",
+          raison: reservation.raisonAnnulation,
+        }).catch((e) => console.error("Erreur email annulation réservation:", e.message));
+      }
+    }
+
+    if (reservation.typeReservation === "invite" && reservation.emailInvite) {
+      sendReservationStatusUpdateToUser({
+        nomEleve: reservation.nomEleve,
+        prenomEleve: "",
+        emailEleve: reservation.emailInvite,
+        nomCours: cours.nom,
+        dateDebut: cours.dateDebut,
+        statut: "annulee",
+        raison: reservation.raisonAnnulation,
+      }).catch((e) => console.error("Erreur email annulation réservation invité:", e.message));
     }
 
     return res.status(200).json({
@@ -788,6 +814,26 @@ export const validerReservation = async (req, res) => {
         coursId: cours._id,
         reservationId: reservation._id,
       });
+
+      if (reservation.utilisateur.email) {
+        sendReservationStatusUpdateToUser({
+          nomEleve: reservation.utilisateur.nom,
+          prenomEleve: reservation.utilisateur.prenom,
+          emailEleve: reservation.utilisateur.email,
+          nomCours: cours.nom,
+          dateDebut: cours.dateDebut,
+          statut: "confirmee",
+        }).catch((e) => console.error("Erreur email validation réservation:", e.message));
+      }
+    } else if (reservation.typeReservation === "invite" && reservation.emailInvite) {
+      sendReservationStatusUpdateToUser({
+        nomEleve: reservation.nomEleve,
+        prenomEleve: "",
+        emailEleve: reservation.emailInvite,
+        nomCours: cours.nom,
+        dateDebut: cours.dateDebut,
+        statut: "confirmee",
+      }).catch((e) => console.error("Erreur email validation réservation invité:", e.message));
     }
 
     return res.status(200).json({
@@ -850,6 +896,28 @@ export const refuserReservation = async (req, res) => {
         coursId: cours._id,
         reservationId: reservation._id,
       });
+
+      if (reservation.utilisateur.email) {
+        sendReservationStatusUpdateToUser({
+          nomEleve: reservation.utilisateur.nom,
+          prenomEleve: reservation.utilisateur.prenom,
+          emailEleve: reservation.utilisateur.email,
+          nomCours: cours.nom,
+          dateDebut: cours.dateDebut,
+          statut: "refusee",
+          raison: raison || "Non spécifiée",
+        }).catch((e) => console.error("Erreur email refus réservation:", e.message));
+      }
+    } else if (reservation.typeReservation === "invite" && reservation.emailInvite) {
+      sendReservationStatusUpdateToUser({
+        nomEleve: reservation.nomEleve,
+        prenomEleve: "",
+        emailEleve: reservation.emailInvite,
+        nomCours: cours.nom,
+        dateDebut: cours.dateDebut,
+        statut: "refusee",
+        raison: raison || "Non spécifiée",
+      }).catch((e) => console.error("Erreur email refus réservation invité:", e.message));
     }
 
     return res.status(200).json({

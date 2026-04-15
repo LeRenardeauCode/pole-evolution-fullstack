@@ -55,7 +55,7 @@ export default function Parametres() {
   const [docReglement2, setDocReglement2] = useState('');
   const [docPlaquetteEVJF, setDocPlaquetteEVJF] = useState('');
   const [emailSafeMode, setEmailSafeMode] = useState(false);
-  const [emailSafeRecipient, setEmailSafeRecipient] = useState('p.ewan@hotmail.fr');
+  const [emailSafeRecipient, setEmailSafeRecipient] = useState('');
   const [uploadingDoc, setUploadingDoc] = useState(null);
   const fileInputRef1 = useRef(null);
   const fileInputRef2 = useRef(null);
@@ -122,7 +122,7 @@ export default function Parametres() {
           setDocReglement2(findParam('documentreglementinterieur2'));
           setDocPlaquetteEVJF(findParam('documentplaquetteevjf'));
           setEmailSafeMode(parseBoolean(findParamValue('emailsafemode', false), false));
-          setEmailSafeRecipient(findParamValue('emailsaferecipient', 'p.ewan@hotmail.fr'));
+          setEmailSafeRecipient(findParamValue('emailsaferecipient', ''));
         }
       } catch (err) {
         console.error('Erreur chargement paramètres:', err);
@@ -326,14 +326,14 @@ export default function Parametres() {
                 label="Email de redirection safe-mode"
                 value={emailSafeRecipient}
                 onChange={(e) => setEmailSafeRecipient(e.target.value)}
-                helperText="Exemple : p.ewan@hotmail.fr"
+                helperText="Laissez vide pour utiliser automatiquement l'email admin (ADMIN_EMAIL)."
                 sx={{ mb: 2 }}
               />
 
               <Button
                 variant="contained"
                 onClick={handleSaveEmailSafeMode}
-                disabled={loading || !emailSafeRecipient.trim()}
+                disabled={loading}
                 sx={{ fontWeight: 600 }}
               >
                 Enregistrer le safe-mode email
