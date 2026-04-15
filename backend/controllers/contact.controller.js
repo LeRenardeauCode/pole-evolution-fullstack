@@ -2,46 +2,17 @@ import MessageContact from '../models/MessageContact.js';
 import Notification from '../models/Notification.js';
 import asyncHandler from 'express-async-handler';
 import { sendContactNotificationToAdmin, sendContactConfirmationToUser } from '../utils/emailService.js';
-
-const verifierCaptcha = async (token, ipAddress) => {
-  if (!process.env.RECAPTCHA_SECRET_KEY) {
-    return true;
-  }
-
-  if (!token) {
-    return false;
-  }
-
-  const payload = new URLSearchParams({
-    secret: process.env.RECAPTCHA_SECRET_KEY,
-    response: token,
-  });
-
-  if (ipAddress) {
-    payload.append('remoteip', ipAddress);
-  }
-
-  const response = await fetch(
-    'https://www.google.com/recaptcha/api/siteverify',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: payload,
-    },
-  );
-
-  const data = await response.json();
-  return Boolean(data.success);
-};
+import { verifyRecaptchaToken } from '../utils/captcha.utils.js';
 
 export const envoyerMessage = asyncHandler(async (req, res) => {
   const { nom, prenom, email, telephone, sujet, message, captchaToken } = req.body;
 
   const ipAddress = req.ip || req.connection.remoteAddress;
 
-  const captchaValide = await verifierCaptcha(captchaToken, ipAddress);
+  const captchaValide = await verifyRecaptchaToken({
+    token: captchaToken,
+    ipAddress,
+  });
 
   if (!captchaValide) {
     return res.status(400).json({

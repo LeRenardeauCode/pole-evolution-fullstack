@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useContact } from '@hooks/useContact';
+import { isValidFrenchPhone, sanitizePhoneInput } from '@utils/validation';
 
 import logo from '@assets/images/thumbnail_LOGO_POLE_EVOLUTION-removebg-preview.png';
 import heroContact from '@assets/images/img_hero.jpg';
@@ -18,6 +19,7 @@ import heroContact from '@assets/images/img_hero.jpg';
 const Contact = () => {
   const { loading, error, success, sendMessage, resetForm } = useContact();
   const captchaEnabled = Boolean(import.meta.env.VITE_RECAPTCHA_SITE_KEY);
+  const MESSAGE_MAX_LENGTH = 1000;
 
   const [formData, setFormData] = useState({
     nom: '',
@@ -29,6 +31,7 @@ const Contact = () => {
   });
   const [captchaToken, setCaptchaToken] = useState('');
   const [captchaResetKey, setCaptchaResetKey] = useState(0);
+  const [formError, setFormError] = useState('');
 
   const sujets = [
     'Informations cours',
@@ -43,6 +46,7 @@ const Contact = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormError('');
     if (error || success) resetForm();
   };
 
@@ -50,12 +54,26 @@ const Contact = () => {
     e.preventDefault();
 
     if (!formData.nom || !formData.email || !formData.sujet || !formData.message) {
+      setFormError('Veuillez remplir tous les champs obligatoires.');
+      return;
+    }
+
+    if (!isValidFrenchPhone(formData.telephone)) {
+      setFormError('Le numéro de téléphone est invalide (format français attendu).');
+      return;
+    }
+
+    if (formData.message.length > MESSAGE_MAX_LENGTH) {
+      setFormError(`Votre message ne doit pas dépasser ${MESSAGE_MAX_LENGTH} caractères.`);
       return;
     }
 
     if (captchaEnabled && !captchaToken) {
+      setFormError('Veuillez valider le CAPTCHA.');
       return;
     }
+
+    setFormError('');
 
     const success = await sendMessage({
       ...formData,
@@ -73,6 +91,7 @@ const Contact = () => {
       });
       setCaptchaToken('');
       setCaptchaResetKey((currentKey) => currentKey + 1);
+      setFormError('');
     }
   };
 
@@ -173,6 +192,12 @@ const Contact = () => {
                   </Alert>
                 )}
 
+                {formError && (
+                  <Alert severity="error" sx={{ mb: 3 }}>
+                    {formError}
+                  </Alert>
+                )}
+
                 {success && (
                   <Alert severity="success" sx={{ mb: 3 }}>
                     Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.
@@ -267,12 +292,18 @@ const Contact = () => {
                   type="tel"
                   value={formData.telephone}
                   onChange={(e) => {
-                    const val = e.target.value.replace(/[^0-9+\s.-]/g, '');
+                    const val = sanitizePhoneInput(e.target.value);
                     setFormData((prev) => ({ ...prev, telephone: val }));
+                    setFormError('');
                     if (error || success) resetForm();
                   }}
-                  inputProps={{ maxLength: 15, pattern: '^(\\+33|0)[1-9](\\s?\\d{2}){4}$' }}
-                  helperText="Format : 06 12 34 56 78 ou +33 6 12 34 56 78"
+                  inputProps={{ maxLength: 20, pattern: '^(?:(?:\\+|00)33|0)\\s*[1-9](?:[\\s.-]*\\d{2}){4}$' }}
+                  error={Boolean(formData.telephone) && !isValidFrenchPhone(formData.telephone)}
+                  helperText={
+                    formData.telephone && !isValidFrenchPhone(formData.telephone)
+                      ? 'Numéro invalide. Format attendu: 06 12 34 56 78 ou +33 6 12 34 56 78'
+                      : 'Format : 06 12 34 56 78 ou +33 6 12 34 56 78'
+                  }
                   variant="outlined"
                   sx={{
                     mb: 3,
@@ -332,6 +363,9 @@ const Contact = () => {
                   required
                   multiline
                   rows={6}
+                  inputProps={{ maxLength: MESSAGE_MAX_LENGTH }}
+                  error={formData.message.length > MESSAGE_MAX_LENGTH}
+                  helperText={`${formData.message.length}/${MESSAGE_MAX_LENGTH} caractères`}
                   variant="outlined"
                   sx={{
                     mb: 4,
@@ -356,6 +390,8 @@ const Contact = () => {
                       key={captchaResetKey}
                       sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
                       onChange={(value) => setCaptchaToken(value || '')}
+                      onExpired={() => setCaptchaToken('')}
+                      onErrored={() => setCaptchaToken('')}
                     />
                   </Box>
                 )}

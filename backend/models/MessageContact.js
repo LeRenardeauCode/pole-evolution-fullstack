@@ -68,7 +68,7 @@ const messageContactSchema = new mongoose.Schema({
     required: [true, 'Le message est obligatoire'],
     trim: true,
     minlength: [10, 'Le message doit contenir au moins 10 caractères'],
-    maxlength: [2000, 'Le message ne peut pas dépasser 2000 caractères']
+    maxlength: [1000, 'Le message ne peut pas dépasser 1000 caractères']
   },
 
   dateEnvoi: {

@@ -12,6 +12,7 @@ import {
   avatarProfile,
   buttonSaveProfile,
 } from "@/styles/pageStyles";
+import { isValidFrenchPhone } from "@utils/validation";
 import logo from "@assets/images/thumbnail_LOGO_POLE_EVOLUTION-removebg-preview.png";
 
 export default function MonCompteProfile({
@@ -151,6 +152,13 @@ export default function MonCompteProfile({
         name="telephone"
         value={formData.telephone}
         onChange={(e) => onFormChange(e)}
+        inputProps={{ maxLength: 20, pattern: '^(?:(?:\\+|00)33|0)\\s*[1-9](?:[\\s.-]*\\d{2}){4}$' }}
+        error={Boolean(formData.telephone) && !isValidFrenchPhone(formData.telephone)}
+        helperText={
+          formData.telephone && !isValidFrenchPhone(formData.telephone)
+            ? "Numéro invalide. Format attendu: 06 12 34 56 78 ou +33 6 12 34 56 78"
+            : "Format : 06 12 34 56 78 ou +33 6 12 34 56 78"
+        }
         variant="filled"
         sx={textFieldWhiteBg}
       />

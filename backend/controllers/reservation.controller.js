@@ -11,6 +11,7 @@ import {
   sendReservationConfirmationToUser,
   sendReservationStatusUpdateToUser,
 } from "../utils/emailService.js";
+import { verifyRecaptchaToken } from "../utils/captcha.utils.js";
 
 export const getMesReservations = async (req, res) => {
   try {
@@ -289,6 +290,7 @@ export const createReservationInvite = async (req, res) => {
       emailInvite,
       telephoneInvite,
       niveauPoleInvite,
+      captchaToken,
     } = req.body;
 
     if (!coursId || !nomEleve || !emailInvite) {
@@ -296,6 +298,19 @@ export const createReservationInvite = async (req, res) => {
         success: false,
         message:
           "Cours ID, nom et email sont requis pour une réservation invité",
+      });
+    }
+
+    const ipAddress = req.ip || req.connection?.remoteAddress;
+    const captchaValide = await verifyRecaptchaToken({
+      token: captchaToken,
+      ipAddress,
+    });
+
+    if (!captchaValide) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation CAPTCHA invalide. Veuillez réessayer.",
       });
     }
 
@@ -356,7 +371,7 @@ export const createReservationInvite = async (req, res) => {
         estPaye: false,
         moyenPaiement: null,
       },
-      ipAddress: req.ip,
+      ipAddress,
     });
 
     cours.placesReservees += 1;

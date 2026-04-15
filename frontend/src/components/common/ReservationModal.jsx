@@ -23,15 +23,18 @@ import {
 import { Close, CheckCircle, Warning } from "@mui/icons-material";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import ReCAPTCHA from "react-google-recaptcha";
 import { useAuth } from "@/hooks/useAuth";
 import {
   creerReservation,
   creerReservationInvite,
 } from "@services/reservationService";
 import { getForfaitsUtilisateur } from "@services/forfaitService";
+import { isValidFrenchPhone, sanitizePhoneInput } from "@utils/validation";
 
 const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
   const { user } = useAuth();
+  const captchaEnabled = Boolean(import.meta.env.VITE_RECAPTCHA_SITE_KEY);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -47,6 +50,8 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
     niveauPoleInvite: "jamais",
   });
   const [reglementAccepte, setReglementAccepte] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetKey, setCaptchaResetKey] = useState(0);
 
   useEffect(() => {
     if (open && user) {
@@ -110,12 +115,27 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
         return;
       }
 
+      if (!isValidFrenchPhone(inviteData.telephoneInvite)) {
+        setError("Numéro de téléphone invalide (format français attendu).");
+        setLoading(false);
+        return;
+      }
+
+      if (captchaEnabled && !captchaToken) {
+        setError("Veuillez valider le CAPTCHA.");
+        setLoading(false);
+        return;
+      }
+
       await creerReservationInvite({
         coursId: cours._id,
         ...inviteData,
+        captchaToken,
       });
 
       setSuccess(true);
+      setCaptchaToken("");
+      setCaptchaResetKey((currentKey) => currentKey + 1);
       setTimeout(() => {
         onSuccess();
       }, 1500);
@@ -285,7 +305,14 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
                   label="Téléphone"
                   value={inviteData.telephoneInvite}
                   onChange={(e) =>
-                    handleInviteChange("telephoneInvite", e.target.value)
+                    handleInviteChange("telephoneInvite", sanitizePhoneInput(e.target.value))
+                  }
+                  inputProps={{ maxLength: 20, pattern: '^(?:(?:\\+|00)33|0)\\s*[1-9](?:[\\s.-]*\\d{2}){4}$' }}
+                  error={Boolean(inviteData.telephoneInvite) && !isValidFrenchPhone(inviteData.telephoneInvite)}
+                  helperText={
+                    inviteData.telephoneInvite && !isValidFrenchPhone(inviteData.telephoneInvite)
+                      ? "Numéro invalide. Format attendu: 06 12 34 56 78 ou +33 6 12 34 56 78"
+                      : "Format : 06 12 34 56 78 ou +33 6 12 34 56 78"
                   }
                   sx={{ mb: 2 }}
                 />
@@ -309,6 +336,18 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
                 <Alert severity="warning" icon={<Warning />}>
                   Paiement sur place le jour du cours
                 </Alert>
+
+                {captchaEnabled && (
+                  <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+                    <ReCAPTCHA
+                      key={captchaResetKey}
+                      sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                      onChange={(value) => setCaptchaToken(value || "")}
+                      onExpired={() => setCaptchaToken("")}
+                      onErrored={() => setCaptchaToken("")}
+                    />
+                  </Box>
+                )}
 
                 <FormControlLabel
                   control={
@@ -351,7 +390,7 @@ const ReservationModal = ({ open, onClose, cours, onSuccess }) => {
               disabled={
                 loading ||
                 (user && typePaiement === "forfait" && !forfaitSelectionne) ||
-                (!user && !reglementAccepte)
+                (!user && (!reglementAccepte || (captchaEnabled && !captchaToken)))
               }
               startIcon={loading && <CircularProgress size={20} />}
               sx={{ px: 4 }}

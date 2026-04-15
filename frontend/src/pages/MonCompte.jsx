@@ -16,6 +16,7 @@ import MonCompteProfile from "@components/MonCompte/MonCompteProfile";
 import MonComptePassword from "@components/MonCompte/MonComptePassword";
 import MonCompteCourses from "@components/MonCompte/MonCompteCourses";
 import MonCompteReglement from "@components/MonCompte/MonCompteReglement";
+import { isValidFrenchPhone, sanitizePhoneInput } from "@utils/validation";
 import backgroundImg from "@assets/images/img_hero2.png";
 
 const MonCompte = () => {
@@ -119,7 +120,8 @@ const MonCompte = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const nextValue = name === "telephone" ? sanitizePhoneInput(value) : value;
+    setFormData((prev) => ({ ...prev, [name]: nextValue }));
     if (error || success) {
       setError(null);
       setSuccess(null);
@@ -171,6 +173,12 @@ const MonCompte = () => {
   };
 
   const handleUpdateProfile = async () => {
+    if (!isValidFrenchPhone(formData.telephone)) {
+      setError("Numéro de téléphone invalide (format français attendu).");
+      setSuccess(null);
+      return;
+    }
+
     try {
       await authService.updateProfile({
         pseudo: formData.pseudo,

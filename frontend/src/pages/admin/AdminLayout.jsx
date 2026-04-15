@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
-import { Box, AppBar, Toolbar, Typography, IconButton } from '@mui/material';
-import { Logout as LogoutIcon } from '@mui/icons-material';
+import { Box, AppBar, Toolbar, Typography, IconButton, Button } from '@mui/material';
+import { Logout as LogoutIcon, Home as HomeIcon } from '@mui/icons-material';
 import { useAuth } from '@hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -11,6 +11,10 @@ import NotificationBell from '@components/admin/NotificationBell';
 export default function AdminLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  const handleGoToFront = () => {
+    navigate('/');
+  };
 
   const handleLogout = () => {
     logout();
@@ -35,6 +39,20 @@ export default function AdminLayout() {
             <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 600 }}>
               Bienvenue, {user?.prenom || 'Admin'}
             </Typography>
+
+            <Button
+              onClick={handleGoToFront}
+              startIcon={<HomeIcon />}
+              sx={{
+                color: 'white',
+                borderColor: 'rgba(255,255,255,0.45)',
+                mr: 1,
+                display: { xs: 'none', sm: 'inline-flex' }
+              }}
+              variant="outlined"
+            >
+              Voir le site
+            </Button>
 
             <NotificationBell />
 
