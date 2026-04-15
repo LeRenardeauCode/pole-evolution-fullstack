@@ -41,7 +41,25 @@ startForfaitExpiryNotifier();
 
 const app = express();
 
-const normalizeOrigin = (origin) => origin?.trim().replace(/\/$/, '');
+const normalizeOrigin = (origin) => {
+  if (!origin) {
+    return origin;
+  }
+
+  try {
+    const parsed = new URL(origin);
+    const protocol = parsed.protocol.toLowerCase();
+    const hostname = parsed.hostname.toLowerCase();
+    const isDefaultPort =
+      (protocol === 'https:' && parsed.port === '443') ||
+      (protocol === 'http:' && parsed.port === '80');
+    const port = parsed.port && !isDefaultPort ? `:${parsed.port}` : '';
+
+    return `${protocol}//${hostname}${port}`;
+  } catch {
+    return origin.trim().replace(/\/$/, '').toLowerCase();
+  }
+};
 
 const allowedOrigins = [
   process.env.FRONTEND_URL,
@@ -55,23 +73,28 @@ const allowedOrigins = [
   .map(normalizeOrigin)
   .filter(Boolean);
 
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
     if (!origin) {
       return callback(null, true);
     }
 
     const normalizedOrigin = normalizeOrigin(origin);
-    if (allowedOrigins.includes(normalizedOrigin)) {
+    const isVercelApp = /^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(normalizedOrigin);
+
+    if (allowedOrigins.includes(normalizedOrigin) || isVercelApp) {
       return callback(null, true);
     }
 
     return callback(new Error(`CORS blocked for origin: ${origin}`));
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'baggage', 'sentry-trace'],
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
