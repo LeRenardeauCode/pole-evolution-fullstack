@@ -8,6 +8,7 @@ import {
   supprimerArchivees,
   creerDemandeForfait,
   refuserDemandeForfait,
+  testerEmailSafeMode,
 } from '../controllers/notification.controller.js';
 import { protect, admin } from '../middleware/auth.middleware.js';
 
@@ -15,6 +16,7 @@ const router = express.Router();
 
 router.post('/demande-forfait', protect, creerDemandeForfait);
 router.put('/demande-forfait/:id/refuser', protect, admin, refuserDemandeForfait);
+router.post('/test-email-safe-mode', protect, admin, testerEmailSafeMode);
 
 router.get('/', protect, admin, getNotifications);
 router.get('/count', protect, admin, countNonLues);

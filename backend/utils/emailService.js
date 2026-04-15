@@ -963,3 +963,60 @@ export const sendNewUserNotificationToAdmin = async ({ prenom, nom, email, telep
     throw new Error(`Erreur notification nouvel utilisateur: ${error.message}`);
   }
 };
+
+export const sendSafeModeDiagnosticEmail = async ({ requestedByEmail = "", requestedByName = "Admin" } = {}) => {
+  const runtimeConfig = await getEmailRuntimeConfig();
+  const targetEmail = requestedByEmail || process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
+  const timestamp = new Date().toISOString();
+
+  if (!targetEmail) {
+    throw new Error("Aucune adresse cible disponible pour l'email de test");
+  }
+
+  const mailOptions = {
+    from: `"Pôle Evolution" <${process.env.EMAIL_USER}>`,
+    to: targetEmail,
+    subject: "Test email safe-mode - Pôle Evolution",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>Test email safe-mode</h2>
+        <p>Bonjour ${requestedByName},</p>
+        <p>Ceci est un email de test déclenché depuis le back-office.</p>
+        <ul>
+          <li>Safe-mode actif: <strong>${runtimeConfig.safeMode ? "oui" : "non"}</strong></li>
+          <li>Safe-recipient configuré: <strong>${runtimeConfig.safeRecipient || "(non défini)"}</strong></li>
+          <li>Destinataire demandé: <strong>${targetEmail}</strong></li>
+          <li>Date UTC: <strong>${timestamp}</strong></li>
+        </ul>
+      </div>
+    `,
+    text: `
+      Test email safe-mode
+
+      Bonjour ${requestedByName},
+      Ceci est un email de test déclenché depuis le back-office.
+
+      Safe-mode actif: ${runtimeConfig.safeMode ? "oui" : "non"}
+      Safe-recipient configuré: ${runtimeConfig.safeRecipient || "(non défini)"}
+      Destinataire demandé: ${targetEmail}
+      Date UTC: ${timestamp}
+    `,
+  };
+
+  const info = await sendMailWithPolicy({
+    mailOptions,
+    scenario: "safe-mode-diagnostic",
+  });
+
+  const routedTo = runtimeConfig.safeMode && runtimeConfig.safeRecipient
+    ? runtimeConfig.safeRecipient
+    : targetEmail;
+
+  return {
+    messageId: info.messageId,
+    safeMode: runtimeConfig.safeMode,
+    safeRecipient: runtimeConfig.safeRecipient,
+    requestedTarget: targetEmail,
+    routedTo,
+  };
+};

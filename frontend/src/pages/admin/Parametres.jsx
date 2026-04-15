@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { Upload, CheckCircle, PictureAsPdf } from '@mui/icons-material';
 import { toast } from 'react-toastify';
-import { getParametres, createParametre, updateParametre, uploadDocumentPDF } from '@services/adminService';
+import { getParametres, createParametre, updateParametre, uploadDocumentPDF, testerEmailSafeMode } from '@services/adminService';
 
 export default function Parametres() {
   const [loading, setLoading] = useState(false);
@@ -56,6 +56,7 @@ export default function Parametres() {
   const [docPlaquetteEVJF, setDocPlaquetteEVJF] = useState('');
   const [emailSafeMode, setEmailSafeMode] = useState(false);
   const [emailSafeRecipient, setEmailSafeRecipient] = useState('');
+  const [testingSafeModeEmail, setTestingSafeModeEmail] = useState(false);
   const [uploadingDoc, setUploadingDoc] = useState(null);
   const fileInputRef1 = useRef(null);
   const fileInputRef2 = useRef(null);
@@ -287,6 +288,23 @@ export default function Parametres() {
     }
   };
 
+  const handleTestSafeModeEmail = async () => {
+    setTestingSafeModeEmail(true);
+    try {
+      const response = await testerEmailSafeMode();
+      const data = response?.data || {};
+      const routedTo = data.routedTo || 'destinataire inconnu';
+      const mode = data.safeMode ? 'SAFE-MODE actif' : 'SAFE-MODE inactif';
+
+      toast.success(`Email test envoyé (${mode}) vers: ${routedTo}`);
+    } catch (err) {
+      console.error('Erreur test safe-mode email:', err);
+      toast.error(err.response?.data?.message || 'Erreur lors de l\'envoi de l\'email test');
+    } finally {
+      setTestingSafeModeEmail(false);
+    }
+  };
+
   return (
     <Box>
       <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
@@ -330,14 +348,26 @@ export default function Parametres() {
                 sx={{ mb: 2 }}
               />
 
-              <Button
-                variant="contained"
-                onClick={handleSaveEmailSafeMode}
-                disabled={loading}
-                sx={{ fontWeight: 600 }}
-              >
-                Enregistrer le safe-mode email
-              </Button>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                <Button
+                  variant="contained"
+                  onClick={handleSaveEmailSafeMode}
+                  disabled={loading}
+                  sx={{ fontWeight: 600 }}
+                >
+                  Enregistrer le safe-mode email
+                </Button>
+
+                <Button
+                  variant="outlined"
+                  color="warning"
+                  onClick={handleTestSafeModeEmail}
+                  disabled={testingSafeModeEmail || loading}
+                  sx={{ fontWeight: 600 }}
+                >
+                  {testingSafeModeEmail ? 'Envoi du test...' : 'Envoyer un email test'}
+                </Button>
+              </Stack>
             </CardContent>
           </Card>
         </Grid>

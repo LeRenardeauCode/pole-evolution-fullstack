@@ -271,6 +271,11 @@ export const archiverNotification = async (id) => {
   return response.data;
 };
 
+export const testerEmailSafeMode = async () => {
+  const response = await api.post('/notifications/test-email-safe-mode');
+  return response.data;
+};
+
 // Paramètres
 
 export const getParametres = async () => {
@@ -375,6 +380,7 @@ export default {
   marquerLue,
   marquerToutesLues,
   archiverNotification,
+  testerEmailSafeMode,
   getParametres,
   getParametreByKey,
   getParametresByCategorie,

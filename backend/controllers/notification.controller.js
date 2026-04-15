@@ -4,6 +4,7 @@ import {
   sendForfaitRequestDecisionToUser,
   sendForfaitRequestNotificationToAdmin,
   sendForfaitRequestReceivedToUser,
+  sendSafeModeDiagnosticEmail,
 } from "../utils/emailService.js";
 
 export const getNotifications = asyncHandler(async (req, res) => {
@@ -186,5 +187,21 @@ export const supprimerArchivees = asyncHandler(async (req, res) => {
   return res.status(200).json({
     success: true,
     message: `${result.deletedCount} notification(s) supprimée(s)`,
+  });
+});
+
+export const testerEmailSafeMode = asyncHandler(async (req, res) => {
+  const requestedByEmail = req.user?.email || "";
+  const requestedByName = req.user?.prenom || req.user?.nom || "Admin";
+
+  const result = await sendSafeModeDiagnosticEmail({
+    requestedByEmail,
+    requestedByName,
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Email de test envoyé",
+    data: result,
   });
 });
