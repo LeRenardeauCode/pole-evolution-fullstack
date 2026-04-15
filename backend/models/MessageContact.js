@@ -176,14 +176,22 @@ messageContactSchema.statics.getMessagesNonTraites = function() {
   .limit(50);
 };
 
-messageContactSchema.statics.verifierLimiteIP = async function(ipAddress) {
+messageContactSchema.statics.verifierLimiteIP = async function(ipAddress, email = '') {
   const debutJour = new Date();
   debutJour.setHours(0, 0, 0, 0);
 
-  const count = await this.countDocuments({
+  const normalizedEmail = String(email || '').trim().toLowerCase();
+
+  const query = {
     ipAddress: ipAddress,
     dateEnvoi: { $gte: debutJour }
-  });
+  };
+
+  if (normalizedEmail) {
+    query.email = normalizedEmail;
+  }
+
+  const count = await this.countDocuments(query);
 
   return count < 3;
 };

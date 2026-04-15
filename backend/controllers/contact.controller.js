@@ -4,10 +4,21 @@ import asyncHandler from 'express-async-handler';
 import { sendContactNotificationToAdmin, sendContactConfirmationToUser } from '../utils/emailService.js';
 import { verifyRecaptchaToken } from '../utils/captcha.utils.js';
 
+const getClientIp = (req) => {
+  const forwardedFor = req.headers['x-forwarded-for'];
+
+  if (typeof forwardedFor === 'string' && forwardedFor.length > 0) {
+    return forwardedFor.split(',')[0].trim();
+  }
+
+  return req.ip || req.connection?.remoteAddress || 'unknown';
+};
+
 export const envoyerMessage = asyncHandler(async (req, res) => {
   const { nom, prenom, email, telephone, sujet, message, captchaToken } = req.body;
 
-  const ipAddress = req.ip || req.connection.remoteAddress;
+  const ipAddress = getClientIp(req);
+  const normalizedEmail = String(email || '').trim().toLowerCase();
 
   const captchaValide = await verifyRecaptchaToken({
     token: captchaToken,
@@ -21,7 +32,7 @@ export const envoyerMessage = asyncHandler(async (req, res) => {
     });
   }
 
-  const peutEnvoyer = await MessageContact.verifierLimiteIP(ipAddress);
+  const peutEnvoyer = await MessageContact.verifierLimiteIP(ipAddress, normalizedEmail);
   
   if (!peutEnvoyer) {
     return res.status(429).json({

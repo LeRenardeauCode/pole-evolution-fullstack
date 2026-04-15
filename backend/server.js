@@ -50,6 +50,9 @@ if (expiryNotifierEnabled) {
 
 const app = express();
 
+// Render est derrière un proxy, cette option permet d'extraire la vraie IP client.
+app.set('trust proxy', 1);
+
 const normalizeOrigin = (origin) => {
   if (!origin) {
     return origin;
