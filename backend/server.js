@@ -37,7 +37,16 @@ import parametreRoutes from './routes/parametre.routes.js';
 
 connectDB();
 initMonitoring();
-startForfaitExpiryNotifier();
+
+const expiryNotifierEnabled =
+  String(process.env.FORFAIT_EXPIRY_NOTIFIER_ENABLED || "false").toLowerCase() === "true";
+
+if (expiryNotifierEnabled) {
+  startForfaitExpiryNotifier();
+  console.log("⏰ Forfait expiry notifier actif");
+} else {
+  console.log("⏸️ Forfait expiry notifier inactif (FORFAIT_EXPIRY_NOTIFIER_ENABLED=false)");
+}
 
 const app = express();
 
